@@ -1,0 +1,66 @@
+---
+type: product
+title: "finfluencer.trade"
+product: finfluencer-trade
+project: null
+created: 2026-04-06
+updated: 2026-04-06
+tags: [finfluencer, finance, pipeline, dagster, blog, tracking]
+---
+
+# finfluencer.trade
+
+Financial influencer tracking and accountability platform. Ingests podcast and content from financial influencers, transcribes it, extracts stock picks and recommendations, tracks prediction performance against market benchmarks, and publishes research and insights.
+
+## What it does
+
+The platform follows financial influencers (podcasters, YouTubers, analysts) and holds their predictions accountable. It processes audio content through a multi-stage pipeline — transcription → speaker attribution → facts extraction → signal generation — and tracks whether the picks actually played out. Findings are published via a public blog and directory.
+
+## Target users
+
+- Retail investors who want to assess finfluencer track records before following advice
+- Researchers studying crowd-sourced financial prediction quality
+- Andres as the operator building and refining the platform
+
+## Component repos
+
+| Repo | Role |
+|---|---|
+| [[projects/gor_dagster]] | Data pipeline — ingestion, transcription, speaker attribution, facts extraction, signal generation. The core backend. |
+| [[projects/gor-blog]] | Public-facing MkDocs site — blog posts, finfluencer directory, research articles |
+| [[projects/finfluencer-tracker]] | (Light layer — auth, sharing, landing app) |
+
+## Architecture summary
+
+Three-tier cloud stack on GCP. Dagster Cloud for orchestration (hybrid deployment with GCE agent). BigQuery as the data warehouse. GCS for media files and transcripts. A multi-stage pipeline:
+
+1. RSS ingestion → episode discovery
+2. STT transcription (AssemblyAI, Deepgram, ElevenLabs) → raw transcripts
+3. Unified transcript generation → normalised format
+4. Speaker attribution (LLM) → named speaker labels
+5. Facts extraction (LLM) → stock picks, position disclosures
+6. Signal refinement → `ActionableSignal` records
+7. Performance tracking → signal outcomes against market benchmarks
+
+LLM layer uses multi-provider configuration registry (Gemini, GPT, Claude) with batch processing and consensus algorithms for accuracy.
+
+## Current status
+
+Active development. Pipeline is production-ready for core transcription and facts extraction. Speaker attribution and signal tracking are mature. Blog is live with 14+ published posts.
+
+## Key cross-repo decisions
+
+- STT transcripts stored in `gor-stt-transcripts` GCS bucket (hardcoded, not from env var)
+- **Backend data (BigQuery / GCS):** all pipeline and integration environments — local, branch, and production — use the **production** datasets and buckets (`dagster_prod`, `dagster_shared`, shared media/STT storage). There is no separate staging warehouse for backend analytics (see [[entities/bigquery]]).
+- **finfluencer-tracker (app layer):** **two Supabase instances** — one for **production** and one for **development** — so app/auth data can be isolated while the app still reads pipeline data sourced from production backend stores.
+- Facts extraction uses `ActionableSignal` VIEW over `PotentialPrediction` table — deduplicates by FE config priority
+- Blog (`gor-blog`) uses MkDocs; its `docs/` folder is the site source, not project documentation
+
+## Related pages
+
+- [[projects/gor_dagster]]
+- [[projects/gor-blog]]
+- [[projects/finfluencer-tracker]]
+- [[concepts/actionable-signal]]
+- [[concepts/speaker-attribution]]
+- [[entities/dagster]]
