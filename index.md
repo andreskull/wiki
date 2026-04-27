@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-04-08
+updated: 2026-04-27
 ---
 
 # Wiki Index
@@ -31,11 +31,12 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Product | Status |
 |------|---------|--------|
-| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — signal performance uses implicit flip truncation (2026-04-08 doc sync) |
-| [[wiki/projects/gor-blog]] | finfluencer.trade | Active |
+| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — Dagster Cloud credit optimization wrapped 2026-04-25; 8 features still in `docs/features/` |
+| [[wiki/projects/gor-blog]] | finfluencer.trade | Active — private `research/cramer/` (exports, specs, SSRN notes) |
 | [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — `docs/architecture/` in repo |
 | [[wiki/projects/rattaproff]] | rattaproff | Operational — docs sparse |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Active |
+| [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | Public kit + SSRN 6643379 — CSVs, scripts, paper |
 
 ---
 
@@ -43,7 +44,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Description |
 |------|-------------|
-| [[wiki/sources/2026-04-07-cramer-mad-money-performance-methodology]] | Cramer / Mad Money performance & methodology (`gor-blog/research/cramer/`) |
+| [[wiki/sources/2026-04-07-cramer-mad-money-performance-methodology]] | Cramer / Mad Money performance & methodology ([[projects/cramer-mad-money-research]]) |
 
 ---
 

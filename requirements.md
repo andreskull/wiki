@@ -523,4 +523,4 @@ tags: [dagster, pipeline, python]
 1. **Product descriptions** for `botastico` and `rattaproff` — to be filled during bootstrap when repos are accessible.
 2. **Botastico repos docs structure** — not yet scanned; check during bootstrap.
 3. **Cross-project implications format** in `WIKI.md` — exact format to be established in CLAUDE.md during Phase 1.
-4. **`gor_dagster` active features**: 7 feature folders in `docs/features/` are live work in progress. During bootstrap, wiki skips these. They should each be wrapped up via `/wrapup` when their implementation is complete.
+4. **`gor_dagster` active features**: 8 feature folders in `docs/features/` (2026-04-25); **Dagster Cloud credit optimization** wrapped to `docs/architecture/features/`. Wiki skips `docs/features/` until `/wrapup`.

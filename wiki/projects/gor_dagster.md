@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-04-08
+updated: 2026-04-25
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase]
 ---
 
@@ -77,13 +77,13 @@ Two-stage pipeline: **LLM Identification** then **Transcript Hydration**.
 
 **LLM Identification (Stage 4a):** An LLM classifies each utterance's speaker at one of three confidence levels (`full_name`, `partial_name`, `unknown`). The output — a flat segment array with `source_utterance_start/end` references — is written to `gs://gor-stt-transcripts/identification/{episode_id}/{provider}_{llm_config_id}.json`. Eight LLM models supported. Anchor enforcement ensures `full_name` attributions require explicit textual evidence (self-introduction, name mention, etc.); speakers without anchors are forced to `Unknown`.
 
-**Transcript Hydration (Stage 4b):** Merges the identification file back into the unified transcript to produce a stitched transcript where every utterance has a named speaker. Written to `gs://gor-stt-transcripts/hydrated/{episode_id}/{provider}_{llm_config_id}.json`. The `hydration_sensor` builds batches of `(episode, llm_config_id)` pairs, runs two parallel `hydration_job` instances per tick (15+15 targets), with round-robin fairness. Audit trail in the `hydration_runs` BigQuery table.
+**Transcript Hydration (Stage 4b):** Merges the identification file back into the unified transcript to produce a stitched transcript where every utterance has a named speaker. Written to `gs://gor-stt-transcripts/hydrated/{episode_id}/{provider}_{llm_config_id}.json`. The `hydration_sensor` builds batches of `(episode, llm_config_id)` pairs (**batch size 30**), emits **one** `hydration_job` run per sensor tick (fewer Dagster Cloud orchestration runs than the former dual parallel pattern), with round-robin fairness. Audit trail in the `hydration_runs` BigQuery table.
 
 Quality metrics tracked per run: `anchor_coverage_pct` (target ≥ 95%), `llm_coverage_ratio` (target > 0.95), `multi_speaker_utterances_count`, `auto_corrected_segments_count`, `quote_validation_failure_rate`.
 
 Key assets: `speaker_attribution_llm`, `transcript_hydration`, `statistical_speaker_attribution`
 
-Docs: [Speaker Attribution Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/speaker-attribution-architecture.md), [Anchor Enforcement](file:///Users/andreskull/gor_dagster/docs/architecture/speaker-attribution-anchor-enforcement.md), [Speaker Attribution Guide](file:///Users/andreskull/gor_dagster/docs/operations/speaker-attribution-guide.md)
+Docs: [Speaker Attribution Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/speaker-attribution-architecture.md), [Anchor Enforcement](file:///Users/andreskull/gor_dagster/docs/architecture/speaker-attribution-anchor-enforcement.md), [Speaker Attribution Guide](file:///Users/andreskull/gor_dagster/docs/operations/speaker-attribution-guide.md), [Hydration sensor batching](file:///Users/andreskull/gor_dagster/docs/operations/hydration-sensor-batching.md)
 
 ### Stage 5 — Facts Extraction
 
@@ -254,6 +254,7 @@ Docs: [Pipeline Dashboard Architecture](file:///Users/andreskull/gor_dagster/doc
 - **Hybrid Dagster Cloud** — Dagster Cloud manages orchestration; a GCE VM (`AGENT_VM_MACHINE_TYPE_PROD`, e.g. `e2-standard-4`) runs the agent in Docker
 - **Separate staging VM** — `AGENT_VM_MACHINE_TYPE_STAGING` (e.g. `e2-medium: 2 vCPU, 4GB`) for branch deployments; resource constrained, avoid heavy parallelism
 - **Default executor: `max_concurrent: 2`** — prevents GCE VM contention. Jobs that need different behaviour override explicitly (e.g. `instrument_resolution_job` uses `in_process_executor`)
+- **Dagster Cloud orchestration credits** — hybrid deployment bills credits for orchestrated runs; cadence and run fan-out are tuned per [Dagster Cloud credit optimization](file:///Users/andreskull/gor_dagster/docs/architecture/features/dagster-cloud-credit-optimization.md) (e.g. Supabase sync **N=8** in production via `SUPABASE_SYNC_INTERVAL_HOURS_PROD`, PP resolution sensor **2h** minimum interval)
 - **`in_process_executor` for DNS-sensitive jobs** — multiprocess child workers can't resolve `gor.agent.dagster.cloud`; use `in_process_executor` as workaround
 - **Deploy flow**: `git push origin main` → GitHub Actions builds Docker image → pushes to GCR → GCE agent picks up new image
 - **Environments**: `local` (filesystem I/O), `staging` (branch deploys), `production` (main branch). BigQuery still uses the same two production datasets (`dagster_prod` + `dagster_shared`); branch deployments do not create a separate staging copy of the warehouse — see [[entities/bigquery]]
@@ -305,6 +306,17 @@ Key rule: all Python code must be written to `.py` files before execution — ne
 | Signal date uses `ContentSourceTimingConfig` | `pubDate` from RSS is not air date. Each content source has a timing strategy: `scheduled_title_date`, `publication_driven`, etc. |
 | Performance truncation includes implicit flip | Same finfluencer + instrument: opposite-direction `start_*`/`hold_*` truncates prior position; see [[concepts/signal-performance]]. |
 | No mocks in tests | All tests must use real APIs, real BigQuery, real GCS. No mocks, stubs, or test doubles for external services. |
+| Dagster Cloud credit hygiene | Tune sensors/schedules and `RunRequest` fan-out for hybrid orchestration credits; permanent write-up: [dagster-cloud-credit-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/dagster-cloud-credit-optimization.md). |
+
+---
+
+## Completed architecture features
+
+Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
+
+| Completed | Topic | Doc |
+|---|---|---|
+| 2026-04-25 | Dagster Cloud credit optimization | [dagster-cloud-credit-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/dagster-cloud-credit-optimization.md) |
 
 ---
 
@@ -314,6 +326,7 @@ These are currently in `docs/features/` — temporary, not indexed by wiki. Run 
 
 | Feature | Folder |
 |---|---|
+| BigQuery cost optimization | `bigquery-cost-optimization/` |
 | LLM batch processing | `batch-integration/` |
 | Finfluencer affiliations human curation | `finfluencer-affiliations-human-curation/` |
 | Instrument resolution bulk manual curation | `instrument-resolution-bulk-manual-curation/` |
@@ -341,6 +354,8 @@ These are currently in `docs/features/` — temporary, not indexed by wiki. Run 
 | Schema management | [Schema Management](file:///Users/andreskull/gor_dagster/docs/operations/schema-management.md) |
 | Configuration reference | [Configuration Reference](file:///Users/andreskull/gor_dagster/docs/operations/configuration-reference.md) |
 | Price ingestion | [Price Ingestion Guide](file:///Users/andreskull/gor_dagster/docs/operations/price-ingestion-guide.md) |
+| Dagster schedules (prod vs code defaults) | [Dagster schedules — production](file:///Users/andreskull/gor_dagster/docs/operations/dagster-schedules-production.md) |
+| SI job reliability / credits | [SI job reliability](file:///Users/andreskull/gor_dagster/docs/operations/si-job-reliability.md) |
 
 ---
 

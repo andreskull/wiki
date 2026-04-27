@@ -4,7 +4,7 @@ title: "Lint — gor-blog research papers → wiki (2026-04-07)"
 product: finfluencer-trade
 project: gor-blog
 created: 2026-04-07
-updated: 2026-04-07
+updated: 2026-04-17
 tags: [lint, wiki-health, gor-blog, sources, papers]
 ---
 
@@ -16,7 +16,7 @@ tags: [lint, wiki-health, gor-blog, sources, papers]
 
 | Item | Action |
 |------|--------|
-| `Cramer's Performance_ Research & Methodology.md` | Copied to **`wiki/raw/papers/cramer-mad-money-performance-methodology.md`**; working copy now **`gor-blog/research/cramer/`** |
+| `Cramer's Performance_ Research & Methodology.md` | Copied to **`wiki/raw/papers/cramer-mad-money-performance-methodology.md`**; topic folder **`gor-blog/research/cramer/`** holds internal specs + DB-export scripts; public kit is [[projects/cramer-mad-money-research]] |
 | Source page | **`wiki/sources/2026-04-07-cramer-mad-money-performance-methodology.md`** (links updated) |
 | [[wiki/index.md]] | **Sources** section |
 | [[projects/gor-blog]] | Notes **`research/`** ↔ vault ingest |
@@ -28,4 +28,5 @@ tags: [lint, wiki-health, gor-blog, sources, papers]
 ## Related pages
 
 - [[projects/gor-blog]]
+- [[projects/cramer-mad-money-research]]
 - [[sources/2026-04-07-cramer-mad-money-performance-methodology]]

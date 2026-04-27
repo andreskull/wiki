@@ -4,17 +4,18 @@ title: "Cramer / Mad Money — performance & methodology (internal research)"
 product: finfluencer-trade
 project: gor-blog
 created: 2026-04-07
-updated: 2026-04-07
-tags: [cramer, mad-money, finfluencer, methodology, academic, inverse-cramer]
+updated: 2026-04-27
+tags: [cramer, mad-money, finfluencer, methodology, academic, inverse-cramer, ssrn]
 ---
 
 # Cramer / Mad Money — performance & methodology (internal research)
 
 ## Source
 
-- **Working copy (repo):** [Cramer's Performance_ Research & Methodology.md](file:///Users/andreskull/gor-blog/research/cramer/Cramer's%20Performance_%20Research%20%26%20Methodology.md) under **`gor-blog/research/cramer/`**
-- **Vault archive (immutable):** [cramer-mad-money-performance-methodology.md](file:///Users/andreskull/wiki/raw/papers/cramer-mad-money-performance-methodology.md) in `wiki/raw/papers/` (synced from the repo path above)
-- **Ingested:** 2026-04-07; path updated 2026-04-07 when the file moved from `_internal/papers/` → **`research/cramer/`**
+- **Public reproducibility repo + working paper:** [[projects/cramer-mad-money-research]] — [cramer-mad-money-research](file:///Users/andreskull/cramer-mad-money-research) (CSV/Parquet, analysis-only scripts, figures, paper). **SSRN** [6643379](https://ssrn.com/abstract=6643379).
+- **Private prep (not public):** [gor-blog/research/cramer/](file:///Users/andreskull/gor-blog/research/cramer/) — `research_plan.md`, `SPEC_*.md`, `SSRN_submission.md`, and scripts that export from BigQuery / run full hold reclassification (`enrich` / `extract`). Superseded QQQ-era scripts were removed from the tree in 2026-04; **git history** retains them.
+- **Vault archive (immutable):** [cramer-mad-money-performance-methodology.md](file:///Users/andreskull/wiki/raw/papers/cramer-mad-money-performance-methodology.md) in `wiki/raw/papers/`
+- **Ingested:** 2026-04-07; path history: `_internal/papers/` → **`gor-blog/research/cramer/`** (working area; methodology vault copy is `wiki/raw/papers/…`)
 
 Long-form synthesis tying academic event studies (e.g. Engelberg et al.), AAP / charitable trust benchmarks, inverse ETFs (SJIM/LJIM), and finfluencers.trade-style signal definitions (horizons, next-day open entry, LLM extraction) for Jim Cramer / *Mad Money*.
 
@@ -32,15 +33,17 @@ Long-form synthesis tying academic event studies (e.g. Engelberg et al.), AAP / 
 
 - **Product:** [[products/finfluencer-trade]] — accountability methodology for televised picks.
 - **Pipeline:** [[projects/gor_dagster]] — STT → facts extraction → instruments → performance horizons.
-- **Publication:** [[projects/gor-blog]] — repo research under **`research/`** feeds eventual `docs/blog/posts/`; this page is the vault-side record.
+- **Publication:** [[projects/gor-blog]] — articles in `docs/blog/posts/`; public Cramer kit is [[projects/cramer-mad-money-research]]; DB-export and internal specs stay under `gor-blog/research/cramer/`. This page is the vault-side methodology record.
 
 ## Contradictions / open points
 
-- Document contains `[User Query]` placeholders and draft markers — treat as **research draft**, not peer-reviewed publication.
-- Images in the original are external references (`![][image1]` etc.) — figures may not render in vault copy without assets.
+- The **vault** copy in `raw/papers` may still read like an early research memo; the **cited** working paper is the repo Markdown/PDF and **SSRN** PDF (April 2026).
+- Some placeholders or draft markers may remain in the archived raw file — the public paper is the authority for claims and counts.
+- Images in the original may be external references — figures in the public repo are canonical for the paper.
 
 ## Related pages
 
+- [[projects/cramer-mad-money-research]]
 - [[projects/gor-blog]]
 - [[projects/gor_dagster]]
 - [[concepts/actionable-signal]]

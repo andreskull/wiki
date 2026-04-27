@@ -4,7 +4,7 @@ title: "gor-blog"
 product: finfluencer-trade
 project: gor-blog
 created: 2026-04-06
-updated: 2026-04-07
+updated: 2026-04-27
 tags: [blog, mkdocs, content, finfluencer, research, articles]
 ---
 
@@ -47,9 +47,16 @@ docs/
 - Platform/tech posts (`dagster-hybrid-gcp-deep-dive.md`, `how-i-apply-spec-driven-ai-coding.md`, `finding-optimal-quality-vs-cost-in-large-context-llm-tasks.md`)
 - Product updates (`introducing-finfluencers-directory.md`)
 
-## Research drafts (`research/`)
+## Research (`research/`)
 
-Long-form research that is **not** part of the public MkDocs tree lives under **`gor-blog/research/`** (e.g. **`research/cramer/`** for the Cramer methodology paper). Vault-worthy material must be **ingested**: copy to **`wiki/raw/papers/`** plus **`wiki/sources/YYYY-MM-DD-slug.md`** (see [[synthesis/lint-gor-blog-internal-papers-2026-04-07]] — rule updated when files moved out of `_internal/papers/`). Example: [[sources/2026-04-07-cramer-mad-money-performance-methodology]].
+Long-form research that is **not** part of the public MkDocs tree may live under **`gor-blog/research/`** until ingested to the vault.
+
+**Cramer / *Mad Money* (2018–2024)** is split across two locations:
+
+- **Public** — [[projects/cramer-mad-money-research]]: frozen CSV/Parquet, analysis-only scripts, figures, working paper (Markdown + PDF). **SSRN** [6643379](https://ssrn.com/abstract=6643379). [GitHub](https://github.com/andreskull/cramer-mad-money-research).
+- **Private** — **`gor-blog/research/`** ([`README.md`](file:///Users/andreskull/gor-blog/research/README.md)) and **`research/cramer/`**: `README.md`, `SSRN_submission.md`, `research_plan.md`, `SPEC_*.md`, **`scripts/`** (BigQuery export, `reclassify_holds` with `enrich`/`extract`, Fama/phase prep). Superseded QQQ-era exploratory scripts were removed from the tree (2026-04); **git history** retains them. Outputs land in the public repo clone’s `data/`.
+
+Vault methodology archive: [[sources/2026-04-07-cramer-mad-money-performance-methodology]] (`wiki/raw/papers/…`). For new long-form that should live in the vault, still **ingest** per [[synthesis/lint-gor-blog-internal-papers-2026-04-07]].
 
 ## Where research work lands
 
@@ -57,10 +64,11 @@ New articles about finfluencers or the platform are written directly as posts in
 
 ## Current status
 
-Live site with active publication. 14 posts published. Directory operational.
+Live site with active publication. 14+ posts published. Directory operational. Cramer working paper is public on **SSRN** and **GitHub** (see [[projects/cramer-mad-money-research]]); private `research/cramer/` holds export/spec/admin files only.
 
 ## Related pages
 
 - [[products/finfluencer-trade]]
 - [[projects/gor_dagster]]
+- [[projects/cramer-mad-money-research]]
 - [[projects/finfluencer-tracker]]

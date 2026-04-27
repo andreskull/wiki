@@ -4,7 +4,7 @@ title: "finfluencer.trade"
 product: finfluencer-trade
 project: null
 created: 2026-04-06
-updated: 2026-04-06
+updated: 2026-04-25
 tags: [finfluencer, finance, pipeline, dagster, blog, tracking]
 ---
 
@@ -27,8 +27,9 @@ The platform follows financial influencers (podcasters, YouTubers, analysts) and
 | Repo | Role |
 |---|---|
 | [[projects/gor_dagster]] | Data pipeline — ingestion, transcription, speaker attribution, facts extraction, signal generation. The core backend. |
-| [[projects/gor-blog]] | Public-facing MkDocs site — blog posts, finfluencer directory, research articles |
+| [[projects/gor-blog]] | Public MkDocs site — blog, directory, articles; private **`research/cramer/`** for Cramer internal export scripts and specs (public data kit: [[projects/cramer-mad-money-research]]) |
 | [[projects/finfluencer-tracker]] | (Light layer — auth, sharing, landing app) |
+| [[projects/cramer-mad-money-research]] | Public reproducibility + working paper (SSRN 6643379) — Cramer / *Mad Money* 2018–2024 |
 
 ## Architecture summary
 
@@ -60,6 +61,7 @@ Active development. Pipeline is production-ready for core transcription and fact
 
 - [[projects/gor_dagster]]
 - [[projects/gor-blog]]
+- [[projects/cramer-mad-money-research]]
 - [[projects/finfluencer-tracker]]
 - [[concepts/actionable-signal]]
 - [[concepts/speaker-attribution]]
