@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-04-29
+updated: 2026-05-05
 ---
 
 # Wiki Index
@@ -57,6 +57,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/concepts/signal-performance]] | Signal → horizons: truncation, implicit opposite-direction close (same instrument) |
 | [[wiki/concepts/llm-config-registry]] | How multi-model experimentation is managed |
 | [[wiki/concepts/spec-driven-development]] | The development methodology loop |
+| [[wiki/concepts/blog-post-cta-pattern]] | Required CTAs on every gor-blog post (above-fold, mid-article, end-of-post, internal links) |
 
 ---
 

@@ -4,7 +4,7 @@ title: "gor-blog"
 product: finfluencer-trade
 project: gor-blog
 created: 2026-04-06
-updated: 2026-04-29
+updated: 2026-05-05
 tags: [blog, mkdocs, content, finfluencer, research, articles, newsletter, convertkit]
 ---
 
@@ -67,6 +67,10 @@ New articles about finfluencers or the platform are written directly as posts in
 
 **[`growth_plan.md`](file:///Users/andreskull/gor-blog/growth_plan.md)** (repo root) — Finfluencers.trade growth plan, competitive notes, and pre-launch actions. Central index: [[products/finfluencer-trade]] § Planning and strategy.
 
+## Required elements on every blog post
+
+Every blog post in `docs/blog/posts/` must include the CTAs codified in [[concepts/blog-post-cta-pattern]] before publishing — above-the-fold module, inline mid-article module, expanded end-of-post block (newsletter + product CTA), and internal product links throughout the body. The pattern was established 2026-05-05 after the Cramer launch revealed 92% article-to-product abandonment uniform across acquisition channels (GA4 Funnel exploration, May 4 2026). See `research/cramer/promotion/linkedin_promotion_plan.md` § *Day 1 learnings + plan revision* for the source data.
+
 ## Current status
 
 Live site with active publication. 14+ posts published. Directory operational. **Newsletter:** registered finfluencer-tracker users can be merged into Kit tag **`GOR_NEWSLETTER_SUBS`** via CLI import (see repo `api/newsletter/`); template and Gmail dark-mode guidance in `convertkit_template_final.html` / README. Cramer working paper is public on **SSRN** and **GitHub** (see [[projects/cramer-mad-money-research]]); private `research/cramer/` holds export/spec/admin files only.
@@ -77,3 +81,4 @@ Live site with active publication. 14+ posts published. Directory operational. *
 - [[projects/gor_dagster]]
 - [[projects/cramer-mad-money-research]]
 - [[projects/finfluencer-tracker]]
+- [[concepts/blog-post-cta-pattern]]
