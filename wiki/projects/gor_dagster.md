@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-04-25
+updated: 2026-04-29
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase]
 ---
 
@@ -20,6 +20,16 @@ The core backend of [[products/finfluencer-trade]]. A Dagster-orchestrated data 
 
 The data engine. Everything from RSS feed polling through to `ActionableSignal` creation runs here. The other finfluencer.trade repos (`gor-blog`, `finfluencer-tracker`) consume the structured data this pipeline produces. BigQuery is the single source of truth; Supabase is a read-replica synced via Dagster (`sync/sync_to_supabase` and related `mat_*` assets) for the app layer.
 
+### Product and app planning (durable)
+
+| Doc | Purpose |
+|---|---|
+| [MVP_MASTER_PLAN.md](file:///Users/andreskull/gor_dagster/docs/MVP_MASTER_PLAN.md) | Shipped **finfluencer-tracker** MVP — achievement spec |
+| [INCR_01_MASTER_PLAN.md](file:///Users/andreskull/gor_dagster/docs/INCR_01_MASTER_PLAN.md) | Deferred / follow-on product work after MVP |
+| [finfluencers-app-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/finfluencers-app-runbook.md) | App operations, access rules, E2E, cutover checks |
+
+Growth and GTM live in [`gor-blog/growth_plan.md`](file:///Users/andreskull/gor-blog/growth_plan.md). **Do not** use `docs/features/<feature>/` as the long-term home for planning — those folders are temporary until `/wrapup`; see **Active features in progress** below. Hub page: [[products/finfluencer-trade]] § Planning and strategy.
+
 ---
 
 ## Tech stack
@@ -29,7 +39,7 @@ The data engine. Everything from RSS feed polling through to `ActionableSignal` 
 | Orchestration | Dagster 1.10.19 — Cloud hybrid, GCE agent |
 | Language | Python ≥ 3.10 |
 | Dependency management | Poetry — all Dagster packages pinned to exact versions |
-| Data warehouse | Google BigQuery — **`dagster_prod`** (RSS/content catalogue) + **`dagster_shared`** (pipeline warehouse); see [[entities/bigquery]] |
+| Data warehouse | Google BigQuery — **`dagster_prod`** (RSS/content catalogue) + **`dagster_shared`** (pipeline warehouse) + **`dagster_prices`** (prices and signal performance); see [[entities/bigquery]] |
 | App database | Supabase (PostgreSQL) — nightly read-replica of BigQuery |
 | File storage | GCS: `gor-media-prod` (audio/images), `gor-stt-transcripts` (transcripts — hardcoded) |
 | STT providers | AssemblyAI, Deepgram Nova-2/Nova-3, ElevenLabs Scribe, Google STT, Speechmatics, Rev.AI |
@@ -129,7 +139,7 @@ Docs: [ActionableSignal Schema](file:///Users/andreskull/gor_dagster/docs/schema
 
 ### BigQuery datasets (`gurus-on-record`)
 
-Production uses **two** datasets (verified with `bq ls`, 2026-04-06). Default `bigquery_resource` targets `BIGQUERY_DATASET_ID` (typically `dagster_prod` per `env.example`); `app_bq_resource` is fixed to `dagster_shared` in `definitions.py`.
+Production uses **three** datasets for the core pipeline. Default `bigquery_resource` targets `BIGQUERY_DATASET_ID` (typically `dagster_prod` per `env.example`); `app_bq_resource` is fixed to `dagster_shared` in `definitions.py`; price/performance objects live in `dagster_prices`.
 
 #### Content catalogue — `dagster_prod`
 
@@ -155,9 +165,16 @@ Production uses **two** datasets (verified with `bq ls`, 2026-04-06). Default `b
 | `FinancialInstrument` | Canonical stock/instrument (FIGI, ticker, exchange, sector) |
 | `PotentialPrediction` | Raw LLM extraction — all hypotheses including duplicates across FE configs |
 | `ActionableSignal` | **VIEW** over `PotentialPrediction` — deduped, gated, production-ready |
-| `SignalPerformance` | Measured performance per signal per time horizon |
 | `PredictionContext` | Audio/video clip context for a signal |
 | `PendingSpeakerResolution` | Speaker names that need human review to map to a Finfluencer |
+
+#### Price and performance warehouse — `dagster_prices`
+
+| Entity | What it is |
+|---|---|
+| `PriceHistory` | Daily OHLCV and adjusted prices used for returns |
+| `TradingCalendar` | Trading-session calendar and sequential day numbers |
+| `SignalPerformance` | Measured performance per signal per time horizon |
 
 **Operational tables (`dagster_shared`):**
 

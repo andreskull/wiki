@@ -4,7 +4,7 @@ title: "BigQuery"
 product: null
 project: null
 created: 2026-04-06
-updated: 2026-04-06
+updated: 2026-04-29
 tags: [bigquery, gcp, data-warehouse, sql]
 ---
 
@@ -14,9 +14,10 @@ Google Cloud's serverless data warehouse. Used across multiple projects.
 
 ## How it's used
 
-- **finfluencer.trade / gor_dagster (project `gurus-on-record`):** Two datasets, split by role. Verified with `bq ls` (2026-04-06):
+- **finfluencer.trade / gor_dagster (project `gurus-on-record`):** Core objects are split by role across three datasets:
   - **`dagster_prod`** — RSS / episode catalogue only: `ContentSource`, `ContentItem`, `ContentSourceTimingConfig`. This is what the default `bigquery_resource` uses via `BIGQUERY_DATASET_ID` (see `gor_dagster/env.example`).
-  - **`dagster_shared`** — Main pipeline warehouse: `Finfluencer`, `FinancialInstrument`, `PotentialPrediction`, `ActionableSignal` (view), `stt_operations`, `stt_speaker_attributions`, batch job tables, facts extraction, performance views, and dozens of other tables/views. The `app_bq_resource` in `definitions.py` is pinned to `dagster_shared` (not env-driven) for assets that must always hit that dataset.
+  - **`dagster_shared`** — Main pipeline warehouse: `Finfluencer`, `FinancialInstrument`, `PotentialPrediction`, `ActionableSignal` (view), `stt_operations`, `stt_speaker_attributions`, batch job tables, facts extraction, and dozens of other tables/views. The `app_bq_resource` in `definitions.py` is pinned to `dagster_shared` (not env-driven) for assets that must always hit that dataset.
+  - **`dagster_prices`** — Price and performance warehouse: `PriceHistory`, `TradingCalendar`, `SignalPerformance`, and performance aggregate views. `SignalPerformance` lives here, not in `dagster_shared`.
 - **rattaproff:** Indexing backlog governance — URL action queue with status metadata.
 
 ## Key patterns (gor_dagster)

@@ -4,7 +4,7 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-04-06
+updated: 2026-04-27
 tags: [finfluencer, auth, landing, vercel, supabase, react]
 ---
 
@@ -19,6 +19,10 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, billi
 ## Purpose and role
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and are intended to reach the app via Supabase sync (see repo `docs/architecture/data-layer.md`).
+
+## MVP and planning docs (source of truth)
+
+Shipped MVP scope for this app is documented in **`gor_dagster`**, not in this repo: [`MVP_MASTER_PLAN.md`](file:///Users/andreskull/gor_dagster/docs/MVP_MASTER_PLAN.md). Post-MVP backlog: [`INCR_01_MASTER_PLAN.md`](file:///Users/andreskull/gor_dagster/docs/INCR_01_MASTER_PLAN.md). Operations: [`finfluencers-app-runbook.md`](file:///Users/andreskull/gor_dagster/docs/operations/finfluencers-app-runbook.md). Growth / GTM: [`gor-blog/growth_plan.md`](file:///Users/andreskull/gor-blog/growth_plan.md). Full table: [[products/finfluencer-trade]] § Planning and strategy.
 
 ## Tech stack
 

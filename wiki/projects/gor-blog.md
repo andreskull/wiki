@@ -4,8 +4,8 @@ title: "gor-blog"
 product: finfluencer-trade
 project: gor-blog
 created: 2026-04-06
-updated: 2026-04-27
-tags: [blog, mkdocs, content, finfluencer, research, articles]
+updated: 2026-04-29
+tags: [blog, mkdocs, content, finfluencer, research, articles, newsletter, convertkit]
 ---
 
 # gor-blog
@@ -26,17 +26,18 @@ The public voice of the platform. Publishes research on finfluencer prediction q
 - **Content format:** Markdown (blog posts, directory)
 - **Hosting:** [Vercel](https://vercel.com/) — static build (`mkdocs build` / `vercel-build`); env and domains documented in the repo `README.md`
 - **Assets:** Fonts, logos, images in `docs/assets/`
+- **Newsletter / Kit:** `api/newsletter/` — `send.py`, ConvertKit client, `import_registered_users.py` (Supabase → same tag as footer, `GOR_NEWSLETTER_SUBS`). Wrap-up: [`registered-users-kit-import.md`](file:///Users/andreskull/gor-blog/api/newsletter/registered-users-kit-import.md); full ops in [`README.md`](file:///Users/andreskull/gor-blog/api/newsletter/README.md).
 
 ## Important structural note
 
-`docs/` in this repo IS the MkDocs site source, not project documentation. There is no separate `docs/architecture/` or similar — the published content is the output.
+`docs/` in this repo IS the MkDocs site source, not project documentation. There is no separate `docs/architecture/` — the published content is the output. In-progress feature specs are not kept under `docs/` after wrapup; internal notes sit next to code (e.g. `api/newsletter/registered-users-kit-import.md`).
 
 ```
 docs/
-├── blog/posts/     ← published articles (14 posts as of bootstrap)
+├── blog/posts/     ← published articles
 ├── assets/         ← images, fonts, logos
 ├── directory/      ← finfluencer directory content
-└── features/       ← empty (spec-driven scaffold, unused)
+└── (no docs/features/ — removed after newsletter-import wrapup 2026-04)
 ```
 
 ## Published content (as of 2026-04-06)
@@ -62,9 +63,13 @@ Vault methodology archive: [[sources/2026-04-07-cramer-mad-money-performance-met
 
 New articles about finfluencers or the platform are written directly as posts in `docs/blog/posts/`. Working drafts may live under **`research/`** or the wiki **`raw/`** folder; published posts are content outputs in `docs/blog/posts/`.
 
+## Growth and product strategy
+
+**[`growth_plan.md`](file:///Users/andreskull/gor-blog/growth_plan.md)** (repo root) — Finfluencers.trade growth plan, competitive notes, and pre-launch actions. Central index: [[products/finfluencer-trade]] § Planning and strategy.
+
 ## Current status
 
-Live site with active publication. 14+ posts published. Directory operational. Cramer working paper is public on **SSRN** and **GitHub** (see [[projects/cramer-mad-money-research]]); private `research/cramer/` holds export/spec/admin files only.
+Live site with active publication. 14+ posts published. Directory operational. **Newsletter:** registered finfluencer-tracker users can be merged into Kit tag **`GOR_NEWSLETTER_SUBS`** via CLI import (see repo `api/newsletter/`); template and Gmail dark-mode guidance in `convertkit_template_final.html` / README. Cramer working paper is public on **SSRN** and **GitHub** (see [[projects/cramer-mad-money-research]]); private `research/cramer/` holds export/spec/admin files only.
 
 ## Related pages
 

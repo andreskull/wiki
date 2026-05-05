@@ -2,16 +2,16 @@
 type: overview
 title: "Wiki Overview"
 created: 2026-04-06
-updated: 2026-04-25
+updated: 2026-04-29
 ---
 
 # Wiki Overview
 
-Three products, one methodology, one wiki. Updated: 2026-04-25.
+Three products, one methodology, one wiki. Updated: 2026-04-29.
 
 ## Products
 
-**[[products/finfluencer-trade]]** — Financial influencer accountability platform. Ingests podcast content, transcribes it, extracts stock picks, tracks prediction performance. Core repos: `gor_dagster` (data pipeline), `gor-blog` (public site; private **`research/cramer/`** = Cramer export scripts, specs, SSRN admin), `finfluencer-tracker` (auth/landing layer). **`cramer-mad-money-research`** — public reproducibility kit + **SSRN** working paper [6643379](https://ssrn.com/abstract=6643379). Pipeline is production-ready; **Dagster Cloud credit optimization** wrapped to `docs/architecture/features/` (2026-04-25); **8** feature folders remain in `gor_dagster/docs/features/`.
+**[[products/finfluencer-trade]]** — Financial influencer accountability platform. Ingests podcast content, transcribes it, extracts stock picks, tracks prediction performance. Core repos: `gor_dagster` (data pipeline), `gor-blog` (public site + **`api/newsletter/`** ConvertKit tooling and Supabase→`GOR_NEWSLETTER_SUBS` import; private **`research/cramer/`** = Cramer export scripts, specs, SSRN admin), `finfluencer-tracker` (auth/landing layer). **`cramer-mad-money-research`** — public reproducibility kit + **SSRN** working paper [6643379](https://ssrn.com/abstract=6643379). **Planning docs** (growth plan, app MVP spec, post-MVP increments, app runbook) are linked from the product page — not from transient `gor_dagster/docs/features/<feature>/`. Pipeline is production-ready; **Dagster Cloud credit optimization** wrapped to `docs/architecture/features/` (2026-04-25); **8** feature folders remain in `gor_dagster/docs/features/`.
 
 **[[products/rattaproff]]** — WooCommerce multi-store automation for a network of 7 e-commerce storefronts. Single repo. Handles supplier ingestion, pricing, publishing, and Google Indexing API quota management. Operational but docs sparse.
 

@@ -4,7 +4,7 @@ title: "finfluencer.trade"
 product: finfluencer-trade
 project: null
 created: 2026-04-06
-updated: 2026-04-25
+updated: 2026-04-27
 tags: [finfluencer, finance, pipeline, dagster, blog, tracking]
 ---
 
@@ -56,6 +56,19 @@ Active development. Pipeline is production-ready for core transcription and fact
 - **finfluencer-tracker (app layer):** **two Supabase instances** — one for **production** and one for **development** — so app/auth data can be isolated while the app still reads pipeline data sourced from production backend stores.
 - Facts extraction uses `ActionableSignal` VIEW over `PotentialPrediction` table — deduplicates by FE config priority
 - Blog (`gor-blog`) uses MkDocs; its `docs/` folder is the site source, not project documentation
+
+## Planning and strategy (durable docs)
+
+Use these when you need **growth**, **app MVP scope**, or **post-MVP product backlog** — not transient feature folders.
+
+| What | Where |
+|---|---|
+| Growth / GTM / pre-launch plan | [`gor-blog/growth_plan.md`](file:///Users/andreskull/gor-blog/growth_plan.md) (repo root, not under `docs/`) |
+| Shipped **finfluencer-tracker** MVP (achievement spec) | [`gor_dagster/docs/MVP_MASTER_PLAN.md`](file:///Users/andreskull/gor_dagster/docs/MVP_MASTER_PLAN.md) |
+| Deferred product work after MVP | [`gor_dagster/docs/INCR_01_MASTER_PLAN.md`](file:///Users/andreskull/gor_dagster/docs/INCR_01_MASTER_PLAN.md) |
+| App runbook (access, Stripe, E2E, blog URL) | [`gor_dagster/docs/operations/finfluencers-app-runbook.md`](file:///Users/andreskull/gor_dagster/docs/operations/finfluencers-app-runbook.md) |
+
+**Not indexed here for planning:** `gor_dagster/docs/features/<feature>/` — temporary spec folders during active development; after `/wrapup`, durable write-ups land under `gor_dagster/docs/architecture/` or `docs/architecture/features/`. See [[projects/gor_dagster]].
 
 ## Related pages
 

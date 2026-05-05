@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-04-27
+updated: 2026-04-29
 ---
 
 # Wiki Index
@@ -21,7 +21,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Description |
 |------|-------------|
-| [[wiki/products/finfluencer-trade]] | Financial influencer accountability platform — 3 repos |
+| [[wiki/products/finfluencer-trade]] | Financial influencer accountability platform — planning hub (growth + MVP docs on product page) |
 | [[wiki/products/rattaproff]] | WooCommerce multi-store automation — 7 storefronts |
 | [[wiki/products/botastico]] | Stub — 7 repos, not yet indexed |
 
@@ -31,8 +31,8 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Product | Status |
 |------|---------|--------|
-| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — Dagster Cloud credit optimization wrapped 2026-04-25; 8 features still in `docs/features/` |
-| [[wiki/projects/gor-blog]] | finfluencer.trade | Active — private `research/cramer/` (exports, specs, SSRN notes) |
+| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — SignalPerformance dataset corrected to `dagster_prices`; 8 features still in `docs/features/` |
+| [[wiki/projects/gor-blog]] | finfluencer.trade | Active — MkDocs site; `api/newsletter/` (Kit + Supabase→tag import); private `research/cramer/` |
 | [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — `docs/architecture/` in repo |
 | [[wiki/projects/rattaproff]] | rattaproff | Operational — docs sparse |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Active |
