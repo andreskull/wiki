@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-05-05
+updated: 2026-05-12
 ---
 
 # Wiki Index
@@ -22,7 +22,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | Page | Description |
 |------|-------------|
 | [[wiki/products/finfluencer-trade]] | Financial influencer accountability platform — planning hub (growth + MVP docs on product page) |
-| [[wiki/products/rattaproff]] | WooCommerce multi-store automation — 7 storefronts |
+| [[wiki/products/rattaproff]] | WooCommerce multi-store automation — 7 storefronts; HUF→EUR pricing concept [[wiki/concepts/huf-eur-pipeline-pricing]] |
 | [[wiki/products/botastico]] | Stub — 7 repos, not yet indexed |
 
 ---
@@ -31,10 +31,10 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Product | Status |
 |------|---------|--------|
-| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — SignalPerformance dataset corrected to `dagster_prices`; 8 features still in `docs/features/` |
-| [[wiki/projects/gor-blog]] | finfluencer.trade | Active — MkDocs site; `api/newsletter/` (Kit + Supabase→tag import); private `research/cramer/` |
+| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — `signal-pruning-performance` wrapped May 2026; baseline table retired |
+| [[wiki/projects/gor-blog]] | finfluencer.trade | Active — CTA pattern shipped (Cramer post); apex `/api/subscribe` via landing rewrite; `api/newsletter/`; `research/cramer/` |
 | [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — `docs/architecture/` in repo |
-| [[wiki/projects/rattaproff]] | rattaproff | Operational — docs sparse |
+| [[wiki/projects/rattaproff]] | rattaproff | Operational — HUF/EUR pricing doc + `_build_supplier_huf_base_df` fix (May 2026) |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Active |
 | [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | Public kit + SSRN 6643379 — CSVs, scripts, paper |
 
@@ -57,7 +57,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/concepts/signal-performance]] | Signal → horizons: truncation, implicit opposite-direction close (same instrument) |
 | [[wiki/concepts/llm-config-registry]] | How multi-model experimentation is managed |
 | [[wiki/concepts/spec-driven-development]] | The development methodology loop |
-| [[wiki/concepts/blog-post-cta-pattern]] | Required CTAs on every gor-blog post (above-fold, mid-article, end-of-post, internal links) |
+| [[wiki/concepts/huf-eur-pipeline-pricing]] | rattaproff: HUF sheet vs per-site EUR recompute for Woo diffs |
 
 ---
 

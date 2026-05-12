@@ -4,7 +4,7 @@ title: "rattaproff"
 product: rattaproff
 project: rattaproff
 created: 2026-04-06
-updated: 2026-04-06
+updated: 2026-05-12
 tags: [woocommerce, ecommerce, automation, gcp, bigquery, indexing, supplier, python]
 ---
 
@@ -30,7 +30,7 @@ Everything in one repo: supplier catalogue ingestion, reconciliation with Google
 
 ## Key modules
 
-- `suppliers.py` / `process.py` — supplier ingestion and normalisation
+- `suppliers.py` / `process.py` — supplier ingestion and normalisation; HUF→EUR pricing and per-site recompute for Woo diffs ([[concepts/huf-eur-pipeline-pricing]])
 - `woo.py` — WooCommerce publishing (per-site credentials via env)
 - `bigquery_backlog.py` / `indexing_api_utils.py` — indexing queue and quota management
 - `indexing_dispatcher_function/` — Cloud Function, 200 URLs/day limit
@@ -45,9 +45,10 @@ Has `.ai-rules/` with `product.md`, `tech.md`, `structure.md` populated.
 
 ## Current status
 
-Operational. Documentation sparse — architecture and operations folders created but not yet populated. Priority to run `/wrapup` on `database-sync` feature when complete.
+Operational. **HUF/EUR:** default rate is 350 HUF per EUR repo-wide (`DEFAULT_HUF_EUR_RATE`); per-site overrides live in `SITE_HUF_EUR_RATES` (currently empty = all sites use default). Architecture note: [huf-eur-per-site-pricing.md](file:///Users/andreskull/rattaproff/docs/architecture/huf-eur-per-site-pricing.md). Wiki concept: [[concepts/huf-eur-pipeline-pricing]]. Documentation elsewhere still sparse — `/wrapup` on `database-sync` when complete.
 
 ## Related pages
 
 - [[products/rattaproff]]
+- [[concepts/huf-eur-pipeline-pricing]]
 - [[entities/bigquery]]

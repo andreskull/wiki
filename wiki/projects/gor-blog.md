@@ -4,7 +4,7 @@ title: "gor-blog"
 product: finfluencer-trade
 project: gor-blog
 created: 2026-04-06
-updated: 2026-05-05
+updated: 2026-05-06
 tags: [blog, mkdocs, content, finfluencer, research, articles, newsletter, convertkit]
 ---
 
@@ -30,15 +30,27 @@ The public voice of the platform. Publishes research on finfluencer prediction q
 
 ## Important structural note
 
-`docs/` in this repo IS the MkDocs site source, not project documentation. There is no separate `docs/architecture/` — the published content is the output. In-progress feature specs are not kept under `docs/` after wrapup; internal notes sit next to code (e.g. `api/newsletter/registered-users-kit-import.md`).
+`docs/` in this repo IS the MkDocs site source, not project documentation. There is no separate `docs/architecture/` — the published content is the output.
+
+**Feature specs (requirements / design / tasks) live at `gor-blog/features/<feature-name>/`, NOT under `docs/`.** This is a **gor-blog-specific deviation** from the standard `docs/features/` convention used in `gor_dagster`, `finfluencer-tracker`, and `rattaproff` — putting feature specs under `docs/` would expose them on the public MkDocs site (`finfluencers.trade`). All in-progress feature work for this repo must use `features/` at repo root. Established 2026-05-05. After wrapup, durable notes move to [`WIKI.md`](file:///Users/andreskull/gor-blog/WIKI.md) (and wiki) and the feature folder is removed.
 
 ```
-docs/
-├── blog/posts/     ← published articles
-├── assets/         ← images, fonts, logos
-├── directory/      ← finfluencer directory content
-└── (no docs/features/ — removed after newsletter-import wrapup 2026-04)
+gor-blog/
+├── docs/                    ← MkDocs site source (PUBLIC)
+│   ├── blog/posts/          ← published articles
+│   ├── assets/              ← images, fonts, logos
+│   ├── directory/           ← finfluencer directory content
+│   └── stylesheets/         ← theme overrides
+├── features/                ← feature specs (PRIVATE — outside MkDocs build)
+│   └── <feature-name>/
+│       ├── requirements.md
+│       ├── design.md
+│       └── tasks.md
+├── research/                ← long-form research drafts (PRIVATE)
+└── api/                     ← newsletter / Kit integration code
 ```
+
+Internal implementation notes that are tightly coupled to specific code modules sit next to that code (e.g. `api/newsletter/registered-users-kit-import.md`), not under `features/`.
 
 ## Published content (as of 2026-04-06)
 
@@ -65,15 +77,15 @@ New articles about finfluencers or the platform are written directly as posts in
 
 ## Growth and product strategy
 
-**[`growth_plan.md`](file:///Users/andreskull/gor-blog/growth_plan.md)** (repo root) — Finfluencers.trade growth plan, competitive notes, and pre-launch actions. Central index: [[products/finfluencer-trade]] § Planning and strategy.
+**[`growth_plan.md`](file:///Users/andreskull/gor-blog/growth_plan.md)** (repo root) — Finfluencers.trade growth plan, competitive notes, and pre-launch actions. Central index: [[products/finfluencer-trade]] § Planning and strategy. The *Cramer Paper Promotion Plan* phased checklist lives there; the **live cross-channel campaign log** (permalinks, metrics, variants) is [`research/cramer/promotion/cramer-study-launch-campaign.md`](file:///Users/andreskull/gor-blog/research/cramer/promotion/cramer-study-launch-campaign.md) *(supersedes the old `linkedin_promotion_plan.md` path)*.
 
 ## Required elements on every blog post
 
-Every blog post in `docs/blog/posts/` must include the CTAs codified in [[concepts/blog-post-cta-pattern]] before publishing — above-the-fold module, inline mid-article module, expanded end-of-post block (newsletter + product CTA), and internal product links throughout the body. The pattern was established 2026-05-05 after the Cramer launch revealed 92% article-to-product abandonment uniform across acquisition channels (GA4 Funnel exploration, May 4 2026). See `research/cramer/promotion/linkedin_promotion_plan.md` § *Day 1 learnings + plan revision* for the source data.
+Every blog post in `docs/blog/posts/` must include the CTAs codified in [[concepts/blog-post-cta-pattern]] before publishing — above-the-fold module, inline mid-article module, expanded end-of-post block (newsletter + product CTA), and internal product links throughout the body. The pattern was established 2026-05-05 after the Cramer launch revealed 92% article-to-product abandonment uniform across acquisition channels (GA4 Funnel exploration, May 4 2026). See `research/cramer/promotion/cramer-study-launch-campaign.md` § *Day 1 learnings + plan revision* for the source data.
 
 ## Current status
 
-Live site with active publication. 14+ posts published. Directory operational. **Newsletter:** registered finfluencer-tracker users can be merged into Kit tag **`GOR_NEWSLETTER_SUBS`** via CLI import (see repo `api/newsletter/`); template and Gmail dark-mode guidance in `convertkit_template_final.html` / README. Cramer working paper is public on **SSRN** and **GitHub** (see [[projects/cramer-mad-money-research]]); private `research/cramer/` holds export/spec/admin files only.
+Live site with active publication. 14+ posts published. Directory operational. **Newsletter:** footer form POSTs to **`/api/subscribe`** on gor-blog (Vercel serverless). When the blog is viewed via **`finfluencers.trade/blog/...`**, the landing app (**[[projects/finfluencer-tracker]]**) rewrites **`/api/subscribe`** to **`blog.finfluencers.trade`** so subscriptions work at apex. Registered app users can still be merged into Kit tag **`GOR_NEWSLETTER_SUBS`** via CLI import (see repo `api/newsletter/`). **Cramer post CTA pattern** (hero + inline + end-of-post dual card + internal links) is implemented on the Cramer methodology post (`jim-cramer-stock-picks-study.md`); CSS classes **`.ft-cta-hero`** / **`.ft-cta-inline`** in `docs/stylesheets/extra.css` — see [`WIKI.md`](file:///Users/andreskull/gor-blog/WIKI.md) § *Blog post CTA pattern*. Cramer working paper is public on **SSRN** and **GitHub** (see [[projects/cramer-mad-money-research]]); private `research/cramer/` holds export/spec/admin files only.
 
 ## Related pages
 

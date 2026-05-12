@@ -4,7 +4,7 @@ title: "Blog post CTA pattern"
 product: finfluencer-trade
 project: gor-blog
 created: 2026-05-05
-updated: 2026-05-05
+updated: 2026-05-06
 tags: [blog, cta, conversion, funnel, growth, mkdocs]
 ---
 
@@ -24,7 +24,7 @@ The Cramer post launch on 2026-05-04 produced 25 article landings. Funnel explor
 | https://www.linkedin.com/ | 2 | 0 | 0% |
 | https://www.facebook.com/ | 1 | 0 | 0% |
 
-The 92% abandonment was uniform across channels. Even Reddit — the strongest acquisition channel — had 0 of 13 desktop visitors progress. No amount of channel tuning solves this; the article itself needs clear next-step CTAs. Source: `gor-blog/research/cramer/promotion/linkedin_promotion_plan.md` § *Day 1 learnings + plan revision*.
+The 92% abandonment was uniform across channels. Even Reddit — the strongest acquisition channel — had 0 of 13 desktop visitors progress. No amount of channel tuning solves this; the article itself needs clear next-step CTAs. Source: `gor-blog/research/cramer/promotion/cramer-study-launch-campaign.md` § *Day 1 learnings + plan revision*.
 
 ## Required elements (every new post)
 
@@ -43,6 +43,10 @@ Every blog post in `gor-blog/docs/blog/posts/` must include items 1–4 before p
 5. **Sticky element.** A persistent bottom bar or sidebar visible during scroll: *"Track 200+ finfluencers →"*. Should be dismissible. Implement once in the MkDocs theme; applies to every post automatically thereafter.
 
 6. **Author/sidebar product CTA.** Extend the existing Andres Kull author block with a small product link: *"→ Track signals on finfluencers.trade"*.
+
+## Implementation reference (gor-blog)
+
+First complete application: **May 2026** — [`jim-cramer-stock-picks-study.md`](file:///Users/andreskull/gor-blog/docs/blog/posts/jim-cramer-stock-picks-study.md) (live: `https://finfluencers.trade/blog/2026/04/27/what-i-learned-from-16701-jim-cramer-stock-picks/`). Shared styles: **`docs/stylesheets/extra.css`** — **`.ft-cta-hero`**, **`.ft-cta-hero__copy`**, **`.ft-cta-hero__button`**, **`.ft-cta-inline`**. End-of-post block on that post uses the newsletter card plus a secondary leaderboard CTA (per-post HTML until a theme-level rollout). Durable notes: [`WIKI.md`](file:///Users/andreskull/gor-blog/WIKI.md) § *Blog post CTA pattern*.
 
 ## Style guidelines
 
@@ -64,4 +68,4 @@ When a new blog post is drafted, the writer (or LLM assistant) opens this page a
 ## Sources
 
 - GA4 Funnel exploration "Cramer blog funnel", May 4 2026 (Page referrer breakdown).
-- `gor-blog/research/cramer/promotion/linkedin_promotion_plan.md` § *Day 1 learnings + plan revision*.
+- `gor-blog/research/cramer/promotion/cramer-study-launch-campaign.md` § *Day 1 learnings + plan revision*.

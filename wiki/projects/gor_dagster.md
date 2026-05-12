@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-04-29
+updated: 2026-05-05
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase]
 ---
 
@@ -125,7 +125,7 @@ Docs: [Instrument Resolution Reference](file:///Users/andreskull/gor_dagster/doc
 - `proof_segments_speaker_status = 'resolved'`
 - FE config priority deduplication (highest-priority FE config per episode wins)
 
-`SignalPerformance` tracks each signal across standard horizons (1w, 1m, 3m, 6m, 1y). Price data ingested via EODHD API. **Truncated horizons** (position ends before the horizon completes) are **not** stored. A position ends on an explicit `close_long` / `close_short`, or **implicitly** when the same finfluencer issues an opposite-direction `start_*` / `hold_*` on the **same instrument** (boundary = `first_tradeable_session_date` of the flip). See [[concepts/signal-performance]] and [Performance Methodology](file:///Users/andreskull/gor_dagster/docs/architecture/performance-methodology.md).
+`SignalPerformance` tracks each signal across standard horizons (1w, 1m, 3m, 6m, 1y). Price data ingested via EODHD API. **Truncated horizons** (position ends before the horizon completes) are **not** stored. A position ends on an explicit `close_long` / `close_short`, or **implicitly** when the same finfluencer issues an opposite-direction `start_*` / `hold_*` on the **same instrument** (boundary = `first_tradeable_session_date` of the flip). **Signal pruning (2026-05):** within-sequence redundant mentions are pruned in `SignalSequence`; Supabase **`mat_signal_performance`** merges un-pruned **`SignalPerformance`** with `mat_signals`, while finfluencer aggregate mats filter with **`mat_signals.is_kept`** so leaderboards reflect kept calls. **`SignalPerformance_pruned`** is the kept-only calculator table for QA. The cutover snapshot **`SignalPerformance_baseline`** is retired — Dagster does not write it; the physical BigQuery table was dropped after cutover ([feature doc](file:///Users/andreskull/gor_dagster/docs/architecture/features/signal-pruning-performance.md)). See [[concepts/signal-performance]] and [Performance Methodology](file:///Users/andreskull/gor_dagster/docs/architecture/performance-methodology.md).
 
 `SignalCurrentPerformance` (BigQuery VIEW) and the `calculate_signal_performance` asset share the same truncation logic (`implicit_close_signals` ∪ `close_signals` in SQL).
 
@@ -174,7 +174,9 @@ Production uses **three** datasets for the core pipeline. Default `bigquery_reso
 |---|---|
 | `PriceHistory` | Daily OHLCV and adjusted prices used for returns |
 | `TradingCalendar` | Trading-session calendar and sequential day numbers |
-| `SignalPerformance` | Measured performance per signal per time horizon |
+| `SignalPerformance` | Measured performance per signal per time horizon (full calculator output; source for `mat_signal_performance`) |
+| `SignalPerformance_pruned` | Kept-only performance rows (`calculate_pruned_signal_performance`) for pruning QA |
+| `SignalPerformance_baseline` | **Removed** — cutover-only snapshot; not recreated by Dagster; physical table dropped **2026-05** |
 
 **Operational tables (`dagster_shared`):**
 
@@ -334,6 +336,7 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 | Completed | Topic | Doc |
 |---|---|---|
 | 2026-04-25 | Dagster Cloud credit optimization | [dagster-cloud-credit-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/dagster-cloud-credit-optimization.md) |
+| 2026-05-04 | Signal pruning & hybrid performance serving | [signal-pruning-performance.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/signal-pruning-performance.md) |
 
 ---
 
@@ -343,13 +346,11 @@ These are currently in `docs/features/` — temporary, not indexed by wiki. Run 
 
 | Feature | Folder |
 |---|---|
+| Speaker recommendation patterns (Increment 7; gor-blog) | `speaker-recommendation-patterns/` |
 | BigQuery cost optimization | `bigquery-cost-optimization/` |
 | LLM batch processing | `batch-integration/` |
-| Finfluencer affiliations human curation | `finfluencer-affiliations-human-curation/` |
-| Instrument resolution bulk manual curation | `instrument-resolution-bulk-manual-curation/` |
 | Pipeline model priority and retries | `pipeline-model-priority-retries/` |
 | Post-MVP loops migration | `post-mvp-loops-migration/` |
-| Proof-segment speaker resolution | `proof-segment-speaker-resolution/` |
 | Social share previews | `social-share-previews/` |
 
 ---

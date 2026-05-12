@@ -4,7 +4,7 @@ title: "rattaproff"
 product: rattaproff
 project: null
 created: 2026-04-06
-updated: 2026-04-06
+updated: 2026-05-12
 tags: [rattaproff, woocommerce, ecommerce, automation, google-indexing, gcp]
 ---
 
@@ -31,7 +31,7 @@ Rattaproff automates the full cycle from supplier catalogue ingestion to live pr
 ## Architecture summary
 
 Python-based automation suite on GCP. Key components:
-- **Supplier ingestion** (`suppliers.py`, `process.py`) — normalise catalogue data, price calculations, image validation
+- **Supplier ingestion** (`suppliers.py`, `process.py`) — normalise catalogue data, HUF→EUR pricing ([[concepts/huf-eur-pipeline-pricing]]), image validation
 - **WooCommerce publishing** (`woo.py`) — per-site credentials, create/update/delete operations
 - **Indexing backlog governance** (`bigquery_backlog.py`, `indexing_api_utils.py`) — BigQuery-backed queue, quota enforcement
 - **Indexing dispatcher** — Cloud Function processing up to 200 URLs/day via Cloud Scheduler
@@ -44,3 +44,4 @@ Operational. Core supplier-to-storefront pipeline running. Docs scaffold created
 ## Related pages
 
 - [[projects/rattaproff]]
+- [[concepts/huf-eur-pipeline-pricing]]
