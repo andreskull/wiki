@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-05-05
+updated: 2026-05-17
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase]
 ---
 
@@ -59,9 +59,11 @@ The pipeline is a seven-stage sequence. Each stage consumes the output of the pr
 
 Polls RSS feeds for all configured `ContentSource` records. For each new episode: creates a `ContentItem`, downloads audio to `gs://gor-media-prod/sources/podcasts/{show_id}/{episode_id}.mp3`. The `rss_episode_ingestion_sensor` runs on a configurable `RSS_POLL_INTERVAL_SEC` (default 300s). Download retries use exponential backoff; permanent failures (`download_error:unsupported_media_type`, `download_error:network`) stop retries and flag for manual review.
 
+**Production RSS catalogue (six `ContentSource` rows in the SI-monitored podcast set):** Fast Money (`49400b5b-6e3e-4c0d-be0b-8cd7ab18ba74`), Mad Money (`e6a22166-82ca-482d-b54b-4a1f016948c3`), Hedgeye (`8a61349e-9df2-4397-bc76-b4af8b0fb9d8`), Halftime Report (`c925324b-63e2-4f10-a074-6e4ed7da2d0b`), Morning Filter (`4f158ea6-c1c4-43f1-86e3-3d96fed6dd80` — [morning-filter-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/morning-filter-ingestion.md)), **Compound and Friends** (`0b75ea6c-20b2-4a7c-89db-b0899788a8cc` — [compound-and-friends-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/compound-and-friends-ingestion.md), Pippa feed `https://feed.pippa.io/public/shows/5c1d3a90e6bc692c38b2221f`, `external_id` `5c1d3a90e6bc692c38b2221f`, enclosure **Pattern 3** Megaphone `TCP…`). Canonical UUID list: [`si_sensor.PIPELINE_SI_MONITORED_CONTENT_SOURCE_IDS`](file:///Users/andreskull/gor_dagster/gor_dagster/sensors/si_sensor.py).
+
 Key assets: `rss_new_episodes_identified`, `rss_episode_ingestion_orchestrator`, `rss_episode_ingestion_sensor`
 
-Docs: [RSS Ingestion Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/rss-ingestion-architecture.md), [RSS Ingestion Guide](file:///Users/andreskull/gor_dagster/docs/operations/rss-ingestion-guide.md)
+Docs: [RSS Ingestion Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/rss-ingestion-architecture.md), [RSS Ingestion Guide](file:///Users/andreskull/gor_dagster/docs/operations/rss-ingestion-guide.md), [Onboarding a New Podcast Source — Playbook](file:///Users/andreskull/gor_dagster/docs/operations/onboarding-new-podcast-source.md) (wiki: [[concepts/onboarding-new-podcast-source]])
 
 ### Stage 2 — STT Transcription
 
@@ -123,7 +125,7 @@ Docs: [Instrument Resolution Reference](file:///Users/andreskull/gor_dagster/doc
 - `extraction_confidence >= 0.7`
 - `finfluencer.status = 'active'`
 - `proof_segments_speaker_status = 'resolved'`
-- FE config priority deduplication (highest-priority FE config per episode wins)
+- FE config priority deduplication (highest-priority FE config per episode wins — DeepSeek `fe-dsv4fr-*` above retained grok tiers when both exist; see `ActionableSignal.sql`)
 
 `SignalPerformance` tracks each signal across standard horizons (1w, 1m, 3m, 6m, 1y). Price data ingested via EODHD API. **Truncated horizons** (position ends before the horizon completes) are **not** stored. A position ends on an explicit `close_long` / `close_short`, or **implicitly** when the same finfluencer issues an opposite-direction `start_*` / `hold_*` on the **same instrument** (boundary = `first_tradeable_session_date` of the flip). **Signal pruning (2026-05):** within-sequence redundant mentions are pruned in `SignalSequence`; Supabase **`mat_signal_performance`** merges un-pruned **`SignalPerformance`** with `mat_signals`, while finfluencer aggregate mats filter with **`mat_signals.is_kept`** so leaderboards reflect kept calls. **`SignalPerformance_pruned`** is the kept-only calculator table for QA. The cutover snapshot **`SignalPerformance_baseline`** is retired — Dagster does not write it; the physical BigQuery table was dropped after cutover ([feature doc](file:///Users/andreskull/gor_dagster/docs/architecture/features/signal-pruning-performance.md)). See [[concepts/signal-performance]] and [Performance Methodology](file:///Users/andreskull/gor_dagster/docs/architecture/performance-methodology.md).
 
@@ -192,7 +194,7 @@ Production uses **three** datasets for the core pipeline. Default `bigquery_reso
 ### The ActionableSignal VIEW — critical rules
 
 - **Never DELETE from `ActionableSignal`** — it's a VIEW. Delete from `PotentialPrediction` instead.
-- **FE config priority deduplication** — only the highest-priority `fe_config_id` per episode appears. Current priority order: `fe-gpt-5.2` (1) → `fe-gpt-5` (2) → `fe-grok-4-fast-reasoning-65k` (3) → others. Managed via `scripts/update_actionable_signal_view.py`.
+- **FE config priority deduplication** — only the highest-priority `fe_config_id` per episode appears. Priority order (**`gor_dagster/sql/views/ActionableSignal.sql` `fe_priority`**): **`fe-gpt-5.2`** (1) → **`fe-gpt-5`** (2) → **`fe-dsv4fr-65k`** / **`fe-dsv4fr-58k`** (DeepSeek tiers) → **`fe-grok-4-fast-reasoning*`** (~5–8) → other / unknown. **`scripts/update_actionable_signal_view.py`** deploys edits to `fe_priority`.
 - **Proof-segment speaker gate** — every row requires `proof_segments_speaker_status = 'resolved'`. No created_at cutoff; rule applies to all signals historical and new.
 
 ### GCS storage structure
@@ -232,7 +234,7 @@ Docs: [Dynamic Allocation API](file:///Users/andreskull/gor_dagster/docs/api/dyn
 
 ### Pipeline model priority and retries
 
-Central policy in `gor_dagster/configs/pipeline_eligibility.py`. Governs:
+Central policy in **`gor_dagster/configs/pipeline_eligibility.py`**. Production SI/FE primary ladder (**2026-05**): **`si-dsv4fr-58k`** / **`fe-dsv4fr-58k`** (DeepSeek-V4-Flash); Grok-era ids remain only for compatibility with historical hydrated transcripts and FE maps. Narrative closure: **[deepseek-v4-flash-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/deepseek-v4-flash-migration.md)**. Governs:
 - Which LLM configs are eligible for SI (Speaker Identification), HY (Hydration), FE (Facts Extraction)
 - Duration-based SI starting config (short episodes vs long)
 - Upward-only retries — FE always picks the best available hydration, re-runs automatically on improvement
@@ -326,6 +328,7 @@ Key rule: all Python code must be written to `.py` files before execution — ne
 | Performance truncation includes implicit flip | Same finfluencer + instrument: opposite-direction `start_*`/`hold_*` truncates prior position; see [[concepts/signal-performance]]. |
 | No mocks in tests | All tests must use real APIs, real BigQuery, real GCS. No mocks, stubs, or test doubles for external services. |
 | Dagster Cloud credit hygiene | Tune sensors/schedules and `RunRequest` fan-out for hybrid orchestration credits; permanent write-up: [dagster-cloud-credit-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/dagster-cloud-credit-optimization.md). |
+| BigQuery bytes + PotentialPrediction guardrail | Partition predicates on hot reads; **`require_partition_filter`** on production `PotentialPrediction`; local lint `check_no_select_star.py`; checklist [bigquery-cost-checklist.md](file:///Users/andreskull/gor_dagster/docs/operations/bigquery-cost-checklist.md); program summary [bigquery-cost-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bigquery-cost-optimization.md). |
 
 ---
 
@@ -335,21 +338,24 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 
 | Completed | Topic | Doc |
 |---|---|---|
+| 2026-05-17 | BigQuery cost optimization (partition guardrails, `SELECT *` lint, cost snapshots under `docs/operations/`) | [bigquery-cost-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bigquery-cost-optimization.md) |
+| 2026-05-15 | Pytest `not expensive` green track (permanent reference; suite alignment) | [pytest-not-expensive-green.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/pytest-not-expensive-green.md) |
+| 2026-05-14 | ContentItem deduplication, ingest guard, BQ apply pipeline | [contentitem-dedupe-and-cleanup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/contentitem-dedupe-and-cleanup.md) — runbook [contentitem-dedupe-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/contentitem-dedupe-runbook.md) |
+| 2026-05-14 | Compound and Friends (Pippa) RSS onboarding + SI allowlist extension | [compound-and-friends-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/compound-and-friends-ingestion.md) |
+| 2026-05-12 | Morning Filter RSS onboarding (third podcast source) | [morning-filter-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/morning-filter-ingestion.md) |
 | 2026-04-25 | Dagster Cloud credit optimization | [dagster-cloud-credit-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/dagster-cloud-credit-optimization.md) |
 | 2026-05-04 | Signal pruning & hybrid performance serving | [signal-pruning-performance.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/signal-pruning-performance.md) |
+| 2026-05-14 | DeepSeek-V4-Flash SI/FE production migration | [deepseek-v4-flash-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/deepseek-v4-flash-migration.md) |
 
 ---
 
 ## Active features in progress
 
-These are currently in `docs/features/` — temporary, not indexed by wiki. Run `/wrapup` when complete.
+These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; not indexed verbatim by wiki.
 
-| Feature | Folder |
+| Feature | Folder / notes |
 |---|---|
-| Speaker recommendation patterns (Increment 7; gor-blog) | `speaker-recommendation-patterns/` |
-| BigQuery cost optimization | `bigquery-cost-optimization/` |
-| LLM batch processing | `batch-integration/` |
-| Pipeline model priority and retries | `pipeline-model-priority-retries/` |
+| Batch LLM integration | `batch-integration/` |
 | Post-MVP loops migration | `post-mvp-loops-migration/` |
 | Social share previews | `social-share-previews/` |
 
@@ -359,8 +365,10 @@ These are currently in `docs/features/` — temporary, not indexed by wiki. Run 
 
 | Topic | Guide |
 |---|---|
-| Daily pipeline operations | [Daily Pipeline Guide](file:///Users/andreskull/gor_dagster/docs/operations/daily-pipeline-guide.md) |
+| BigQuery cost snapshots + checklist | [cost-snapshots README](file:///Users/andreskull/gor_dagster/docs/operations/cost-snapshots/README.md), [bigquery-cost-checklist.md](file:///Users/andreskull/gor_dagster/docs/operations/bigquery-cost-checklist.md) |
 | RSS ingestion | [RSS Ingestion Guide](file:///Users/andreskull/gor_dagster/docs/operations/rss-ingestion-guide.md) |
+| ContentItem duplicate remediation | [ContentItem dedupe runbook](file:///Users/andreskull/gor_dagster/docs/operations/contentitem-dedupe-runbook.md) |
+| New podcast source onboarding | [Onboarding a New Podcast Source — Playbook](file:///Users/andreskull/gor_dagster/docs/operations/onboarding-new-podcast-source.md) — [[concepts/onboarding-new-podcast-source]] |
 | STT batch processing | [STT Batch Processing Guide](file:///Users/andreskull/gor_dagster/docs/operations/stt-batch-processing-guide.md) |
 | STT provider selection | [STT Providers Guide](file:///Users/andreskull/gor_dagster/docs/operations/stt-providers-guide.md) |
 | STT monitoring | [STT Monitoring](file:///Users/andreskull/gor_dagster/docs/operations/stt-monitoring.md) |
@@ -389,5 +397,6 @@ These are currently in `docs/features/` — temporary, not indexed by wiki. Run 
 - [[concepts/actionable-signal]]
 - [[concepts/signal-performance]]
 - [[concepts/llm-config-registry]]
+- [[concepts/onboarding-new-podcast-source]]
 - [[entities/dagster]]
 - [[entities/bigquery]]

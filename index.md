@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-05-12
+updated: 2026-05-18
 ---
 
 # Wiki Index
@@ -23,7 +23,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 |------|-------------|
 | [[wiki/products/finfluencer-trade]] | Financial influencer accountability platform — planning hub (growth + MVP docs on product page) |
 | [[wiki/products/rattaproff]] | WooCommerce multi-store automation — 7 storefronts; HUF→EUR pricing concept [[wiki/concepts/huf-eur-pipeline-pricing]] |
-| [[wiki/products/botastico]] | Stub — 7 repos, not yet indexed |
+| [[wiki/products/botastico]] | Partially indexed — [[projects/botastico-api]] (2026-05-18); other repos pending |
 
 ---
 
@@ -31,12 +31,13 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Product | Status |
 |------|---------|--------|
-| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — `signal-pruning-performance` wrapped May 2026; baseline table retired |
+| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **BigQuery cost program** wrapped **2026-05-17** ([bigquery-cost-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bigquery-cost-optimization.md)); six SI-monitored podcasts; ContentItem dedupe; DeepSeek SI/FE; pytest not-expensive green |
 | [[wiki/projects/gor-blog]] | finfluencer.trade | Active — CTA pattern shipped (Cramer post); apex `/api/subscribe` via landing rewrite; `api/newsletter/`; `research/cramer/` |
 | [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — `docs/architecture/` in repo |
 | [[wiki/projects/rattaproff]] | rattaproff | Operational — HUF/EUR pricing doc + `_build_supplier_huf_base_df` fix (May 2026) |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Active |
 | [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | Public kit + SSRN 6643379 — CSVs, scripts, paper |
+| [[wiki/projects/botastico-api]] | botastico | Active — chat image attachments **2026-05-18** ([feature doc](file:///Users/andreskull/botastico-api/docs/architecture/features/botastico-chat-image-attachments.md)); Cloud Run Flask; `slack_chat_logs` Pub/Sub consumer |
 
 ---
 
@@ -58,6 +59,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/concepts/llm-config-registry]] | How multi-model experimentation is managed |
 | [[wiki/concepts/spec-driven-development]] | The development methodology loop |
 | [[wiki/concepts/huf-eur-pipeline-pricing]] | rattaproff: HUF sheet vs per-site EUR recompute for Woo diffs |
+| [[wiki/concepts/onboarding-new-podcast-source]] | gor_dagster: playbook for new RSS → ActionableSignal (gates, PRs); links to repo operations doc |
 
 ---
 

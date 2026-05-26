@@ -4,7 +4,7 @@ title: "BigQuery"
 product: null
 project: null
 created: 2026-04-06
-updated: 2026-04-29
+updated: 2026-05-17
 tags: [bigquery, gcp, data-warehouse, sql]
 ---
 
@@ -25,6 +25,7 @@ Google Cloud's serverless data warehouse. Used across multiple projects.
 - Use **load jobs** (not streaming inserts) for data that may need modification — streaming buffer prevents row deletion
 - Tables are **partitioned by creation date** and **clustered** by source_id / content_type
 - `ActionableSignal` is a VIEW, not a table — delete from `PotentialPrediction`
+- **`PotentialPrediction`** (prod `dagster_shared`) has **`require_partition_filter = TRUE`** — every query/DML must filter on partition column **`created_at`**. Program write-up: [bigquery-cost-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bigquery-cost-optimization.md).
 - JSON columns used for extensible metadata
 
 ## Projects using it

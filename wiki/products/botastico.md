@@ -4,18 +4,18 @@ title: "botastico"
 product: botastico
 project: null
 created: 2026-04-06
-updated: 2026-04-06
+updated: 2026-05-18
 tags: [botastico]
 ---
 
 # botastico
 
-> **Stub** — repos not yet indexed. To be populated during next bootstrap pass once botastico repos are accessible.
+**Indexed project:** [[projects/botastico-api]] (2026-05-18) — Flask API on Cloud Run; chat image attachments + Pub/Slack path documented. Other repos below remain lightly linked until separate wiki syncs.
 
 ## Component repos
 
-- `botastico`
-- `botastico-api`
+- `botastico` — monorepo shell / Firebase / **`slack_chat_logs`** Cloud Function ([`slack_chat_logs/`](file:///Users/andreskull/botastico/slack_chat_logs))
+- `botastico-api` — [[projects/botastico-api]]
 - `botastico-script`
 - `botastico-portal`
 - `botastico-stripe`
@@ -32,6 +32,7 @@ firebase emulators:start --import=./firestore-emulator-data --export-on-exit=./f
 ## Related pages
 
 - [[wiki/overview]]
+- [[projects/botastico-api]]
 
 ## Deployment Rules
 
@@ -48,7 +49,7 @@ The deployment script is `deploy-api.sh` in the `botastico-api` repo:
 ./deploy-api.sh staging-west1
 
 # Production
-./deploy-api.sh prod-west1
+./deploy-api.sh production-west1
 ```
 
 AI agents should only assist with **preparing** the code for deployment (writing, testing, reviewing),

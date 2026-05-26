@@ -56,7 +56,23 @@ Append-only. Grep recent entries: `grep "^## \[" log.md | tail -10`
 
 ## [2026-05-06] sync | gor-blog — Renamed `research/cramer/promotion/linkedin_promotion_plan.md` → `cramer-study-launch-campaign.md` (cross-channel campaign log; old name implied LinkedIn-only). `growth_plan.md` § *Cramer Paper Promotion* links to the campaign file; `research/cramer/promotion/README.md` table updated. Updated [[wiki/projects/gor-blog]], [[wiki/concepts/blog-post-cta-pattern]], feature refs under `features/cramer-linkedin-promotion/`.
 
-## [2026-05-12] sync | rattaproff — Documented HUF→EUR pipeline: default rate 350 HUF/EUR (`currency_config`), `_build_supplier_huf_base_df` / `_gsheet_for_domain` behavior; repo `docs/architecture/huf-eur-per-site-pricing.md`, updated `WIKI.md`. Wiki: new [[concepts/huf-eur-pipeline-pricing]], updated [[projects/rattaproff]], [[products/rattaproff]], [[overview]], [[index.md]].
+## [2026-05-12] sync | gor_dagster — Morning Filter wrapup: `docs/architecture/features/morning-filter-ingestion.md`, repo `WIKI.md` + README third source; `docs/features/morning-filter-ingestion/` removed. Wiki: [[projects/gor_dagster]], [[index.md]].
 
 ## [2026-05-06] sync | gor-blog — Removed redirect stub `linkedin_promotion_plan.md` (canonical campaign path: `cramer-study-launch-campaign.md`). Updated repo `WIKI.md` and [[wiki/projects/gor-blog]].
+
+## [2026-05-13] sync | gor_dagster — Indexed [onboarding-new-podcast-source.md](file:///Users/andreskull/gor_dagster/docs/operations/onboarding-new-podcast-source.md): new wiki concept [[wiki/concepts/onboarding-new-podcast-source]], [[wiki/projects/gor_dagster]] (Stage 1 docs line, operations table, related pages), [[wiki/overview]], [[index.md]].
+
+## [2026-05-14] sync | gor_dagster — Compound and Friends: `si_sensor` union now six shows (`MORNING_FILTER` + `COMPOUND_AND_FRIENDS` constants); README + repo `WIKI.md`; [[wiki/projects/gor_dagster]] Stage 1 catalogue + `PIPELINE_SI_MONITORED` link; feature `tasks.md` PR 5 monitoring removed per operator preference. Updated [[index.md]].
+
+## [2026-05-14] sync | gor_dagster — DeepSeek-V4-Flash migration Task 15 closure: deleted `docs/features/deepseek-v4-flash-migration/`; removed temp scripts `diag_episode_hydration_si.py`, `find_low_coverage_episodes.py`, `find_task22_6_eligible_episodes.py`, Task 22 ID list files under `scripts/data/`; added `scripts/verify_dsv4fr_pp_actionable_signal.py`; **`docs/architecture/features/deepseek-v4-flash-migration.md`** now holds BQ counts + grok string-sweep acceptance; repo **`WIKI.md`**. Wiki: **`[[projects/gor_dagster]]`**, **`[[concepts/actionable-signal]]`**, **`[[index.md]]`**.
+
+## [2026-05-14] wrapup | gor_dagster | Compound and Friends ingestion — added **`docs/architecture/features/compound-and-friends-ingestion.md`**, `docs/architecture/README.md` completed-feature link; updated **`onboarding-new-podcast-source.md`** + pytest green-track cross-link; **`docs/features/compound-and-friends-ingestion/`** removed. Repo **`WIKI.md`** (completed table + current status). Wiki: **`[[projects/gor_dagster]]`** (Stage 1 doc link, completed + active tables), **`[[index.md]]`**.
+
+## [2026-05-15] wrapup | gor_dagster | compound-and-friends-ingestion — deleted residual **`docs/features/compound-and-friends-ingestion/`** (`requirements.md`, `design.md`, `tasks.md`); permanent record unchanged at **`docs/architecture/features/compound-and-friends-ingestion.md`**. Repo **`WIKI.md`** `Last updated`. Wiki **`[[projects/gor_dagster]]`** frontmatter `updated`.
+
+## [2026-05-15] wrapup | gor_dagster | pytest-not-expensive-green — **`docs/architecture/features/pytest-not-expensive-green.md`** (DoD, env, landed fixes, **`pytest.ini`** ignore debt); **`docs/features/pytest-not-expensive-green/`** removed. Repo **`WIKI.md`** + **`docs/architecture/README.md`**. Wiki **`[[projects/gor_dagster]]`**, **`[[index.md]]`**.
+
+## [2026-05-17] wrapup | gor_dagster | BigQuery cost optimization — **`docs/architecture/features/bigquery-cost-optimization.md`**; **`docs/operations/cost-snapshots/`** + **`docs/operations/bigquery-cost-findings/`** + **`docs/operations/PotentialPrediction-call-site-inventory.md`** relocated from removed **`docs/features/bigquery-cost-optimization/`**; **`scripts/bq_cost_report.py`** default out dir updated. Repo **`WIKI.md`**. Wiki **`[[projects/gor_dagster]]`**, **`[[index.md]]`**.
+
+## [2026-05-18] sync | botastico-api — Repo **`WIKI.md`** + **`docs/architecture/features/botastico-chat-image-attachments.md`** (wrapped feature). New **`[[projects/botastico-api]]`**; **`[[products/botastico]]`** no longer pure stub (API indexed; `slack_chat_logs` path). **`[[wiki/entities/gcs]]`** + **`[[wiki/overview]]`**, **`[[index.md]]`**.
 
