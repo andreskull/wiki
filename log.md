@@ -76,3 +76,5 @@ Append-only. Grep recent entries: `grep "^## \[" log.md | tail -10`
 
 ## [2026-05-18] sync | botastico-api — Repo **`WIKI.md`** + **`docs/architecture/features/botastico-chat-image-attachments.md`** (wrapped feature). New **`[[projects/botastico-api]]`**; **`[[products/botastico]]`** no longer pure stub (API indexed; `slack_chat_logs` path). **`[[wiki/entities/gcs]]`** + **`[[wiki/overview]]`**, **`[[index.md]]`**.
 
+## [2026-05-31] wrapup | gor_dagster | 7investing Ingestion — added **`docs/architecture/features/7investing-ingestion.md`** and updated **`WIKI.md`**; registered UUID `c2658090-942b-4cbd-9552-f04995220873` in **`si_sensor.py`**; updated config validator to allow single-job execution (`total_jobs=1`); verified E2E and idempotency on production; deleted **`docs/features/7investing-ingestion/`** specs. Wiki project page `[[projects/gor_dagster]]` updated.
+

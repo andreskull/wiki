@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-05-18
+updated: 2026-05-31
 ---
 
 # Wiki Index
@@ -31,7 +31,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Product | Status |
 |------|---------|--------|
-| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **BigQuery cost program** wrapped **2026-05-17** ([bigquery-cost-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bigquery-cost-optimization.md)); six SI-monitored podcasts; ContentItem dedupe; DeepSeek SI/FE; pytest not-expensive green |
+| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **7investing onboarding** wrapped **2026-05-31**; seven SI-monitored podcasts; BigQuery cost program; ContentItem dedupe; DeepSeek SI/FE; pytest not-expensive green |
 | [[wiki/projects/gor-blog]] | finfluencer.trade | Active — CTA pattern shipped (Cramer post); apex `/api/subscribe` via landing rewrite; `api/newsletter/`; `research/cramer/` |
 | [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — `docs/architecture/` in repo |
 | [[wiki/projects/rattaproff]] | rattaproff | Operational — HUF/EUR pricing doc + `_build_supplier_huf_base_df` fix (May 2026) |
