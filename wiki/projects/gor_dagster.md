@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-05-30
+updated: 2026-06-10
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase]
 ---
 
@@ -111,11 +111,27 @@ Docs: [Facts Extraction Architecture](file:///Users/andreskull/gor_dagster/docs/
 
 ### Stage 6 — Instrument + Speaker Resolution
 
-**Instrument Resolution:** Maps raw ticker/company mentions to canonical `FinancialInstrument` entities via OpenFIGI API. Sets `resolution_status` on `PotentialPrediction` rows. Unresolvable instruments queue for manual curation in the admin dashboard.
+**Job:** `potential_prediction_resolution_job` → asset `resolve_pending_predictions` (speakers first, then instruments; `in_process_executor`). Sensor: `potential_prediction_resolution_sensor` (2h cadence).
 
-**Speaker Resolution:** Maps named speakers from hydrated transcripts to canonical `Finfluencer` entities. Combines fuzzy name matching, `FinfluencerNameVariant` lookups, affiliation context (organisation boosting), and human prior decisions stored in `SpeakerResolutionManualPrior`. Unresolved speakers queue in `PendingSpeakerResolution` for human review. Sets `speaker_resolution_status` on `PotentialPrediction` rows.
+**Instrument Resolution:** Maps raw ticker/company mentions to canonical `FinancialInstrument` entities via layered matching:
 
-Docs: [Instrument Resolution Reference](file:///Users/andreskull/gor_dagster/docs/architecture/instrument-resolution-reference.md), [Speaker Resolution Workflow](file:///Users/andreskull/gor_dagster/docs/operations/speaker-resolution-workflow.md), [Speaker Resolution Human Priors](file:///Users/andreskull/gor_dagster/docs/architecture/speaker-resolution-human-priors.md)
+- Step 0: `DismissedInstrumentHash` auto-dismiss
+- Layer 0.5: `InstrumentAlias` instant lookup
+- Layers 1/2: internal JW fuzzy match (`compute_instrument_name_similarity`)
+- Layer 1.5: historical ticker lookup
+- Layer 3: OpenFIGI batch lookup
+
+Unresolvable instruments queue in `PendingInstrumentResolution`. **Re-attempt machinery (2026-06):** frozen rows re-enter when `reattempt_eligible=TRUE` (sibling ticker mark or backlog sweep). Resolver version `instr-2026.06-jw`. Alias written on every successful auto-resolve (`created_by='auto_resolution'`).
+
+**Speaker Resolution:** Maps named speakers to `Finfluencer` via `SpeakerMatchScorer` (Jaro-Winkler + org context). Production thresholds: fuzzy auto-resolve **0.935**; org-conflict override **disabled** (1.00). Unresolved speakers queue in `PendingSpeakerResolution`.
+
+**Backlog sweep asset:** `resolution_backlog_sweep` — dry-run preview then mark eligible; drain with resolution job. One-time sweeps unlocked **237** instrument + **18** speaker hashes (2026-06-09).
+
+**Ops monitoring:** `scripts/analyze_resolution_backlog.py`, `scripts/analyze_resolution_drill.py`.
+
+Permanent reference: [resolution-pipeline-efficiency.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/resolution-pipeline-efficiency.md). Wiki: [[concepts/resolution-pipeline-efficiency]].
+
+Docs: [Instrument Resolution Reference](file:///Users/andreskull/gor_dagster/docs/architecture/instrument-resolution-reference.md), [Speaker Resolution Workflow](file:///Users/andreskull/gor_dagster/docs/operations/speaker-resolution-workflow.md), [Speaker Resolution Human Priors](file:///Users/andreskull/gor_dagster/docs/architecture/speaker-resolution-human-priors.md), [Instrument resolution bulk curation](file:///Users/andreskull/gor_dagster/docs/architecture/features/instrument-resolution-bulk-manual-curation.md)
 
 ### Stage 7 — Signal Generation and Performance Tracking
 
@@ -329,6 +345,7 @@ Key rule: all Python code must be written to `.py` files before execution — ne
 | No mocks in tests | All tests must use real APIs, real BigQuery, real GCS. No mocks, stubs, or test doubles for external services. |
 | Dagster Cloud credit hygiene | Tune sensors/schedules and `RunRequest` fan-out for hybrid orchestration credits; permanent write-up: [dagster-cloud-credit-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/dagster-cloud-credit-optimization.md). |
 | BigQuery bytes + PotentialPrediction guardrail | Partition predicates on hot reads; **`require_partition_filter`** on production `PotentialPrediction`; local lint `check_no_select_star.py`; checklist [bigquery-cost-checklist.md](file:///Users/andreskull/gor_dagster/docs/operations/bigquery-cost-checklist.md); program summary [bigquery-cost-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bigquery-cost-optimization.md). |
+| Resolution re-attempt + JW matcher | Frozen PIR/PSR re-enter only when `reattempt_eligible=TRUE`. JW instrument matcher; speaker fuzzy **0.935**; org-conflict override off. Alias on every auto-resolve. [[concepts/resolution-pipeline-efficiency]] |
 
 ---
 
@@ -340,6 +357,7 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 |---|---|---|
 | 2026-05-17 | BigQuery cost optimization (partition guardrails, `SELECT *` lint, cost snapshots under `docs/operations/`) | [bigquery-cost-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bigquery-cost-optimization.md) |
 | 2026-05-30 | 7investing RSS onboarding (Anchor/Spotify; Patterns 4+5; SI monitored set) | [7investing-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/7investing-ingestion.md) |
+| 2026-06-10 | Resolution pipeline efficiency (JW matcher, re-attempt, sweeps, alias-on-resolve) | [resolution-pipeline-efficiency.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/resolution-pipeline-efficiency.md) |
 | 2026-05-15 | Pytest `not expensive` green track (permanent reference; suite alignment) | [pytest-not-expensive-green.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/pytest-not-expensive-green.md) |
 | 2026-05-14 | ContentItem deduplication, ingest guard, BQ apply pipeline | [contentitem-dedupe-and-cleanup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/contentitem-dedupe-and-cleanup.md) — runbook [contentitem-dedupe-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/contentitem-dedupe-runbook.md) |
 | 2026-05-14 | Compound and Friends (Pippa) RSS onboarding + SI allowlist extension | [compound-and-friends-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/compound-and-friends-ingestion.md) |
@@ -357,8 +375,13 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 | Feature | Folder / notes |
 |---|---|
 | Batch LLM integration | `batch-integration/` |
-| Post-MVP loops migration | `post-mvp-loops-migration/` |
+| Recursive LLM extraction | `recursive-llm-extraction/` |
+| Show profile access consistency | `show-profile-access-consistency/` |
+| Finfluencer and show profiles | `finfluencer-and-show-profiles/` |
+| Proof-segment speaker resolution (follow-ons) | `proof-segment-speaker-resolution/` |
 | Social share previews | `social-share-previews/` |
+
+**Wrapped 2026-06-10:** `resolution-pipeline-efficiency/` → [resolution-pipeline-efficiency.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/resolution-pipeline-efficiency.md)
 
 ---
 
@@ -378,6 +401,7 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 | Golden reference creation | [Golden Reference Workflow](file:///Users/andreskull/gor_dagster/docs/operations/golden-reference-workflow.md) |
 | Facts extraction | [Facts Extraction Guide](file:///Users/andreskull/gor_dagster/docs/operations/facts-extraction-guide.md) |
 | Instrument resolution | [FIGI Instrument Cleanup Guide](file:///Users/andreskull/gor_dagster/docs/operations/figi-instrument-cleanup-guide.md) |
+| Resolution backlog monitoring | `scripts/analyze_resolution_backlog.py`, `scripts/analyze_resolution_drill.py` — see [resolution-pipeline-efficiency.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/resolution-pipeline-efficiency.md) |
 | Schema management | [Schema Management](file:///Users/andreskull/gor_dagster/docs/operations/schema-management.md) |
 | Configuration reference | [Configuration Reference](file:///Users/andreskull/gor_dagster/docs/operations/configuration-reference.md) |
 | Price ingestion | [Price Ingestion Guide](file:///Users/andreskull/gor_dagster/docs/operations/price-ingestion-guide.md) |
@@ -399,5 +423,6 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 - [[concepts/signal-performance]]
 - [[concepts/llm-config-registry]]
 - [[concepts/onboarding-new-podcast-source]]
+- [[concepts/resolution-pipeline-efficiency]]
 - [[entities/dagster]]
 - [[entities/bigquery]]

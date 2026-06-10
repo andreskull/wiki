@@ -4,7 +4,7 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-04-27
+updated: 2026-06-02
 tags: [finfluencer, auth, landing, vercel, supabase, react]
 ---
 
@@ -35,6 +35,13 @@ Shipped MVP scope for this app is documented in **`gor_dagster`**, not in this r
 ## Architecture docs (source of truth)
 
 In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and **`docs/architecture/`** — [README](file:///Users/andreskull/finfluencer-tracker/docs/architecture/README.md), [system-overview](file:///Users/andreskull/finfluencer-tracker/docs/architecture/system-overview.md), [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md). Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/finfluencer-tracker/docs/auth-sharing-landing-app.md).
+
+### Feedback & Public Roadmap System
+A native feedback collection, bug reporting, and product roadmap board deployed at `/feedback` to replace the third-party Featurebase tool.
+- **Data Layer**: Governed by `feedback_posts` and `feedback_votes` tables, featuring triggers `tr_feedback_post_votes_count` (atomic upvote syncing) and `tr_auto_vote_for_feedback_creator` (automatic upvote seeding on request insertion).
+- **Edge Notifications**: Pushed via Deno Edge Function `notify-moderators` (authenticated by Resend) which dispatches custom transactional thank-you receipts, moderator notifications, and dynamic status progress updates.
+- **TanStack Caching**: Optimistic query logic within `useToggleVote()` provides instant upvote UI toggles before network completion.
+- **In-Repo Reference**: [feedback-system.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/feedback-system.md).
 
 ## Wiki sync
 

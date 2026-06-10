@@ -4,7 +4,7 @@ title: "ActionableSignal"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-05-14
+updated: 2026-06-10
 tags: [actionable-signal, prediction, facts-extraction, bigquery, view]
 ---
 
@@ -38,5 +38,6 @@ Facts Extraction (Stage 5) → `PotentialPrediction` → `ActionableSignal` VIEW
 - [DeepSeek-V4-Flash migration](file:///Users/andreskull/gor_dagster/docs/architecture/features/deepseek-v4-flash-migration.md) (FE priority + production ladder context)
 - [[concepts/signal-performance]]
 - [[concepts/speaker-attribution]]
+- [[concepts/resolution-pipeline-efficiency]]
 - [[concepts/spec-driven-development]]
 - [[entities/bigquery]]

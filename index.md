@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-05-31
+updated: 2026-06-10
 ---
 
 # Wiki Index
@@ -31,7 +31,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Product | Status |
 |------|---------|--------|
-| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **7investing onboarding** wrapped **2026-05-31**; seven SI-monitored podcasts; BigQuery cost program; ContentItem dedupe; DeepSeek SI/FE; pytest not-expensive green |
+| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **resolution pipeline efficiency** wrapped **2026-06-10** (JW matcher, re-attempt, sweeps); seven SI-monitored podcasts; BigQuery cost program; DeepSeek SI/FE |
 | [[wiki/projects/gor-blog]] | finfluencer.trade | Active — CTA pattern shipped (Cramer post); apex `/api/subscribe` via landing rewrite; `api/newsletter/`; `research/cramer/` |
 | [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — `docs/architecture/` in repo |
 | [[wiki/projects/rattaproff]] | rattaproff | Operational — HUF/EUR pricing doc + `_build_supplier_huf_base_df` fix (May 2026) |
@@ -60,6 +60,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/concepts/spec-driven-development]] | The development methodology loop |
 | [[wiki/concepts/huf-eur-pipeline-pricing]] | rattaproff: HUF sheet vs per-site EUR recompute for Woo diffs |
 | [[wiki/concepts/onboarding-new-podcast-source]] | gor_dagster: playbook for new RSS → ActionableSignal (gates, PRs); links to repo operations doc |
+| [[wiki/concepts/resolution-pipeline-efficiency]] | gor_dagster: JW matcher, re-attempt union, backlog sweeps, alias-on-resolve |
 
 ---
 
