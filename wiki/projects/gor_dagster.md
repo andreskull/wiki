@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-06-10
+updated: 2026-06-15
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase]
 ---
 
@@ -59,7 +59,7 @@ The pipeline is a seven-stage sequence. Each stage consumes the output of the pr
 
 Polls RSS feeds for all configured `ContentSource` records. For each new episode: creates a `ContentItem`, downloads audio to `gs://gor-media-prod/sources/podcasts/{show_id}/{episode_id}.mp3`. The `rss_episode_ingestion_sensor` runs on a configurable `RSS_POLL_INTERVAL_SEC` (default 300s). Download retries use exponential backoff; permanent failures (`download_error:unsupported_media_type`, `download_error:network`) stop retries and flag for manual review.
 
-**Production RSS catalogue (seven `ContentSource` rows in the SI-monitored podcast set):** Fast Money (`49400b5b-6e3e-4c0d-be0b-8cd7ab18ba74`), Mad Money (`e6a22166-82ca-482d-b54b-4a1f016948c3`), Hedgeye (`8a61349e-9df2-4397-bc76-b4af8b0fb9d8`), Halftime Report (`c925324b-63e2-4f10-a074-6e4ed7da2d0b`), Morning Filter (`4f158ea6-c1c4-43f1-86e3-3d96fed6dd80` — [morning-filter-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/morning-filter-ingestion.md)), **Compound and Friends** (`0b75ea6c-20b2-4a7c-89db-b0899788a8cc` — [compound-and-friends-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/compound-and-friends-ingestion.md)), and **7investing** (`c2658090-942b-4cbd-9552-f04995220873` — [7investing-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/7investing-ingestion.md), Anchor/Spotify feed `https://anchor.fm/s/1659b6fc/podcast/rss`, `external_id` `1659b6fc`, enclosure **Pattern 4** Megaphone `APO…` and **Pattern 5** Anchor `anchor.fm/s/...`). Canonical UUID list: [`si_sensor.PIPELINE_SI_MONITORED_CONTENT_SOURCE_IDS`](file:///Users/andreskull/gor_dagster/gor_dagster/sensors/si_sensor.py).
+**Production RSS catalogue (eight `ContentSource` rows in the SI-monitored podcast set):** Fast Money (`49400b5b-6e3e-4c0d-be0b-8cd7ab18ba74`), Mad Money (`e6a22166-82ca-482d-b54b-4a1f016948c3`), Hedgeye (`8a61349e-9df2-4397-bc76-b4af8b0fb9d8`), Halftime Report (`c925324b-63e2-4f10-a074-6e4ed7da2d0b`), Morning Filter (`4f158ea6-c1c4-43f1-86e3-3d96fed6dd80` — [morning-filter-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/morning-filter-ingestion.md)), **Compound and Friends** (`0b75ea6c-20b2-4a7c-89db-b0899788a8cc` — [compound-and-friends-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/compound-and-friends-ingestion.md)), **7investing** (`c2658090-942b-4cbd-9552-f04995220873` — [7investing-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/7investing-ingestion.md), Anchor/Spotify feed `https://anchor.fm/s/1659b6fc/podcast/rss`, `external_id` `1659b6fc`, enclosure **Pattern 4** Megaphone `APO…` and **Pattern 5** Anchor `anchor.fm/s/...`), and **The Acquirers Podcast** (`428270b1-e53b-494a-b1b5-4278756c6aa4` — [acquirers-podcast-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/acquirers-podcast-ingestion.md), Anchor/Spotify feed `https://anchor.fm/s/9603714/podcast/rss`, `external_id` `9603714`, Patterns 4+5, mid-catalog `.m4a` supported). Canonical UUID list: [`si_sensor.PIPELINE_SI_MONITORED_CONTENT_SOURCE_IDS`](file:///Users/andreskull/gor_dagster/gor_dagster/sensors/si_sensor.py).
 
 Key assets: `rss_new_episodes_identified`, `rss_episode_ingestion_orchestrator`, `rss_episode_ingestion_sensor`
 
@@ -91,11 +91,13 @@ Two-stage pipeline: **LLM Identification** then **Transcript Hydration**.
 
 **Transcript Hydration (Stage 4b):** Merges the identification file back into the unified transcript to produce a stitched transcript where every utterance has a named speaker. Written to `gs://gor-stt-transcripts/hydrated/{episode_id}/{provider}_{llm_config_id}.json`. The `hydration_sensor` builds batches of `(episode, llm_config_id)` pairs (**batch size 30**), emits **one** `hydration_job` run per sensor tick (fewer Dagster Cloud orchestration runs than the former dual parallel pattern), with round-robin fairness. Audit trail in the `hydration_runs` BigQuery table.
 
+**In-memory algorithm (2026-06-15):** Canonical implementation in `gor_dagster/utils/transcript_hydration_utils.py` (asset re-exports). Hot path is **O(U log W + W)** via `WordIndex` + normalization cache (was O(U·W) full word scans — ~11 min → ~0.09s on large fixture). Production uses **FR-6** start-anchored word membership (`MEMBERSHIP_TOL=0.01`); recovers boundary/short utterances and speaker-disagreement words without changing golden speaker accuracy. Permanent doc: [hydration-performance-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hydration-performance-optimization.md); algorithm reference: [transcript-hydration-architecture.md](file:///Users/andreskull/gor_dagster/docs/architecture/transcript-hydration-architecture.md) §In-memory hydration algorithm.
+
 Quality metrics tracked per run: `anchor_coverage_pct` (target ≥ 95%), `llm_coverage_ratio` (target > 0.95), `multi_speaker_utterances_count`, `auto_corrected_segments_count`, `quote_validation_failure_rate`.
 
 Key assets: `speaker_attribution_llm`, `transcript_hydration`, `statistical_speaker_attribution`
 
-Docs: [Speaker Attribution Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/speaker-attribution-architecture.md), [Anchor Enforcement](file:///Users/andreskull/gor_dagster/docs/architecture/speaker-attribution-anchor-enforcement.md), [Speaker Attribution Guide](file:///Users/andreskull/gor_dagster/docs/operations/speaker-attribution-guide.md), [Hydration sensor batching](file:///Users/andreskull/gor_dagster/docs/operations/hydration-sensor-batching.md)
+Docs: [Speaker Attribution Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/speaker-attribution-architecture.md), [Anchor Enforcement](file:///Users/andreskull/gor_dagster/docs/architecture/speaker-attribution-anchor-enforcement.md), [Speaker Attribution Guide](file:///Users/andreskull/gor_dagster/docs/operations/speaker-attribution-guide.md), [Transcript Hydration Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/transcript-hydration-architecture.md), [Hydration performance optimization](file:///Users/andreskull/gor_dagster/docs/architecture/features/hydration-performance-optimization.md), [Hydration sensor batching](file:///Users/andreskull/gor_dagster/docs/operations/hydration-sensor-batching.md)
 
 ### Stage 5 — Facts Extraction
 
@@ -346,6 +348,7 @@ Key rule: all Python code must be written to `.py` files before execution — ne
 | Dagster Cloud credit hygiene | Tune sensors/schedules and `RunRequest` fan-out for hybrid orchestration credits; permanent write-up: [dagster-cloud-credit-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/dagster-cloud-credit-optimization.md). |
 | BigQuery bytes + PotentialPrediction guardrail | Partition predicates on hot reads; **`require_partition_filter`** on production `PotentialPrediction`; local lint `check_no_select_star.py`; checklist [bigquery-cost-checklist.md](file:///Users/andreskull/gor_dagster/docs/operations/bigquery-cost-checklist.md); program summary [bigquery-cost-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bigquery-cost-optimization.md). |
 | Resolution re-attempt + JW matcher | Frozen PIR/PSR re-enter only when `reattempt_eligible=TRUE`. JW instrument matcher; speaker fuzzy **0.935**; org-conflict override off. Alias on every auto-resolve. [[concepts/resolution-pipeline-efficiency]] |
+| Transcript hydration canonical utils + FR-6 | Hot path in `transcript_hydration_utils.py`; O(U log W + W) index; `MEMBERSHIP_TOL=0.01`; asset re-exports only. Golden speaker accuracy unchanged (scorer bypasses hydration artifact). [hydration-performance-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hydration-performance-optimization.md) |
 
 ---
 
@@ -358,6 +361,8 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 | 2026-05-17 | BigQuery cost optimization (partition guardrails, `SELECT *` lint, cost snapshots under `docs/operations/`) | [bigquery-cost-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bigquery-cost-optimization.md) |
 | 2026-05-30 | 7investing RSS onboarding (Anchor/Spotify; Patterns 4+5; SI monitored set) | [7investing-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/7investing-ingestion.md) |
 | 2026-06-10 | Resolution pipeline efficiency (JW matcher, re-attempt, sweeps, alias-on-resolve) | [resolution-pipeline-efficiency.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/resolution-pipeline-efficiency.md) |
+| 2026-06-15 | Transcript hydration performance optimization (O(U·W)→O(U log W + W), FR-6 membership, canonical utils) | [hydration-performance-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hydration-performance-optimization.md) |
+| 2026-06-15 | The Acquirers Podcast RSS onboarding (Anchor/Spotify; Patterns 4+5; 8th SI source; 436 episodes) | [acquirers-podcast-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/acquirers-podcast-ingestion.md) |
 | 2026-05-15 | Pytest `not expensive` green track (permanent reference; suite alignment) | [pytest-not-expensive-green.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/pytest-not-expensive-green.md) |
 | 2026-05-14 | ContentItem deduplication, ingest guard, BQ apply pipeline | [contentitem-dedupe-and-cleanup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/contentitem-dedupe-and-cleanup.md) — runbook [contentitem-dedupe-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/contentitem-dedupe-runbook.md) |
 | 2026-05-14 | Compound and Friends (Pippa) RSS onboarding + SI allowlist extension | [compound-and-friends-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/compound-and-friends-ingestion.md) |
@@ -380,6 +385,10 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 | Finfluencer and show profiles | `finfluencer-and-show-profiles/` |
 | Proof-segment speaker resolution (follow-ons) | `proof-segment-speaker-resolution/` |
 | Social share previews | `social-share-previews/` |
+
+**Wrapped 2026-06-15:** `hydration-performance-optimization/` → [hydration-performance-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hydration-performance-optimization.md)
+
+**Wrapped 2026-06-15:** `acquirers-podcast-ingestion/` → [acquirers-podcast-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/acquirers-podcast-ingestion.md)
 
 **Wrapped 2026-06-10:** `resolution-pipeline-efficiency/` → [resolution-pipeline-efficiency.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/resolution-pipeline-efficiency.md)
 

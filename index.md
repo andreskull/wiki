@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-06-10
+updated: 2026-06-15
 ---
 
 # Wiki Index
@@ -31,10 +31,10 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Product | Status |
 |------|---------|--------|
-| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **resolution pipeline efficiency** wrapped **2026-06-10** (JW matcher, re-attempt, sweeps); seven SI-monitored podcasts; BigQuery cost program; DeepSeek SI/FE |
+| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **Acquirers Podcast** RSS wrapped **2026-06-15** (8th SI source); hydration perf wrapped **2026-06-15**; seven→eight SI-monitored podcasts |
 | [[wiki/projects/gor-blog]] | finfluencer.trade | Active — CTA pattern shipped (Cramer post); apex `/api/subscribe` via landing rewrite; `api/newsletter/`; `research/cramer/` |
 | [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — `docs/architecture/` in repo |
-| [[wiki/projects/rattaproff]] | rattaproff | Operational — HUF/EUR pricing doc + `_build_supplier_huf_base_df` fix (May 2026) |
+| [[wiki/projects/rattaproff]] | rattaproff | Operational — permalink backfill + gsheet restore complete (Jun 2026); 20 storefronts; `docs/architecture/features/permalink-redirect-resolution.md` |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Active |
 | [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | Public kit + SSRN 6643379 — CSVs, scripts, paper |
 | [[wiki/projects/botastico-api]] | botastico | Active — chat image attachments **2026-05-18** ([feature doc](file:///Users/andreskull/botastico-api/docs/architecture/features/botastico-chat-image-attachments.md)); Cloud Run Flask; `slack_chat_logs` Pub/Sub consumer |
@@ -53,7 +53,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Description |
 |------|-------------|
-| [[wiki/concepts/speaker-attribution]] | Two-stage LLM pipeline for naming podcast speakers |
+| [[wiki/concepts/speaker-attribution]] | Two-stage LLM pipeline for naming podcast speakers; Stage 2 hydration O(U log W + W), FR-6 membership (2026-06-15) |
 | [[wiki/concepts/actionable-signal]] | Final output VIEW — speaker-gated, not a table |
 | [[wiki/concepts/signal-performance]] | Signal → horizons: truncation, implicit opposite-direction close (same instrument) |
 | [[wiki/concepts/llm-config-registry]] | How multi-model experimentation is managed |

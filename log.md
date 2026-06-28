@@ -83,3 +83,15 @@ Append-only. Grep recent entries: `grep "^## \[" log.md | tail -10`
 ## [2026-06-10] wrapup | gor_dagster | Resolution pipeline efficiency — permanent doc `docs/architecture/features/resolution-pipeline-efficiency.md`; JW matcher, re-attempt union, backlog sweeps, alias-on-resolve; 237 instrument + 18 speaker hashes unlocked; deleted `docs/features/resolution-pipeline-efficiency/` and gate/diagnostic scripts.
 
 ## [2026-06-10] sync | gor_dagster — Updated [[projects/gor_dagster]] Stage 6 resolution section, completed-features table, architecture decisions. New concept [[concepts/resolution-pipeline-efficiency]]. Linked from [[concepts/actionable-signal]]. Updated [[overview]] and [[index]].
+
+## [2026-06-15] wrapup | gor_dagster | Hydration performance optimization — permanent doc `docs/architecture/features/hydration-performance-optimization.md`; canonical utils in `transcript_hydration_utils.py`; O(U·W)→O(U log W + W); FR-6 membership `MEMBERSHIP_TOL=0.01`; deleted `docs/features/hydration-performance-optimization/`.
+
+## [2026-06-15] sync | gor_dagster — Updated [[projects/gor_dagster]] Stage 4b hydration section, completed-features table, architecture decisions. Expanded [[concepts/speaker-attribution]] Stage 2. Updated [[overview]] and [[index]].
+
+## [2026-06-15] wrapup | gor_dagster | The Acquirers Podcast ingestion — permanent doc `docs/architecture/features/acquirers-podcast-ingestion.md`; 436/436 downloaded; PR #134 SI sensor; Patterns 4+5; deleted `docs/features/acquirers-podcast-ingestion/`.
+
+## [2026-06-15] sync | gor_dagster — Updated [[projects/gor_dagster]] RSS catalogue (eight SI sources), completed-features table. Updated [[index]].
+
+## [2026-06-28] wrapup | rattaproff | Permalink redirect resolution + gsheet disaster recovery — updated `docs/architecture/features/permalink-redirect-resolution.md`; gsheet restored to 42,221 rows; hardened `storage.df_to_storage` CSV quoting; removed investigation scripts/artifacts.
+
+## [2026-06-28] sync | rattaproff — Updated [[projects/rattaproff]] (20 sites, permalink module, recovery ops). Updated [[index]].

@@ -4,7 +4,7 @@ title: "Speaker Attribution"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-04-06
+updated: 2026-06-15
 tags: [speaker-attribution, stt, llm, transcript, diarization]
 ---
 
@@ -16,7 +16,11 @@ The process of identifying and naming speakers in a podcast transcript. A two-st
 
 **Stage 1 — LLM Identification:** An LLM reads the full unified transcript and produces a lightweight "identification file" containing speaker mappings and utterance split information — no transcript text. Supports 8 LLM configs (Gemini 2.5-flash/2.0-flash/2.5-pro, GPT-5, GPT-4o, GPT-4o-mini, O3-mini, Claude Sonnet 4).
 
-**Stage 2 — Hydration:** A non-LLM process combines the identification file with the original transcript to produce a fully-attributed "hydrated" transcript.
+**Stage 2 — Hydration:** A non-LLM process combines the identification file with the original transcript to produce a fully-attributed "hydrated" transcript. Written to `gs://gor-stt-transcripts/hydrated/{episode_id}/{provider}_{llm_config_id}.json`.
+
+**Canonical implementation (2026-06-15):** `gor_dagster/utils/transcript_hydration_utils.py` — the asset imports/re-exports only. Hot path uses `WordIndex` + normalization cache: **O(U log W + W)** per episode (was O(U·W) nested scans). Production index builder: **FR-6** start-anchored word membership with `MEMBERSHIP_TOL=0.01` (recovers boundary/short utterances and speaker-disagreement words). Golden speaker accuracy scorer does **not** read hydration output — it builds config utterances from SI segments + unified text, so FR-6 cannot regress golden speaker accuracy by construction.
+
+**Performance:** Large fixture (1,295 utterances, 18,129 words): baseline ~2.93s → ~0.09s median in-memory (~33×). **Orchestration:** `hydration_sensor` batches up to 30 `(episode, llm_config_id)` pairs per tick; audit in `hydration_runs` BigQuery table.
 
 **Stage 3 — Statistical Evaluation:** Statistical consensus analysis flags deviations for human review. Human corrections feed into progressive "golden reference" transcripts (v1 → v2 → v3) used to evaluate and improve future attribution runs.
 
@@ -36,3 +40,5 @@ The process of identifying and naming speakers in a podcast transcript. A two-st
 - [[concepts/llm-config-registry]]
 - [[entities/assemblyai]]
 - [[entities/dagster]]
+- [Transcript Hydration Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/transcript-hydration-architecture.md)
+- [Hydration performance optimization](file:///Users/andreskull/gor_dagster/docs/architecture/features/hydration-performance-optimization.md)

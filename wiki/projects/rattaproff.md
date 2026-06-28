@@ -4,7 +4,7 @@ title: "rattaproff"
 product: rattaproff
 project: rattaproff
 created: 2026-04-06
-updated: 2026-05-12
+updated: 2026-06-28
 tags: [woocommerce, ecommerce, automation, gcp, bigquery, indexing, supplier, python]
 ---
 
@@ -18,34 +18,44 @@ Single-repo product. The full automation suite for [[products/rattaproff]] — s
 
 ## Purpose and role
 
-Everything in one repo: supplier catalogue ingestion, reconciliation with Google Sheets merchandising decisions, WooCommerce publishing across 7 storefronts, BigQuery-backed indexing backlog, Cloud Function dispatcher, and monitoring dashboards.
+Everything in one repo: supplier catalogue ingestion, reconciliation with Google Sheets merchandising decisions, WooCommerce publishing across **20 storefronts** (`SITE_CONFIGS`), BigQuery-backed indexing backlog, Cloud Function dispatcher, and monitoring dashboards.
 
 ## Tech stack
 
 - **Language:** Python
-- **Cloud:** GCP (BigQuery, Cloud Functions, Cloud Scheduler, Cloud Logging)
-- **Storefronts:** WooCommerce (7 locales: .ee, .de, .fr, .it, .es, .fi, .nl)
-- **Data source:** Supplier feeds + Google Sheets overrides
+- **Cloud:** GCP (BigQuery, Cloud Functions, Cloud Scheduler, Cloud Logging, GCS)
+- **Storefronts:** WooCommerce (20 locales — see `SITE_CONFIGS` in `process.py`)
+- **Data source:** Supplier feeds + Google Sheets ground truth (~42k SKUs)
 - **Monitoring:** Streamlit dashboard + CLI tools
 
 ## Key modules
 
 - `suppliers.py` / `process.py` — supplier ingestion and normalisation; HUF→EUR pricing and per-site recompute for Woo diffs ([[concepts/huf-eur-pipeline-pricing]])
+- `permalink_resolver.py` — draft Woo URL → pretty permalink via HTTP redirect
 - `woo.py` — WooCommerce publishing (per-site credentials via env)
+- `db_cache.py` — Cloud SQL product cache; authoritative pretty permalinks post-backfill
+- `storage.py` — GCS backups (`gsheet_*` CSV snapshots on every sheet sync)
 - `bigquery_backlog.py` / `indexing_api_utils.py` — indexing queue and quota management
 - `indexing_dispatcher_function/` — Cloud Function, 200 URLs/day limit
 - `dashboard_app.py` / `indexing_dashboard.py` — monitoring UIs
 - `gsheet.py` / `sheet_utils.py` — Google Sheets reconciliation
 
+## Completed features
+
+- **Permalink redirect resolution** — v1/v2 backfills complete; gsheet disaster recovery (June 2026). [permalink-redirect-resolution.md](file:///Users/andreskull/rattaproff/docs/architecture/features/permalink-redirect-resolution.md)
+- **HUF/EUR per-site pricing** — [huf-eur-per-site-pricing.md](file:///Users/andreskull/rattaproff/docs/architecture/huf-eur-per-site-pricing.md)
+
 ## Docs structure
 
-Scaffold exists (`docs/architecture/`, `docs/operations/`, `docs/schemas/` — empty). Some legacy flat docs in `docs/` root (`FINAL_DEPLOYMENT_GUIDE.md`, `QUICK_REFERENCE.md`, etc.). One active feature: `docs/features/database-sync/`.
-
-Has `.ai-rules/` with `product.md`, `tech.md`, `structure.md` populated.
+- `docs/architecture/` — durable feature and pricing notes
+- `docs/features/` — active WIP specs only (`database-sync`, `per-site-huf-rate`)
+- Legacy flat docs in `docs/` root
 
 ## Current status
 
-Operational. **HUF/EUR:** default rate is 350 HUF per EUR repo-wide (`DEFAULT_HUF_EUR_RATE`); per-site overrides live in `SITE_HUF_EUR_RATES` (currently empty = all sites use default). Architecture note: [huf-eur-per-site-pricing.md](file:///Users/andreskull/rattaproff/docs/architecture/huf-eur-per-site-pricing.md). Wiki concept: [[concepts/huf-eur-pipeline-pricing]]. Documentation elsewhere still sparse — `/wrapup` on `database-sync` when complete.
+Operational. **Permalink backfill:** complete (608k+ pretty cache permalinks; gsheet restored to 42,221 rows after failed sync truncated to 15k). **HUF/EUR:** default rate 350 HUF/EUR (`DEFAULT_HUF_EUR_RATE`); per-site overrides in `SITE_HUF_EUR_RATES` (empty = default).
+
+Before robot execute after any gsheet incident: `scripts/summarize_change_plan.py` then `scripts/verify_gsheet_row_count.py`.
 
 ## Related pages
 
