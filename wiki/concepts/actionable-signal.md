@@ -4,7 +4,7 @@ title: "ActionableSignal"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-06-10
+updated: 2026-07-01
 tags: [actionable-signal, prediction, facts-extraction, bigquery, view]
 ---
 
@@ -17,7 +17,11 @@ The final, deduplicated output of the finfluencer.trade pipeline — a structure
 `ActionableSignal` is a **BigQuery VIEW** over the `PotentialPrediction` table, not a table itself. It applies two filters:
 
 1. **FE config priority deduplication** — when multiple facts extraction runs exist for an episode (e.g., during evaluation), only the highest-priority FE config's predictions appear. Canonical order (**`gor_dagster/sql/views/ActionableSignal.sql`**, `fe_priority`): `fe-gpt-5.2` → `fe-gpt-5` → **`fe-dsv4fr-*`** (DeepSeek) → retained **`fe-grok-4-fast-reasoning*`** tiers → unknown/other.
-2. **Proof-segment speaker gate** — only rows with `proof_segments_speaker_status = 'resolved'` are visible. Unresolved speaker attributions hide signals until curators resolve them.
+2. **Proof-segment speaker gate** — only rows with `proof_segments_speaker_status = 'resolved'` are visible. Unresolved secondary speakers in evidence quotes hide signals until curators resolve them via the unified dashboard queue.
+
+## Proof-segment display names
+
+`display_name` on proof segments is **not** stored in `PotentialPrediction`. `actionable_signal_sql.build_mat_signals_staging_sql` joins `finfluencer_id` → `FinfluencerNameVariant` at `mat_signals` build; Supabase receives enriched JSON. Tracker renders `display_name || speaker`. See [[concepts/proof-segment-speaker-resolution]].
 
 ## Critical rules
 
@@ -36,6 +40,8 @@ Facts Extraction (Stage 5) → `PotentialPrediction` → `ActionableSignal` VIEW
 ## Related pages
 
 - [DeepSeek-V4-Flash migration](file:///Users/andreskull/gor_dagster/docs/architecture/features/deepseek-v4-flash-migration.md) (FE priority + production ladder context)
+- [[concepts/proof-segment-speaker-resolution]]
+- [Proof-segment speaker resolution feature doc](file:///Users/andreskull/gor_dagster/docs/architecture/features/proof-segment-speaker-resolution.md)
 - [[concepts/signal-performance]]
 - [[concepts/speaker-attribution]]
 - [[concepts/resolution-pipeline-efficiency]]

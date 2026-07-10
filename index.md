@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-06-15
+updated: 2026-07-10
 ---
 
 # Wiki Index
@@ -31,9 +31,9 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Product | Status |
 |------|---------|--------|
-| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **Acquirers Podcast** RSS wrapped **2026-06-15** (8th SI source); hydration perf wrapped **2026-06-15**; seven→eight SI-monitored podcasts |
+| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **Recursive LLM extraction** wrapped **2026-07-01** (`si-gem31fl-recursive` / `fe-gem31fl-recursive`; batch Phase 5 → `batch-integration`); proof-segment gate **2026-07-01**; Hidden Gems **2026-07-01**; post-cutoff IPO backfill gate **2026-06-28** |
 | [[wiki/projects/gor-blog]] | finfluencer.trade | Active — CTA pattern shipped (Cramer post); apex `/api/subscribe` via landing rewrite; `api/newsletter/`; `research/cramer/` |
-| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — `docs/architecture/` in repo |
+| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **landing conversion funnel** wrapped **2026-07-10** (`docs/architecture/features/landing-conversion-improvements.md`; public leaderboards + profile gates) |
 | [[wiki/projects/rattaproff]] | rattaproff | Operational — permalink backfill + gsheet restore complete (Jun 2026); 20 storefronts; `docs/architecture/features/permalink-redirect-resolution.md` |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Active |
 | [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | Public kit + SSRN 6643379 — CSVs, scripts, paper |
@@ -53,14 +53,16 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Description |
 |------|-------------|
-| [[wiki/concepts/speaker-attribution]] | Two-stage LLM pipeline for naming podcast speakers; Stage 2 hydration O(U log W + W), FR-6 membership (2026-06-15) |
+| [[wiki/concepts/speaker-attribution]] | Two-stage LLM pipeline; production recursive SI (`si-gem31fl-recursive`); Stage 2 hydration O(U log W + W), FR-6 membership; ElevenLabs mono-speaker hardening (2026-07-01) |
 | [[wiki/concepts/actionable-signal]] | Final output VIEW — speaker-gated, not a table |
-| [[wiki/concepts/signal-performance]] | Signal → horizons: truncation, implicit opposite-direction close (same instrument) |
-| [[wiki/concepts/llm-config-registry]] | How multi-model experimentation is managed |
+| [[wiki/concepts/signal-performance]] | Signal → horizons: truncation, implicit flip; SPY benchmark `BBG000BDTBL9`; as-of exit pricing (2026-06-30) |
+| [[wiki/concepts/llm-config-registry]] | Multi-model experimentation; production `si-gem31fl-recursive` / `fe-gem31fl-recursive` (2026-07-01) |
 | [[wiki/concepts/spec-driven-development]] | The development methodology loop |
 | [[wiki/concepts/huf-eur-pipeline-pricing]] | rattaproff: HUF sheet vs per-site EUR recompute for Woo diffs |
 | [[wiki/concepts/onboarding-new-podcast-source]] | gor_dagster: playbook for new RSS → ActionableSignal (gates, PRs); links to repo operations doc |
+| [[wiki/concepts/proof-segment-speaker-resolution]] | Proof-segment quote speakers → Finfluencer; ActionableSignal gate; display_name at sync (2026-07-01) |
 | [[wiki/concepts/resolution-pipeline-efficiency]] | gor_dagster: JW matcher, re-attempt union, backlog sweeps, alias-on-resolve |
+| [[wiki/concepts/curation-learning]] | gor_dagster: fund-noise similarity, unique-ticker bar 0.85, Stage 0.75 promotion (2026-07-07) |
 
 ---
 

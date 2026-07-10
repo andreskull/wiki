@@ -4,7 +4,7 @@ title: "LLM Config Registry"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-04-06
+updated: 2026-07-01
 tags: [llm, configuration, registry, experimentation, multi-model]
 ---
 
@@ -26,8 +26,11 @@ Rather than hardcoding model names and prompts into individual assets, all LLM c
 
 ## Config IDs in use
 
-Speaker attribution: `gemini`, `gemini_20`, `gemini_25_pro`, `gpt5`, `gpt4o`, `gpt4o_mini`, `o3_mini`, `claude4_sonnet`
-Facts extraction: `fe-gpt-5.2`, `fe-gpt-5`, `fe-grok-4-fast-reasoning-*`
+**Production pipeline (2026-07-01):** **`si-gem31fl-recursive`** / **`fe-gem31fl-recursive`** — memory-centric recursive SI/FE (see [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md)).
+
+**Compat / experimentation tails:** `si-dsv4fr-58k`, `fe-dsv4fr-58k`, grok-era `si-grok-*` / `fe-grok-*`, `fe-gpt-5.2`
+
+**Legacy speaker attribution eval configs:** `gemini`, `gemini_20`, `gemini_25_pro`, `gpt5`, `gpt4o`, `gpt4o_mini`, `o3_mini`, `claude4_sonnet`
 
 ## GCS naming convention
 

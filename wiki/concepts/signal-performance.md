@@ -4,7 +4,7 @@ title: "Signal performance (truncation & implicit flip)"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-08
-updated: 2026-04-08
+updated: 2026-06-30
 tags: [performance, actionable-signal, bigquery, truncation, finfluencer-trade]
 ---
 
@@ -15,6 +15,8 @@ How finfluencer **calls** ([[concepts/actionable-signal]]) are turned into measu
 ## Definition
 
 - **Entry**: Next trading day after air date, at adjusted open (`first_tradeable_session_date` policy — see repo `docs/architecture/performance-methodology.md`).
+- **Exit (horizon end)**: Latest available `PriceHistory` bar **on or before** the calendar horizon end date (as-of join). Used when `TradingCalendar` lists a day without a bar — avoids NULL benchmark/exit prices without inventing phantom days. Shipped **2026-06-30** with SPY consolidation ([spy-canonical-figi-consolidation.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/spy-canonical-figi-consolidation.md)).
+- **S&P 500 benchmark**: SPY at Bloomberg FIGI **`BBG000BDTBL9`** (`gor_dagster/configs/benchmark_figi.py`); single FI row drives daily price sync and benchmark SQL.
 - **Completed horizon**: A row in `dagster_prices.SignalPerformance` (BigQuery) only if the horizon’s evaluation end falls **before** any boundary that ends the position.
 - **Truncation**: If a boundary occurs first, the horizon is **discarded** (not stored). No partial metrics.
 

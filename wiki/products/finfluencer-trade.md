@@ -4,7 +4,7 @@ title: "finfluencer.trade"
 product: finfluencer-trade
 project: null
 created: 2026-04-06
-updated: 2026-04-27
+updated: 2026-07-10
 tags: [finfluencer, finance, pipeline, dagster, blog, tracking]
 ---
 
@@ -28,7 +28,7 @@ The platform follows financial influencers (podcasters, YouTubers, analysts) and
 |---|---|
 | [[projects/gor_dagster]] | Data pipeline — ingestion, transcription, speaker attribution, facts extraction, signal generation. The core backend. |
 | [[projects/gor-blog]] | Public MkDocs site — blog, directory, articles; private **`research/cramer/`** for Cramer internal export scripts and specs (public data kit: [[projects/cramer-mad-money-research]]) |
-| [[projects/finfluencer-tracker]] | (Light layer — auth, sharing, landing app) |
+| [[projects/finfluencer-tracker]] | App + landing on Vercel — auth, billing, leaderboards, conversion funnel (public browse **2026-07-10**) |
 | [[projects/cramer-mad-money-research]] | Public reproducibility + working paper (SSRN 6643379) — Cramer / *Mad Money* 2018–2024 |
 
 ## Architecture summary
@@ -47,7 +47,7 @@ LLM layer uses multi-provider configuration registry (Gemini, GPT, Claude) with 
 
 ## Current status
 
-Active development. Pipeline is production-ready for core transcription and facts extraction. Speaker attribution and signal tracking are mature. Blog is live with 14+ published posts.
+Active development. Pipeline is production-ready for core transcription and facts extraction. Speaker attribution and signal tracking are mature. Blog is live with 14+ published posts. **App (finfluencer-tracker):** public conversion funnel live on `finfluencers.trade` — anonymous leaderboard/shows browse, profile-depth signup gate, landing teasers, SEO bot split (**2026-07-10** — see [[projects/finfluencer-tracker]]).
 
 ## Key cross-repo decisions
 
@@ -56,6 +56,7 @@ Active development. Pipeline is production-ready for core transcription and fact
 - **finfluencer-tracker (app layer):** **two Supabase instances** — one for **production** and one for **development** — so app/auth data can be isolated while the app still reads pipeline data sourced from production backend stores.
 - Facts extraction uses `ActionableSignal` VIEW over `PotentialPrediction` table — deduplicates by FE config priority
 - Blog (`gor-blog`) uses MkDocs; its `docs/` folder is the site source, not project documentation
+- **Public app funnel (2026-07-10):** leaderboards and `/upgrade` public; monetization at Spectator→Trader column mask + profile depth; Googlebot gets SPA not og-meta empty body ([[projects/finfluencer-tracker]])
 
 ## Planning and strategy (durable docs)
 

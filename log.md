@@ -95,3 +95,29 @@ Append-only. Grep recent entries: `grep "^## \[" log.md | tail -10`
 ## [2026-06-28] wrapup | rattaproff | Permalink redirect resolution + gsheet disaster recovery — updated `docs/architecture/features/permalink-redirect-resolution.md`; gsheet restored to 42,221 rows; hardened `storage.df_to_storage` CSV quoting; removed investigation scripts/artifacts.
 
 ## [2026-06-28] sync | rattaproff — Updated [[projects/rattaproff]] (20 sites, permalink module, recovery ops). Updated [[index]].
+
+## [2026-06-30] wrapup | gor_dagster | SPY canonical FIGI consolidation — permanent doc `docs/architecture/features/spy-canonical-figi-consolidation.md`; ops runbook `docs/operations/spy-figi-consolidation-runbook.md`; prod flip to `BBG000BDTBL9`; migration scripts removed; `spy_single_identity` asset check + verify script retained; deleted `docs/features/spy-canonical-figi-consolidation/`. Repo `WIKI.md` updated.
+
+## [2026-06-30] sync | gor_dagster — Updated [[projects/gor_dagster]] (Stage 6 dashboard/SPY identity, Stage 7 as-of exit + benchmark, completed-features table, architecture decisions, active features, ops reference). Updated [[concepts/signal-performance]] (as-of exit, SPY FIGI). Updated [[overview]], [[index]].
+
+## [2026-07-01] wrapup | gor_dagster | Motley Fool Hidden Gems Investing — permanent doc `docs/architecture/features/hidden-gems-ingestion.md`; Pattern 6 ARML; Megaphone slug validator; RSS dedupe + load-job idempotency; source-agnostic `si_sensor`; 2247/2247 downloaded; deleted `docs/features/motley-fool-hidden-gems-ingestion/`. Repo `WIKI.md` updated.
+
+## [2026-07-01] sync | gor_dagster — Updated [[projects/gor_dagster]] (nine-source RSS catalogue, Pattern 6, source-agnostic SI, completed-features table, architecture decisions, wrapped feature note). Updated [[concepts/onboarding-new-podcast-source]] (Gate 2 resolved for podcast_rss). Updated [[overview]], [[index]].
+
+## [2026-07-01] sync | gor_dagster — ElevenLabs mono-speaker SI hardening: resplit-at-unify, auto-heal at SI load (`elevenlabs_unified_heal.py`), healable stuck exclusion, merged-segment coverage fix. Updated repo `WIKI.md`, `docs/architecture/features/hidden-gems-ingestion.md`, `docs/architecture/core-data-model.md`. Wiki: [[projects/gor_dagster]] (Stage 3–4, architecture decisions), [[concepts/speaker-attribution]], [[overview]], [[index]].
+
+## [2026-07-01] wrapup | gor_dagster | Proof-segment speaker resolution — permanent doc `docs/architecture/features/proof-segment-speaker-resolution.md` updated (2026-07-01 operational verification); deleted `docs/features/proof-segment-speaker-resolution/`; ops scripts retained. Repo `WIKI.md` updated.
+
+## [2026-07-01] sync | gor_dagster — Proof-segment speaker resolution wrapup: new [[concepts/proof-segment-speaker-resolution]]; updated [[projects/gor_dagster]] (Stage 6, ActionableSignal gate, completed features, ops), [[concepts/actionable-signal]], [[concepts/speaker-attribution]], [[overview]], [[index]].
+
+## [2026-07-01] wrapup | gor_dagster | Recursive LLM extraction — permanent doc `docs/architecture/features/recursive-llm-extraction.md` (interactive `si-gem31fl-recursive` / `fe-gem31fl-recursive`); deleted `docs/features/recursive-llm-extraction/`; Vertex AI batch delivery moved to `docs/features/batch-integration/` Phase 5; eval outputs → `docs/analytics/recursive-llm-extraction/`. Repo `WIKI.md` updated.
+
+## [2026-07-01] sync | gor_dagster — Recursive LLM extraction wrapup: updated [[projects/gor_dagster]] (Stage 4 recursive SI, pipeline model priority, architecture decisions, active features, wrapped note), [[concepts/speaker-attribution]], [[concepts/llm-config-registry]], [[overview]], [[index]].
+
+## [2026-07-07] wrapup | gor_dagster | Curation learning — permanent doc `docs/architecture/features/curation-learning.md`; P3 fund-noise, P2 unique-ticker bar 0.85, P1 Stage 0.75 promotion; sensor flags on; deleted `docs/features/curation-learning/`; `CLAUDE.md` + `WIKI.md` updated.
+
+## [2026-07-07] sync | gor_dagster — Curation learning wrapup: new [[concepts/curation-learning]]; updated [[projects/gor_dagster]] Stage 6 cascade, architecture decisions, completed features; linked from [[concepts/resolution-pipeline-efficiency]]; [[index]] updated.
+
+## [2026-07-10] wrapup | finfluencer-tracker | Landing page & conversion funnel improvements — permanent doc `docs/architecture/features/landing-conversion-improvements.md`; public `/leaderboard` + `/shows`; profile-depth free-account gate; unified landing teasers; SEO bot split; anon RPCs (`landing_stats`, show summary indexes); deleted `docs/features/landing-conversion-improvements/`. Repo `WIKI.md` updated.
+
+## [2026-07-10] sync | finfluencer-tracker — Updated [[projects/finfluencer-tracker]] (access model, completed features, Supabase RPC notes, architecture decisions). Updated [[products/finfluencer-trade]] (component role, current status, cross-repo decision). Updated [[overview]], [[index]].

@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-06-15
+updated: 2026-07-07
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase]
 ---
 
@@ -59,7 +59,7 @@ The pipeline is a seven-stage sequence. Each stage consumes the output of the pr
 
 Polls RSS feeds for all configured `ContentSource` records. For each new episode: creates a `ContentItem`, downloads audio to `gs://gor-media-prod/sources/podcasts/{show_id}/{episode_id}.mp3`. The `rss_episode_ingestion_sensor` runs on a configurable `RSS_POLL_INTERVAL_SEC` (default 300s). Download retries use exponential backoff; permanent failures (`download_error:unsupported_media_type`, `download_error:network`) stop retries and flag for manual review.
 
-**Production RSS catalogue (eight `ContentSource` rows in the SI-monitored podcast set):** Fast Money (`49400b5b-6e3e-4c0d-be0b-8cd7ab18ba74`), Mad Money (`e6a22166-82ca-482d-b54b-4a1f016948c3`), Hedgeye (`8a61349e-9df2-4397-bc76-b4af8b0fb9d8`), Halftime Report (`c925324b-63e2-4f10-a074-6e4ed7da2d0b`), Morning Filter (`4f158ea6-c1c4-43f1-86e3-3d96fed6dd80` — [morning-filter-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/morning-filter-ingestion.md)), **Compound and Friends** (`0b75ea6c-20b2-4a7c-89db-b0899788a8cc` — [compound-and-friends-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/compound-and-friends-ingestion.md)), **7investing** (`c2658090-942b-4cbd-9552-f04995220873` — [7investing-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/7investing-ingestion.md), Anchor/Spotify feed `https://anchor.fm/s/1659b6fc/podcast/rss`, `external_id` `1659b6fc`, enclosure **Pattern 4** Megaphone `APO…` and **Pattern 5** Anchor `anchor.fm/s/...`), and **The Acquirers Podcast** (`428270b1-e53b-494a-b1b5-4278756c6aa4` — [acquirers-podcast-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/acquirers-podcast-ingestion.md), Anchor/Spotify feed `https://anchor.fm/s/9603714/podcast/rss`, `external_id` `9603714`, Patterns 4+5, mid-catalog `.m4a` supported). Canonical UUID list: [`si_sensor.PIPELINE_SI_MONITORED_CONTENT_SOURCE_IDS`](file:///Users/andreskull/gor_dagster/gor_dagster/sensors/si_sensor.py).
+**Production RSS catalogue (nine `podcast_rss` ContentSources; SI via `get_podcast_rss_content_source_ids()`):** Fast Money (`49400b5b-6e3e-4c0d-be0b-8cd7ab18ba74`), Mad Money (`e6a22166-82ca-482d-b54b-4a1f016948c3`), Hedgeye (`8a61349e-9df2-4397-bc76-b4af8b0fb9d8`), Halftime Report (`c925324b-63e2-4f10-a074-6e4ed7da2d0b`), Morning Filter (`4f158ea6-c1c4-43f1-86e3-3d96fed6dd80` — [morning-filter-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/morning-filter-ingestion.md)), **Compound and Friends** (`0b75ea6c-20b2-4a7c-89db-b0899788a8cc` — [compound-and-friends-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/compound-and-friends-ingestion.md)), **7investing** (`c2658090-942b-4cbd-9552-f04995220873` — [7investing-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/7investing-ingestion.md), Anchor/Spotify feed `https://anchor.fm/s/1659b6fc/podcast/rss`, `external_id` `1659b6fc`, enclosure **Pattern 4** Megaphone `APO…` and **Pattern 5** Anchor `anchor.fm/s/...`), **The Acquirers Podcast** (`428270b1-e53b-494a-b1b5-4278756c6aa4` — [acquirers-podcast-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/acquirers-podcast-ingestion.md), Anchor/Spotify feed `https://anchor.fm/s/9603714/podcast/rss`, `external_id` `9603714`, Patterns 4+5, mid-catalog `.m4a` supported), and **Motley Fool Hidden Gems Investing** (`22e0168c-ef5b-4864-a2ed-cbe8aff56d15` — [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md), Megaphone direct RSS `feeds.megaphone.fm/ARML8165884693`, `external_id` `ARML8165884693`, enclosure **Pattern 6** Megaphone `ARML…`). Episode ID extraction: Patterns 1–6 in [`rss_ingestion.py`](file:///Users/andreskull/gor_dagster/gor_dagster/assets/rss_ingestion.py). SI discovery: [`get_podcast_rss_content_source_ids`](file:///Users/andreskull/gor_dagster/gor_dagster/sensors/si_sensor.py) (all active `podcast_rss` sources — no hardcoded allowlist since **2026-07-01**).
 
 Key assets: `rss_new_episodes_identified`, `rss_episode_ingestion_orchestrator`, `rss_episode_ingestion_sensor`
 
@@ -81,13 +81,19 @@ The `stt_unified_converter` normalises provider-specific raw transcripts into a 
 
 Coverage metrics are tracked: `stt_coverage_ratio` (target > 0.95) flags transcripts where the last utterance ends significantly before the expected audio duration. Diagnostics stored in `gs://gor-stt-transcripts/stt_diagnostics/{episode_id}/{stt_provider}.json`.
 
+**ElevenLabs mono-speaker resplit (2026-07-01):** When ElevenLabs mono-diarization collapses an episode into mega-utterances, `unified_transcript_normalizers.py` splits utterances into **120s windows** (trigger: any utterance >480s or mono-speaker share ≥85%). **`elevenlabs_unified_heal.py`** can re-unify from the existing GCS raw blob at SI load (no STT re-call; max 2 attempts). Manual bulk re-unify: `scripts/rerun_unified_elevenlabs.py`. Permanent doc: [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md) §ElevenLabs mono-speaker SI hardening.
+
 Docs: [Unified Transcript Schema](file:///Users/andreskull/gor_dagster/docs/schemas/unified-transcript-schema.md)
 
 ### Stage 4 — Speaker Attribution
 
 Two-stage pipeline: **LLM Identification** then **Transcript Hydration**.
 
-**LLM Identification (Stage 4a):** An LLM classifies each utterance's speaker at one of three confidence levels (`full_name`, `partial_name`, `unknown`). The output — a flat segment array with `source_utterance_start/end` references — is written to `gs://gor-stt-transcripts/identification/{episode_id}/{provider}_{llm_config_id}.json`. Eight LLM models supported. Anchor enforcement ensures `full_name` attributions require explicit textual evidence (self-introduction, name mention, etc.); speakers without anchors are forced to `Unknown`.
+**LLM Identification (Stage 4a):** Production uses **memory-centric recursive SI** via **`si-gem31fl-recursive`** (wrapped **2026-07-01** — [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md)): three-wave algorithm (roster bootstrap → parallel 300s window passes → optional resolution → deterministic fold). Maintains live speaker memory, delta-only LLM output, show priors from BigQuery, evidence-gated merges with retroactive label rewrite. ~13 passes / ~100s wallclock on 90-min episodes (observed on Compound list-2 rescue). Legacy single-pass and older recursive configs remain as artifact-priority compat tails (`si-dsv4fr-58k`, grok-era ids).
+
+An LLM classifies each utterance's speaker at one of three confidence levels (`full_name`, `partial_name`, `unknown`). The output — a flat segment array with `source_utterance_start/end` references — is written to `gs://gor-stt-transcripts/identification/{episode_id}/{provider}_{llm_config_id}.json`. Eight+ LLM model families supported via config registry. Anchor enforcement ensures `full_name` attributions require explicit textual evidence (self-introduction, name mention, etc.); speakers without anchors are forced to `Unknown`.
+
+**Pending:** Vertex AI **batch delivery** for recursive SI backlog cohorts (~50% interactive cost) — active spec `gor_dagster/docs/features/batch-integration/` Phase 5; types stubbed in `EpisodeWaveState` / `WavePhase`.
 
 **Transcript Hydration (Stage 4b):** Merges the identification file back into the unified transcript to produce a stitched transcript where every utterance has a named speaker. Written to `gs://gor-stt-transcripts/hydrated/{episode_id}/{provider}_{llm_config_id}.json`. The `hydration_sensor` builds batches of `(episode, llm_config_id)` pairs (**batch size 30**), emits **one** `hydration_job` run per sensor tick (fewer Dagster Cloud orchestration runs than the former dual parallel pattern), with round-robin fairness. Audit trail in the `hydration_runs` BigQuery table.
 
@@ -95,15 +101,19 @@ Two-stage pipeline: **LLM Identification** then **Transcript Hydration**.
 
 Quality metrics tracked per run: `anchor_coverage_pct` (target ≥ 95%), `llm_coverage_ratio` (target > 0.95), `multi_speaker_utterances_count`, `auto_corrected_segments_count`, `quote_validation_failure_rate`.
 
+**Duration coverage gate (70% minimum):** `llm_coverage_calculator.calculate_unique_time_covered()` uses `merge_metadata.merged_utterances` when segments were merged across STT utterances — without this, merged segments only expose the first utterance bounds and under-report coverage (2026-07-01 fix). See [core-data-model.md](file:///Users/andreskull/gor_dagster/docs/architecture/core-data-model.md) (LLM Coverage Metrics).
+
+**ElevenLabs auto-heal at SI load (2026-07-01):** `speaker_attribution_llm` calls `heal_elevenlabs_unified_transcript_if_needed()` before recursive SI; `si_sensor` excludes healable mega-utterance failures from `si_stuck`. See [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md) §ElevenLabs mono-speaker SI hardening.
+
 Key assets: `speaker_attribution_llm`, `transcript_hydration`, `statistical_speaker_attribution`
 
-Docs: [Speaker Attribution Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/speaker-attribution-architecture.md), [Anchor Enforcement](file:///Users/andreskull/gor_dagster/docs/architecture/speaker-attribution-anchor-enforcement.md), [Speaker Attribution Guide](file:///Users/andreskull/gor_dagster/docs/operations/speaker-attribution-guide.md), [Transcript Hydration Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/transcript-hydration-architecture.md), [Hydration performance optimization](file:///Users/andreskull/gor_dagster/docs/architecture/features/hydration-performance-optimization.md), [Hydration sensor batching](file:///Users/andreskull/gor_dagster/docs/operations/hydration-sensor-batching.md)
+Docs: [Speaker Attribution Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/speaker-attribution-architecture.md), [Recursive LLM extraction](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md), [Anchor Enforcement](file:///Users/andreskull/gor_dagster/docs/architecture/speaker-attribution-anchor-enforcement.md), [Speaker Attribution Guide](file:///Users/andreskull/gor_dagster/docs/operations/speaker-attribution-guide.md), [Transcript Hydration Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/transcript-hydration-architecture.md), [Hydration performance optimization](file:///Users/andreskull/gor_dagster/docs/architecture/features/hydration-performance-optimization.md), [Hydration sensor batching](file:///Users/andreskull/gor_dagster/docs/operations/hydration-sensor-batching.md)
 
 ### Stage 5 — Facts Extraction
 
 An LLM reads the hydrated transcript and extracts financial predictions: stock picks, position disclosures (start/hold/close long/short), recommendations. Each extracted item becomes a `PotentialPrediction` row in BigQuery. Runs in parallel with `IndividualQuote` creation from the same hydrated transcript.
 
-FE model selection: chooses the best available hydration (per `Pipeline Model Priority and Retries` policy). Retries upward only — if a lower-priority hydration succeeds first, FE runs on it, then automatically re-runs on a better hydration when available.
+FE model selection: production **`fe-gem31fl-recursive`** (paired with recursive SI); chooses the best available hydration (per `Pipeline Model Priority and Retries` policy). Retries upward only — if a lower-priority hydration succeeds first, FE runs on it, then automatically re-runs on a better hydration when available.
 
 `PotentialPrediction` is the raw store. It holds everything including duplicates (from running with different FE configs). `ActionableSignal` is a VIEW over it with deduplication logic.
 
@@ -119,13 +129,22 @@ Docs: [Facts Extraction Architecture](file:///Users/andreskull/gor_dagster/docs/
 
 - Step 0: `DismissedInstrumentHash` auto-dismiss
 - Layer 0.5: `InstrumentAlias` instant lookup
-- Layers 1/2: internal JW fuzzy match (`compute_instrument_name_similarity`)
+- **Layer 0.75: promoted-ticker lookup** (≥2 consistent manual curations, no conflicting aliases — **2026-07-07**)
+- Layers 1/2: internal JW fuzzy match (`compute_instrument_name_similarity`); **unique-ticker bar 0.85** when ticker maps to exactly one FI (not inferred)
 - Layer 1.5: historical ticker lookup
 - Layer 3: OpenFIGI batch lookup
 
-Unresolvable instruments queue in `PendingInstrumentResolution`. **Re-attempt machinery (2026-06):** frozen rows re-enter when `reattempt_eligible=TRUE` (sibling ticker mark or backlog sweep). Resolver version `instr-2026.06-jw`. Alias written on every successful auto-resolve (`created_by='auto_resolution'`).
+**Curation learning (2026-07-07):** P3 fund-noise second pass in name similarity (always on). P1+P2 flag-gated in production via `potential_prediction_resolution_sensor`. Poison-alias cleanup manifest + gap-fix scripts applied in prod BQ. Permanent doc: [curation-learning.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/curation-learning.md). Wiki: [[concepts/curation-learning]].
+
+Unresolvable instruments queue in `PendingInstrumentResolution`. **Re-attempt machinery (2026-06):** frozen rows re-enter when `reattempt_eligible=TRUE` (sibling ticker mark or backlog sweep). Resolver version `instr-2026.07-tr`. Alias written on every successful auto-resolve (`created_by='auto_resolution'`).
+
+**Dashboard enrichment (2026-06-30):** Instrument curation matches existing `FinancialInstrument` rows **FIGI-first**, with unambiguous `(ticker, exchange)` fallback when OpenFIGI returns a different FIGI than stored — prevents false **"Create & link"** for well-known names like SPY. Ambiguous recycled tickers are never auto-linked.
+
+**SPY canonical identity (2026-06-30):** Benchmark ETF SPY/US uses single Bloomberg FIGI **`BBG000BDTBL9`** (`gor_dagster/configs/benchmark_figi.py`). Row UUID **`8dbef73e-8ec3-4b18-b530-b045316467f1`** unchanged; daily price sync and benchmark SQL follow the FI row's FIGI. Daily **`spy_single_identity`** asset check on `resolve_instruments` + `scripts/verify_spy_single_identity.py`; schedule STOPPED by default. Permanent doc: [spy-canonical-figi-consolidation.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/spy-canonical-figi-consolidation.md); runbook: [spy-figi-consolidation-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/spy-figi-consolidation-runbook.md).
 
 **Speaker Resolution:** Maps named speakers to `Finfluencer` via `SpeakerMatchScorer` (Jaro-Winkler + org context). Production thresholds: fuzzy auto-resolve **0.935**; org-conflict override **disabled** (1.00). Unresolved speakers queue in `PendingSpeakerResolution`.
+
+**Proof-segment speaker resolution (2026-07-01):** After prediction-level resolution, `_resolve_proof_segment_speakers` resolves each distinct speaker in `proof_segments[]`. Multi-token unresolved secondaries appear in the **unified dashboard queue** (ranked by `predictions_blocked`); `resolve_proof_segment_speaker()` writes `finfluencer_id` back to all affected predictions. `content_quality.proof_segment_speaker_backfill` propagates manual resolutions historically. `display_name` for quotes is enriched at `mat_signals` build (`actionable_signal_sql`), not stored in BQ. Permanent doc: [proof-segment-speaker-resolution.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/proof-segment-speaker-resolution.md). Wiki: [[concepts/proof-segment-speaker-resolution]].
 
 **Backlog sweep asset:** `resolution_backlog_sweep` — dry-run preview then mark eligible; drain with resolution job. One-time sweeps unlocked **237** instrument + **18** speaker hashes (2026-06-09).
 
@@ -145,7 +164,7 @@ Docs: [Instrument Resolution Reference](file:///Users/andreskull/gor_dagster/doc
 - `proof_segments_speaker_status = 'resolved'`
 - FE config priority deduplication (highest-priority FE config per episode wins — DeepSeek `fe-dsv4fr-*` above retained grok tiers when both exist; see `ActionableSignal.sql`)
 
-`SignalPerformance` tracks each signal across standard horizons (1w, 1m, 3m, 6m, 1y). Price data ingested via EODHD API. **Truncated horizons** (position ends before the horizon completes) are **not** stored. A position ends on an explicit `close_long` / `close_short`, or **implicitly** when the same finfluencer issues an opposite-direction `start_*` / `hold_*` on the **same instrument** (boundary = `first_tradeable_session_date` of the flip). **Signal pruning (2026-05):** within-sequence redundant mentions are pruned in `SignalSequence`; Supabase **`mat_signal_performance`** merges un-pruned **`SignalPerformance`** with `mat_signals`, while finfluencer aggregate mats filter with **`mat_signals.is_kept`** so leaderboards reflect kept calls. **`SignalPerformance_pruned`** is the kept-only calculator table for QA. The cutover snapshot **`SignalPerformance_baseline`** is retired — Dagster does not write it; the physical BigQuery table was dropped after cutover ([feature doc](file:///Users/andreskull/gor_dagster/docs/architecture/features/signal-pruning-performance.md)). See [[concepts/signal-performance]] and [Performance Methodology](file:///Users/andreskull/gor_dagster/docs/architecture/performance-methodology.md).
+`SignalPerformance` tracks each signal across standard horizons (1w, 1m, 3m, 6m, 1y). Price data ingested via EODHD API. **S&P 500 benchmark** uses SPY at **`BBG000BDTBL9`** (see SPY consolidation above). **Exit pricing (2026-06-30):** horizon-end prices use **as-of** join — latest `PriceHistory` bar on or before the calendar end date when exact-day bars are missing (avoids NULL benchmark rows on sparse trading days). **Truncated horizons** (position ends before the horizon completes) are **not** stored. A position ends on an explicit `close_long` / `close_short`, or **implicitly** when the same finfluencer issues an opposite-direction `start_*` / `hold_*` on the **same instrument** (boundary = `first_tradeable_session_date` of the flip). **Signal pruning (2026-05):** within-sequence redundant mentions are pruned in `SignalSequence`; Supabase **`mat_signal_performance`** merges un-pruned **`SignalPerformance`** with `mat_signals`, while finfluencer aggregate mats filter with **`mat_signals.is_kept`** so leaderboards reflect kept calls. **`SignalPerformance_pruned`** is the kept-only calculator table for QA. The cutover snapshot **`SignalPerformance_baseline`** is retired — Dagster does not write it; the physical BigQuery table was dropped after cutover ([feature doc](file:///Users/andreskull/gor_dagster/docs/architecture/features/signal-pruning-performance.md)). See [[concepts/signal-performance]] and [Performance Methodology](file:///Users/andreskull/gor_dagster/docs/architecture/performance-methodology.md).
 
 `SignalCurrentPerformance` (BigQuery VIEW) and the `calculate_signal_performance` asset share the same truncation logic (`implicit_close_signals` ∪ `close_signals` in SQL).
 
@@ -213,7 +232,7 @@ Production uses **three** datasets for the core pipeline. Default `bigquery_reso
 
 - **Never DELETE from `ActionableSignal`** — it's a VIEW. Delete from `PotentialPrediction` instead.
 - **FE config priority deduplication** — only the highest-priority `fe_config_id` per episode appears. Priority order (**`gor_dagster/sql/views/ActionableSignal.sql` `fe_priority`**): **`fe-gpt-5.2`** (1) → **`fe-gpt-5`** (2) → **`fe-dsv4fr-65k`** / **`fe-dsv4fr-58k`** (DeepSeek tiers) → **`fe-grok-4-fast-reasoning*`** (~5–8) → other / unknown. **`scripts/update_actionable_signal_view.py`** deploys edits to `fe_priority`.
-- **Proof-segment speaker gate** — every row requires `proof_segments_speaker_status = 'resolved'`. No created_at cutoff; rule applies to all signals historical and new.
+- **Proof-segment speaker gate** — every row requires `proof_segments_speaker_status = 'resolved'`. No created_at cutoff. `display_name` on proof segments resolves at `mat_signals` build from `FinfluencerNameVariant`, not stored in `PotentialPrediction`. **73,261** resolved / **42** long-tail partial-pending as of **2026-07-01**. [[concepts/proof-segment-speaker-resolution]]
 
 ### GCS storage structure
 
@@ -252,7 +271,7 @@ Docs: [Dynamic Allocation API](file:///Users/andreskull/gor_dagster/docs/api/dyn
 
 ### Pipeline model priority and retries
 
-Central policy in **`gor_dagster/configs/pipeline_eligibility.py`**. Production SI/FE primary ladder (**2026-05**): **`si-dsv4fr-58k`** / **`fe-dsv4fr-58k`** (DeepSeek-V4-Flash); Grok-era ids remain only for compatibility with historical hydrated transcripts and FE maps. Narrative closure: **[deepseek-v4-flash-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/deepseek-v4-flash-migration.md)**. Governs:
+Central policy in **`gor_dagster/configs/pipeline_eligibility.py`**. Production SI/FE primary ladder (**2026-06-15**, recursive wrap **2026-07-01**): **`si-gem31fl-recursive`** / **`fe-gem31fl-recursive`** (Gemini 2.5 Flash memory-centric recursive); **`si-dsv4fr-58k`** / **`fe-dsv4fr-58k`** retained for backward-compat artifact selection only; Grok-era ids remain compatibility tails. Narrative: **[recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md)**, **[deepseek-v4-flash-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/deepseek-v4-flash-migration.md)**. Governs:
 - Which LLM configs are eligible for SI (Speaker Identification), HY (Hydration), FE (Facts Extraction)
 - Duration-based SI starting config (short episodes vs long)
 - Upward-only retries — FE always picks the best available hydration, re-runs automatically on improvement
@@ -348,7 +367,14 @@ Key rule: all Python code must be written to `.py` files before execution — ne
 | Dagster Cloud credit hygiene | Tune sensors/schedules and `RunRequest` fan-out for hybrid orchestration credits; permanent write-up: [dagster-cloud-credit-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/dagster-cloud-credit-optimization.md). |
 | BigQuery bytes + PotentialPrediction guardrail | Partition predicates on hot reads; **`require_partition_filter`** on production `PotentialPrediction`; local lint `check_no_select_star.py`; checklist [bigquery-cost-checklist.md](file:///Users/andreskull/gor_dagster/docs/operations/bigquery-cost-checklist.md); program summary [bigquery-cost-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bigquery-cost-optimization.md). |
 | Resolution re-attempt + JW matcher | Frozen PIR/PSR re-enter only when `reattempt_eligible=TRUE`. JW instrument matcher; speaker fuzzy **0.935**; org-conflict override off. Alias on every auto-resolve. [[concepts/resolution-pipeline-efficiency]] |
+| Curation learning (P1/P2/P3) | Fund-noise similarity always on; unique-ticker bar **0.85**; Stage **0.75** promotion (≥2 manual curations). Sensor flags on **2026-07-07**. [[concepts/curation-learning]] |
 | Transcript hydration canonical utils + FR-6 | Hot path in `transcript_hydration_utils.py`; O(U log W + W) index; `MEMBERSHIP_TOL=0.01`; asset re-exports only. Golden speaker accuracy unchanged (scorer bypasses hydration artifact). [hydration-performance-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hydration-performance-optimization.md) |
+| SPY single benchmark FIGI | SPY/US canonical FIGI **`BBG000BDTBL9`**; FI UUID unchanged; dashboard FIGI-first + ticker/exchange fallback; daily `spy_single_identity` asset check; performance exit uses as-of price join. [spy-canonical-figi-consolidation.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/spy-canonical-figi-consolidation.md) |
+| Podcast RSS SI discovery | `si_sensor` queries all active `podcast_rss` ContentSources via `get_podcast_rss_content_source_ids()` — no per-onboarding allowlist (2026-07-01). [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md) |
+| Pattern 6 Megaphone ARML | `extract_episode_id_from_enclosure_url()` branch for `feeds.megaphone.fm/{slug}` shows with `ARML{digits}.mp3`; Megaphone slug valid as `ContentSource.external_id`. [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md) |
+| ElevenLabs mono-speaker SI hardening | Resplit at unify (120s windows); auto-heal at SI load from GCS raw (`elevenlabs_unified_heal.py`); healable stuck exclusion; merged-segment coverage via `merge_metadata.merged_utterances`. [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md) |
+| Recursive LLM extraction (memory-centric SI/FE) | Production **`si-gem31fl-recursive`** / **`fe-gem31fl-recursive`**; three-wave bootstrap → windows → resolution → fold; show priors; delta-only ops. Wrapped **2026-07-01**. Batch backlog delivery: `docs/features/batch-integration/` Phase 5. [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md) |
+| ContentItem load-job idempotency | RSS batch dedupe + `content_item_insert_already_present` guard prevents duplicate physical rows on load-job retry (2026-06-30). Extends [contentitem-dedupe-and-cleanup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/contentitem-dedupe-and-cleanup.md) |
 
 ---
 
@@ -363,6 +389,11 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 | 2026-06-10 | Resolution pipeline efficiency (JW matcher, re-attempt, sweeps, alias-on-resolve) | [resolution-pipeline-efficiency.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/resolution-pipeline-efficiency.md) |
 | 2026-06-15 | Transcript hydration performance optimization (O(U·W)→O(U log W + W), FR-6 membership, canonical utils) | [hydration-performance-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hydration-performance-optimization.md) |
 | 2026-06-15 | The Acquirers Podcast RSS onboarding (Anchor/Spotify; Patterns 4+5; 8th SI source; 436 episodes) | [acquirers-podcast-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/acquirers-podcast-ingestion.md) |
+| 2026-06-30 | SPY canonical FIGI consolidation (BL9 identity, dashboard fallback, guardrail, as-of performance exit) | [spy-canonical-figi-consolidation.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/spy-canonical-figi-consolidation.md) |
+| 2026-07-07 | Curation learning — fund-noise similarity, unique-ticker bar, Stage 0.75 promotion | [curation-learning.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/curation-learning.md) |
+| 2026-07-01 | Proof-segment speaker resolution (gate live, curation + backfill + sync verified) | [proof-segment-speaker-resolution.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/proof-segment-speaker-resolution.md) |
+| 2026-07-01 | Recursive LLM extraction — memory-centric SI/FE (wrapped) | [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md) |
+| 2026-07-01 | Motley Fool Hidden Gems RSS onboarding (Pattern 6 ARML, Megaphone slug, STT pacing, source-agnostic SI; 2247 episodes) | [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md) |
 | 2026-05-15 | Pytest `not expensive` green track (permanent reference; suite alignment) | [pytest-not-expensive-green.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/pytest-not-expensive-green.md) |
 | 2026-05-14 | ContentItem deduplication, ingest guard, BQ apply pipeline | [contentitem-dedupe-and-cleanup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/contentitem-dedupe-and-cleanup.md) — runbook [contentitem-dedupe-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/contentitem-dedupe-runbook.md) |
 | 2026-05-14 | Compound and Friends (Pippa) RSS onboarding + SI allowlist extension | [compound-and-friends-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/compound-and-friends-ingestion.md) |
@@ -379,12 +410,18 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 
 | Feature | Folder / notes |
 |---|---|
-| Batch LLM integration | `batch-integration/` |
-| Recursive LLM extraction | `recursive-llm-extraction/` |
-| Show profile access consistency | `show-profile-access-consistency/` |
+| Batch LLM integration | `batch-integration/` — Phase 1 done (`LLMBatchProcessor`); Phase 5 = recursive SI wave batch (migrated from recursive-llm-extraction wrapup) |
 | Finfluencer and show profiles | `finfluencer-and-show-profiles/` |
-| Proof-segment speaker resolution (follow-ons) | `proof-segment-speaker-resolution/` |
 | Social share previews | `social-share-previews/` |
+| Post-cutoff IPO resolution | `post-cutoff-ipo-resolution/` — Inc 1–8 backfill gate ✅ (2026-06-28); frozen DATA_REFRESH curation ongoing |
+
+**Wrapped 2026-07-01:** `recursive-llm-extraction/` → [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md) (interactive **`si-gem31fl-recursive`** / **`fe-gem31fl-recursive`** in prod; 60-episode Compound list-2 rescue complete). Unimplemented Vertex AI batch delivery moved to **`batch-integration/`** Phase 5.
+
+**Wrapped 2026-07-01:** `proof-segment-speaker-resolution/` → [proof-segment-speaker-resolution.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/proof-segment-speaker-resolution.md) (gate live; 73,261 resolved; mat_signals + Supabase verified; ops scripts retained)
+
+**Wrapped 2026-07-01:** `motley-fool-hidden-gems-ingestion/` → [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md) (2247/2247 downloaded; STT backfill ongoing; Pattern 6; `si_sensor` now source-agnostic; ElevenLabs mono-speaker resplit + auto-heal + merged-segment coverage fix documented in permanent doc)
+
+**Wrapped 2026-06-30:** `spy-canonical-figi-consolidation/` → [spy-canonical-figi-consolidation.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/spy-canonical-figi-consolidation.md)
 
 **Wrapped 2026-06-15:** `hydration-performance-optimization/` → [hydration-performance-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hydration-performance-optimization.md)
 
@@ -407,10 +444,12 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 | STT monitoring | [STT Monitoring](file:///Users/andreskull/gor_dagster/docs/operations/stt-monitoring.md) |
 | Speaker attribution | [Speaker Attribution Guide](file:///Users/andreskull/gor_dagster/docs/operations/speaker-attribution-guide.md) |
 | Speaker resolution | [Speaker Resolution Workflow](file:///Users/andreskull/gor_dagster/docs/operations/speaker-resolution-workflow.md) |
+| Proof-segment speaker resolution | [proof-segment-speaker-resolution.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/proof-segment-speaker-resolution.md); verify: `proof_segment_integration_checks.py`, `verify_mat_signals_proof_segments.py`, `verify_supabase_proof_segments.py` |
 | Golden reference creation | [Golden Reference Workflow](file:///Users/andreskull/gor_dagster/docs/operations/golden-reference-workflow.md) |
 | Facts extraction | [Facts Extraction Guide](file:///Users/andreskull/gor_dagster/docs/operations/facts-extraction-guide.md) |
 | Instrument resolution | [FIGI Instrument Cleanup Guide](file:///Users/andreskull/gor_dagster/docs/operations/figi-instrument-cleanup-guide.md) |
 | Resolution backlog monitoring | `scripts/analyze_resolution_backlog.py`, `scripts/analyze_resolution_drill.py` — see [resolution-pipeline-efficiency.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/resolution-pipeline-efficiency.md) |
+| SPY benchmark identity verification | [spy-figi-consolidation-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/spy-figi-consolidation-runbook.md), `scripts/verify_spy_single_identity.py` |
 | Schema management | [Schema Management](file:///Users/andreskull/gor_dagster/docs/operations/schema-management.md) |
 | Configuration reference | [Configuration Reference](file:///Users/andreskull/gor_dagster/docs/operations/configuration-reference.md) |
 | Price ingestion | [Price Ingestion Guide](file:///Users/andreskull/gor_dagster/docs/operations/price-ingestion-guide.md) |
@@ -427,6 +466,7 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 
 - [[products/finfluencer-trade]]
 - [[projects/gor-blog]]
+- [[concepts/proof-segment-speaker-resolution]]
 - [[concepts/speaker-attribution]]
 - [[concepts/actionable-signal]]
 - [[concepts/signal-performance]]

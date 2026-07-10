@@ -56,6 +56,8 @@ Gate and one-time diagnostic scripts were removed at wrapup.
 ## Related pages
 
 - [resolution-pipeline-efficiency.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/resolution-pipeline-efficiency.md) — permanent feature doc
+- [curation-learning.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/curation-learning.md) — P1/P2/P3 curation learning (2026-07-07)
 - [instrument-resolution-reference.md](file:///Users/andreskull/gor_dagster/docs/architecture/instrument-resolution-reference.md)
 - [instrument-resolution-bulk-manual-curation.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/instrument-resolution-bulk-manual-curation.md)
+- [[concepts/curation-learning]] — Stage 0.75 promotion, unique-ticker bar 0.85
 - [[concepts/actionable-signal]] — requires `resolution_status` and `speaker_resolution_status` resolved
