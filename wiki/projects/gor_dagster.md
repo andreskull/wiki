@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-07-07
+updated: 2026-07-11
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase]
 ---
 
@@ -295,6 +295,8 @@ Docs: [Finfluencer Master Data](file:///Users/andreskull/gor_dagster/docs/archit
 
 BigQuery is the system of record. Supabase mirrors selected tables for the app (`finfluencer-tracker`). Dagster asset `sync/sync_to_supabase` (and `mat_*` materialisation assets) materialise compatible tables, upsert deltas, and **delete stale rows** when BigQuery no longer has a matching key (e.g. after performance row corrections).
 
+**CNBC IPO scoreboard (2026-07-11):** Dedicated snapshot path for post-IPO CNBC cohort picks — `mat_ipo_scoreboard_{signals,leaderboard,summary}` in `dagster_shared` → Supabase `ipo_scoreboard_*` tables → RPC `get_ipo_scoreboard_page`. Since-call performance via `IpoScoreboardSinceCallPerformance` (not fixed horizons). Public app route **`/cnbc-ipo`** on [[projects/finfluencer-tracker]]; v1 ticker **SPCX** only. UI shows **kept picks only** (`is_kept`); repeat mentions hidden from feed. Social honeypot + gor-blog launch **deferred** (sparse post-IPO pick frequency). Permanent doc: [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md). Ops: `scripts/verify_ipo_scoreboard_rpc_prod.py`, `scripts/analyze_hot_ipo_scoreboard_candidates.py`.
+
 The app does not write to synced analytical tables — signal and performance data flow BigQuery → Supabase.
 
 Docs: [Supabase Schema Spec](file:///Users/andreskull/gor_dagster/docs/architecture/supabase-schema-spec.md), [Supabase Sync Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/supabase-sync-architecture.md)
@@ -375,6 +377,7 @@ Key rule: all Python code must be written to `.py` files before execution — ne
 | ElevenLabs mono-speaker SI hardening | Resplit at unify (120s windows); auto-heal at SI load from GCS raw (`elevenlabs_unified_heal.py`); healable stuck exclusion; merged-segment coverage via `merge_metadata.merged_utterances`. [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md) |
 | Recursive LLM extraction (memory-centric SI/FE) | Production **`si-gem31fl-recursive`** / **`fe-gem31fl-recursive`**; three-wave bootstrap → windows → resolution → fold; show priors; delta-only ops. Wrapped **2026-07-01**. Batch backlog delivery: `docs/features/batch-integration/` Phase 5. [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md) |
 | ContentItem load-job idempotency | RSS batch dedupe + `content_item_insert_already_present` guard prevents duplicate physical rows on load-job retry (2026-06-30). Extends [contentitem-dedupe-and-cleanup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/contentitem-dedupe-and-cleanup.md) |
+| CNBC IPO scoreboard (SPCX v1) | BQ snapshot mats → Supabase RPC `get_ipo_scoreboard_page`; since-call perf SQL; public `/cnbc-ipo`; **kept picks only** in UI; social + blog deferred. [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md) |
 
 ---
 
@@ -394,6 +397,7 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 | 2026-07-01 | Proof-segment speaker resolution (gate live, curation + backfill + sync verified) | [proof-segment-speaker-resolution.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/proof-segment-speaker-resolution.md) |
 | 2026-07-01 | Recursive LLM extraction — memory-centric SI/FE (wrapped) | [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md) |
 | 2026-07-01 | Motley Fool Hidden Gems RSS onboarding (Pattern 6 ARML, Megaphone slug, STT pacing, source-agnostic SI; 2247 episodes) | [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md) |
+| 2026-07-11 | CNBC IPO scoreboard — SPCX public page, BQ→Supabase sync, OG/SEO; social + blog deferred | [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md) |
 | 2026-05-15 | Pytest `not expensive` green track (permanent reference; suite alignment) | [pytest-not-expensive-green.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/pytest-not-expensive-green.md) |
 | 2026-05-14 | ContentItem deduplication, ingest guard, BQ apply pipeline | [contentitem-dedupe-and-cleanup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/contentitem-dedupe-and-cleanup.md) — runbook [contentitem-dedupe-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/contentitem-dedupe-runbook.md) |
 | 2026-05-14 | Compound and Friends (Pippa) RSS onboarding + SI allowlist extension | [compound-and-friends-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/compound-and-friends-ingestion.md) |
@@ -414,6 +418,8 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 | Finfluencer and show profiles | `finfluencer-and-show-profiles/` |
 | Social share previews | `social-share-previews/` |
 | Post-cutoff IPO resolution | `post-cutoff-ipo-resolution/` — Inc 1–8 backfill gate ✅ (2026-06-28); frozen DATA_REFRESH curation ongoing |
+
+**Wrapped 2026-07-11:** `cnbc-ipo-scoreboard-social/` → [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md) (live **`https://finfluencers.trade/cnbc-ipo`**; SPCX v1; increments 7–8 social/blog deferred; monitor pick frequency before expansion)
 
 **Wrapped 2026-07-01:** `recursive-llm-extraction/` → [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md) (interactive **`si-gem31fl-recursive`** / **`fe-gem31fl-recursive`** in prod; 60-episode Compound list-2 rescue complete). Unimplemented Vertex AI batch delivery moved to **`batch-integration/`** Phase 5.
 
@@ -449,6 +455,7 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 | Facts extraction | [Facts Extraction Guide](file:///Users/andreskull/gor_dagster/docs/operations/facts-extraction-guide.md) |
 | Instrument resolution | [FIGI Instrument Cleanup Guide](file:///Users/andreskull/gor_dagster/docs/operations/figi-instrument-cleanup-guide.md) |
 | Resolution backlog monitoring | `scripts/analyze_resolution_backlog.py`, `scripts/analyze_resolution_drill.py` — see [resolution-pipeline-efficiency.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/resolution-pipeline-efficiency.md) |
+| CNBC IPO scoreboard (SPCX) | [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md); verify: `scripts/verify_ipo_scoreboard_rpc_prod.py`, `scripts/analyze_hot_ipo_scoreboard_candidates.py` |
 | SPY benchmark identity verification | [spy-figi-consolidation-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/spy-figi-consolidation-runbook.md), `scripts/verify_spy_single_identity.py` |
 | Schema management | [Schema Management](file:///Users/andreskull/gor_dagster/docs/operations/schema-management.md) |
 | Configuration reference | [Configuration Reference](file:///Users/andreskull/gor_dagster/docs/operations/configuration-reference.md) |

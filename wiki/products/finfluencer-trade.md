@@ -4,7 +4,7 @@ title: "finfluencer.trade"
 product: finfluencer-trade
 project: null
 created: 2026-04-06
-updated: 2026-07-10
+updated: 2026-07-11
 tags: [finfluencer, finance, pipeline, dagster, blog, tracking]
 ---
 
@@ -47,7 +47,7 @@ LLM layer uses multi-provider configuration registry (Gemini, GPT, Claude) with 
 
 ## Current status
 
-Active development. Pipeline is production-ready for core transcription and facts extraction. Speaker attribution and signal tracking are mature. Blog is live with 14+ published posts. **App (finfluencer-tracker):** public conversion funnel live on `finfluencers.trade` — anonymous leaderboard/shows browse, profile-depth signup gate, landing teasers, SEO bot split (**2026-07-10** — see [[projects/finfluencer-tracker]]).
+Active development. Pipeline is production-ready for core transcription and facts extraction. Speaker attribution and signal tracking are mature. Blog is live with 14+ published posts. **App (finfluencer-tracker):** **CNBC IPO scoreboard** live at **`/cnbc-ipo`** (**2026-07-11** — SPCX v1, since-call alpha; social/blog deferred). Public conversion funnel on `finfluencers.trade` — anonymous leaderboard/shows browse, profile-depth signup gate, landing teasers, SEO bot split (**2026-07-10** — see [[projects/finfluencer-tracker]]).
 
 ## Key cross-repo decisions
 

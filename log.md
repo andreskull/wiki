@@ -121,3 +121,7 @@ Append-only. Grep recent entries: `grep "^## \[" log.md | tail -10`
 ## [2026-07-10] wrapup | finfluencer-tracker | Landing page & conversion funnel improvements — permanent doc `docs/architecture/features/landing-conversion-improvements.md`; public `/leaderboard` + `/shows`; profile-depth free-account gate; unified landing teasers; SEO bot split; anon RPCs (`landing_stats`, show summary indexes); deleted `docs/features/landing-conversion-improvements/`. Repo `WIKI.md` updated.
 
 ## [2026-07-10] sync | finfluencer-tracker — Updated [[projects/finfluencer-tracker]] (access model, completed features, Supabase RPC notes, architecture decisions). Updated [[products/finfluencer-trade]] (component role, current status, cross-repo decision). Updated [[overview]], [[index]].
+
+## [2026-07-11] wrapup | gor_dagster | CNBC IPO Scoreboard — permanent doc `docs/architecture/features/cnbc-ipo-scoreboard.md`; live `https://finfluencers.trade/cnbc-ipo` (SPCX v1); increments 7–8 social/blog deferred; deleted `docs/features/cnbc-ipo-scoreboard-social/`; removed throwaway diagnostic scripts. Repo `WIKI.md` updated.
+
+## [2026-07-11] sync | gor_dagster — Updated [[projects/gor_dagster]] (Supabase IPO snapshot path, architecture decision, completed features, ops reference). Updated [[projects/finfluencer-tracker]] (`/cnbc-ipo` public route, RPC, decisions). Updated [[products/finfluencer-trade]], [[overview]], [[index]].

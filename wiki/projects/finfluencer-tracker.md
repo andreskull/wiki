@@ -4,7 +4,7 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-07-10
+updated: 2026-07-11
 tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo]
 ---
 
@@ -20,14 +20,17 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-07-10)
+## Current status (2026-07-11)
 
-**Public conversion funnel shipped.** Anonymous visitors browse `/leaderboard` and `/shows` without login; profile depth is gated behind free Spectator signup; Trader tier unchanged for non-featured finfluencer data. Landing page uses unified leaderboard teaser cards (finfluencers + shows). Mobile UX: in-page sticky search on leaderboard, touch `InfoTip`s, bottom-nav fix. SEO: Googlebot receives SPA; social bots use `api/og-meta`. Supabase prod: anon-safe RPCs for landing stats and show summary columns. Stripe Checkout wallet-ready (Dashboard-configured; do not pin `payment_method_types` in code).
+**CNBC IPO scoreboard live** at **`/cnbc-ipo`** — public, no auth; Supabase RPC `get_ipo_scoreboard_page`; since-call alpha vs S&P for SpaceX (SPCX) CNBC picks post-IPO. OG/sitemap shipped. Social honeypot + blog promotion deferred (gor_dagster).
+
+**Public conversion funnel shipped (2026-07-10).** Anonymous visitors browse `/leaderboard` and `/shows` without login; profile depth is gated behind free Spectator signup; Trader tier unchanged for non-featured finfluencer data. Landing page uses unified leaderboard teaser cards (finfluencers + shows). Mobile UX: in-page sticky search on leaderboard, touch `InfoTip`s, bottom-nav fix. SEO: Googlebot receives SPA; social bots use `api/og-meta`. Supabase prod: anon-safe RPCs for landing stats and show summary columns. Stripe Checkout wallet-ready (Dashboard-configured; do not pin `payment_method_types` in code).
 
 ## Access model
 
 | Surface | Anonymous | Spectator | Trader |
 |---------|-----------|-----------|--------|
+| `/cnbc-ipo` (IPO scoreboard) | Public | Public | Public |
 | Leaderboards (`/leaderboard`, `/shows`) | Public (masked columns same as Spectator) | Unchanged | Unchanged |
 | `/upgrade` (Pricing) | Public | Unchanged | Unchanged |
 | Finfluencer profile | Teaser + free-account gate | Featured-3 full; others Trader-gated | Full |
@@ -62,6 +65,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-07-11 | CNBC IPO scoreboard (`/cnbc-ipo`, SPCX v1) | Cross-repo: [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md) |
 | 2026-07-10 | Landing page & conversion funnel improvements | [landing-conversion-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-conversion-improvements.md) |
 | 2026-06-02 | Custom feedback & public roadmap | [feedback-system.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/feedback-system.md) |
 
@@ -69,6 +73,8 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-07-11 | IPO scoreboard public route `/cnbc-ipo` | Dedicated cohort page; not gated; BQ→Supabase snapshot via RPC |
+| 2026-07-11 | IPO feed shows kept picks only | Repeat CNBC mentions hidden; summary Calls = kept_count |
 | 2026-07-10 | Leaderboards public; free-account gate at profile depth | Login wall hid SEO/marketing value; revenue is Spectator→Trader masking |
 | 2026-07-10 | Googlebot → SPA; social bots → `api/og-meta` | Empty-body og-meta pages break search indexing of public content |
 | 2026-07-10 | Anon aggregates as `SECURITY DEFINER` RPC + 30s timeout | Project `anon` role has 3s `statement_timeout`; plain views on large tables fail |
@@ -78,6 +84,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 ## Supabase notes (app layer)
 
+- **`get_ipo_scoreboard_page(p_ticker)`** RPC — CNBC IPO scoreboard payload (summary, leaderboard, signals); anon read via `ipo_scoreboard_*` tables synced from [[projects/gor_dagster]]
 - **`landing_stats()`** RPC (was view) — landing stats bar; frontend `supabase.rpc('landing_stats')`
 - **`show_summary_stats()` / `show_distinct_ticker_counts()`** — composite indexes on `signals` + 30s timeout for guest `/shows` columns
 - **`finfluencer_combined_performance_public`** — existing view; no new view for public leaderboard (anonymous → spectator tier)

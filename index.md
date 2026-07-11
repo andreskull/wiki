@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-07-10
+updated: 2026-07-11
 ---
 
 # Wiki Index
@@ -31,9 +31,9 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Product | Status |
 |------|---------|--------|
-| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **Recursive LLM extraction** wrapped **2026-07-01** (`si-gem31fl-recursive` / `fe-gem31fl-recursive`; batch Phase 5 → `batch-integration`); proof-segment gate **2026-07-01**; Hidden Gems **2026-07-01**; post-cutoff IPO backfill gate **2026-06-28** |
+| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **CNBC IPO scoreboard** wrapped **2026-07-11** (`/cnbc-ipo`, SPCX v1); recursive LLM extraction **2026-07-01**; proof-segment gate **2026-07-01**; post-cutoff IPO backfill gate **2026-06-28** |
 | [[wiki/projects/gor-blog]] | finfluencer.trade | Active — CTA pattern shipped (Cramer post); apex `/api/subscribe` via landing rewrite; `api/newsletter/`; `research/cramer/` |
-| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **landing conversion funnel** wrapped **2026-07-10** (`docs/architecture/features/landing-conversion-improvements.md`; public leaderboards + profile gates) |
+| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **CNBC IPO scoreboard** live **2026-07-11** (`/cnbc-ipo`); landing conversion funnel **2026-07-10** |
 | [[wiki/projects/rattaproff]] | rattaproff | Operational — permalink backfill + gsheet restore complete (Jun 2026); 20 storefronts; `docs/architecture/features/permalink-redirect-resolution.md` |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Active |
 | [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | Public kit + SSRN 6643379 — CSVs, scripts, paper |
