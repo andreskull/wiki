@@ -4,7 +4,7 @@ title: "rattaproff"
 product: rattaproff
 project: null
 created: 2026-04-06
-updated: 2026-05-12
+updated: 2026-07-13
 tags: [rattaproff, woocommerce, ecommerce, automation, google-indexing, gcp]
 ---
 
@@ -39,9 +39,10 @@ Python-based automation suite on GCP. Key components:
 
 ## Current status
 
-Operational. Core supplier-to-storefront pipeline running. Docs scaffold created, content sparse — architecture/ and operations/ folders exist but not yet populated.
+Operational. Core supplier-to-storefront pipeline running. **GSheet ground-truth sync** hardened July 2026 — grow-only writes, `__sync_status` marker, GCS fallback ([[concepts/gsheet-ground-truth-sync]]). Docs: `docs/architecture/features/gsheet-ground-truth-sync.md`.
 
 ## Related pages
 
 - [[projects/rattaproff]]
 - [[concepts/huf-eur-pipeline-pricing]]
+- [[concepts/gsheet-ground-truth-sync]]

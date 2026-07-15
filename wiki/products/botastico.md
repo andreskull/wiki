@@ -4,17 +4,17 @@ title: "botastico"
 product: botastico
 project: null
 created: 2026-04-06
-updated: 2026-05-18
+updated: 2026-07-15
 tags: [botastico]
 ---
 
 # botastico
 
-**Indexed project:** [[projects/botastico-api]] (2026-05-18) — Flask API on Cloud Run; chat image attachments + Pub/Slack path documented. Other repos below remain lightly linked until separate wiki syncs.
+**Indexed projects:** [[projects/botastico-api]] (2026-05-18) — Flask API on Cloud Run; chat image attachments + Pub/Slack path. [[projects/botastico]] (2026-07-15) — GCP LB SSL certs, monitoring, `slack_chat_logs`. Other repos below remain lightly linked until separate wiki syncs.
 
 ## Component repos
 
-- `botastico` — monorepo shell / Firebase / **`slack_chat_logs`** Cloud Function ([`slack_chat_logs/`](file:///Users/andreskull/botastico/slack_chat_logs))
+- `botastico` — [[projects/botastico]] — monorepo shell / Firebase / **`slack_chat_logs`** / **SSL monitoring** ([`operations/ssl-certificates.md`](file:///Users/andreskull/botastico/operations/ssl-certificates.md))
 - `botastico-api` — [[projects/botastico-api]]
 - `botastico-script`
 - `botastico-portal`
@@ -32,7 +32,9 @@ firebase emulators:start --import=./firestore-emulator-data --export-on-exit=./f
 ## Related pages
 
 - [[wiki/overview]]
+- [[projects/botastico]]
 - [[projects/botastico-api]]
+- [[concepts/botastico-ssl-certificates]]
 
 ## Deployment Rules
 

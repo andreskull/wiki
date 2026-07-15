@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-07-11
+updated: 2026-07-15
 ---
 
 # Wiki Index
@@ -22,8 +22,8 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | Page | Description |
 |------|-------------|
 | [[wiki/products/finfluencer-trade]] | Financial influencer accountability platform — planning hub (growth + MVP docs on product page) |
-| [[wiki/products/rattaproff]] | WooCommerce multi-store automation — 7 storefronts; HUF→EUR pricing concept [[wiki/concepts/huf-eur-pipeline-pricing]] |
-| [[wiki/products/botastico]] | Partially indexed — [[projects/botastico-api]] (2026-05-18); other repos pending |
+| [[wiki/products/rattaproff]] | WooCommerce multi-store automation — 7 storefronts; HUF→EUR pricing [[wiki/concepts/huf-eur-pipeline-pricing]]; gsheet sync safety [[wiki/concepts/gsheet-ground-truth-sync]] |
+| [[wiki/products/botastico]] | Partially indexed — [[projects/botastico]] SSL/monitoring (2026-07-15); [[projects/botastico-api]] (2026-05-18); other repos pending |
 
 ---
 
@@ -34,10 +34,11 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **CNBC IPO scoreboard** wrapped **2026-07-11** (`/cnbc-ipo`, SPCX v1); recursive LLM extraction **2026-07-01**; proof-segment gate **2026-07-01**; post-cutoff IPO backfill gate **2026-06-28** |
 | [[wiki/projects/gor-blog]] | finfluencer.trade | Active — CTA pattern shipped (Cramer post); apex `/api/subscribe` via landing rewrite; `api/newsletter/`; `research/cramer/` |
 | [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **CNBC IPO scoreboard** live **2026-07-11** (`/cnbc-ipo`); landing conversion funnel **2026-07-10** |
-| [[wiki/projects/rattaproff]] | rattaproff | Operational — permalink backfill + gsheet restore complete (Jun 2026); 20 storefronts; `docs/architecture/features/permalink-redirect-resolution.md` |
+| [[wiki/projects/rattaproff]] | rattaproff | Operational — gsheet sync safety **2026-07-13**; permalink backfill + gsheet restore (Jun 2026); 20 storefronts |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Active |
 | [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | Public kit + SSRN 6643379 — CSVs, scripts, paper |
 | [[wiki/projects/botastico-api]] | botastico | Active — chat image attachments **2026-05-18** ([feature doc](file:///Users/andreskull/botastico-api/docs/architecture/features/botastico-chat-image-attachments.md)); Cloud Run Flask; `slack_chat_logs` Pub/Sub consumer |
+| [[wiki/projects/botastico]] | botastico | Active — GCP LB SSL certs + monitoring **2026-07-15** (July widget outage); `chatapps`/`assets` auto-renew; [[concepts/botastico-ssl-certificates]] |
 
 ---
 
@@ -59,10 +60,12 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/concepts/llm-config-registry]] | Multi-model experimentation; production `si-gem31fl-recursive` / `fe-gem31fl-recursive` (2026-07-01) |
 | [[wiki/concepts/spec-driven-development]] | The development methodology loop |
 | [[wiki/concepts/huf-eur-pipeline-pricing]] | rattaproff: HUF sheet vs per-site EUR recompute for Woo diffs |
+| [[wiki/concepts/gsheet-ground-truth-sync]] | rattaproff: grow-only sheet writes, `__sync_status` marker, GCS fallback (2026-07-13) |
 | [[wiki/concepts/onboarding-new-podcast-source]] | gor_dagster: playbook for new RSS → ActionableSignal (gates, PRs); links to repo operations doc |
 | [[wiki/concepts/proof-segment-speaker-resolution]] | Proof-segment quote speakers → Finfluencer; ActionableSignal gate; display_name at sync (2026-07-01) |
 | [[wiki/concepts/resolution-pipeline-efficiency]] | gor_dagster: JW matcher, re-attempt union, backlog sweeps, alias-on-resolve |
 | [[wiki/concepts/curation-learning]] | gor_dagster: fund-noise similarity, unique-ticker bar 0.85, Stage 0.75 promotion (2026-07-07) |
+| [[wiki/concepts/botastico-ssl-certificates]] | botastico: GCP LB managed certs, auto-renew, renewal-failure monitoring (2026-07-15) |
 
 ---
 
@@ -73,6 +76,14 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/entities/bigquery]] | Google Cloud data warehouse — used across products |
 | [[wiki/entities/dagster]] | Data orchestration — backbone of gor_dagster |
 | [[wiki/entities/gcs]] | Object storage — media and STT transcripts (gor_dagster) |
+
+---
+
+## Decisions
+
+| Page | Description |
+|------|-------------|
+| [[wiki/decisions/botastico-gcp-managed-ssl-2026-07]] | botastico: stay on GCP managed LB certs; alert on renewal failure only (2026-07-15) |
 
 ---
 
