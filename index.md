@@ -31,8 +31,8 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Product | Status |
 |------|---------|--------|
-| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **Gemini 3.5 Flash-Lite** SI/FE prod **2026-07-27**; **LinkedIn enrichment** **2026-07-23**; **CNBC IPO scoreboard** **2026-07-11**; recursive LLM extraction **2026-07-01** |
-| [[wiki/projects/gor-blog]] | finfluencer.trade | Active — CTA pattern shipped (Cramer post); apex `/api/subscribe` via landing rewrite; `api/newsletter/`; `research/cramer/` |
+| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **Investing Unscripted** onboarded **2026-07-27** (10th RSS); **Gemini 3.5 Flash-Lite** SI/FE prod **2026-07-27**; **LinkedIn enrichment** **2026-07-23**; **CNBC IPO scoreboard** **2026-07-11** |
+| [[wiki/projects/gor-blog]] | finfluencer.trade | Active — directory Covered + Investing Unscripted **2026-07-27**; CTA pattern (Cramer post); apex `/api/subscribe`; `api/newsletter/`; `research/cramer/` |
 | [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **subscription entitlement SSOT** **2026-07-27**; LinkedIn profiles **2026-07-23**; **CNBC IPO scoreboard** **2026-07-11**; landing funnel **2026-07-10** |
 | [[wiki/projects/rattaproff]] | rattaproff | Operational — gsheet sync safety **2026-07-13**; permalink backfill + gsheet restore (Jun 2026); 20 storefronts |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Active |
@@ -61,7 +61,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/concepts/spec-driven-development]] | The development methodology loop |
 | [[wiki/concepts/huf-eur-pipeline-pricing]] | rattaproff: HUF sheet vs per-site EUR recompute for Woo diffs |
 | [[wiki/concepts/gsheet-ground-truth-sync]] | rattaproff: grow-only sheet writes, `__sync_status` marker, GCS fallback (2026-07-13) |
-| [[wiki/concepts/onboarding-new-podcast-source]] | gor_dagster: playbook for new RSS → ActionableSignal (gates, PRs); links to repo operations doc |
+| [[wiki/concepts/onboarding-new-podcast-source]] | gor_dagster: playbook for new RSS → ActionableSignal; directory PR required (2026-07-27); SI auto-discovers podcast_rss |
 | [[wiki/concepts/proof-segment-speaker-resolution]] | Proof-segment quote speakers → Finfluencer; ActionableSignal gate; display_name at sync (2026-07-01) |
 | [[wiki/concepts/resolution-pipeline-efficiency]] | gor_dagster: JW matcher, re-attempt union, backlog sweeps, alias-on-resolve |
 | [[wiki/concepts/curation-learning]] | gor_dagster: fund-noise similarity, unique-ticker bar 0.85, Stage 0.75 promotion (2026-07-07) |

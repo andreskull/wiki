@@ -4,15 +4,15 @@ title: "Onboarding a new podcast source"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-05-13
-updated: 2026-07-01
-tags: [rss, dagster, content-source, pipeline, si-sensor, gor_dagster]
+updated: 2026-07-27
+tags: [rss, dagster, content-source, pipeline, si-sensor, gor_dagster, gor-blog]
 ---
 
 # Onboarding a new podcast source
 
 ## Definition
 
-Standard **playbook** for adding a new podcast RSS feed to [[projects/gor_dagster]] so episodes flow end-to-end: RSS → `ContentItem` → audio in GCS → STT → speaker identification (SI) → hydration → facts extraction (FE) → `ActionableSignal`. It formalises rollout as preflight → optional regex PR → operational `ContentSource` creation → post-deploy monitoring and wrap-up.
+Standard **playbook** for adding a new podcast RSS feed to [[projects/gor_dagster]] so episodes flow end-to-end: RSS → `ContentItem` → audio in GCS → STT → speaker identification (SI) → hydration → facts extraction (FE) → `ActionableSignal`. It formalises rollout as preflight → optional regex PR → operational `ContentSource` creation → **gor-blog Finfluencers Directory revision** → post-deploy monitoring and wrap-up.
 
 ## Canonical document
 
@@ -21,6 +21,8 @@ Full text (pipeline diagram, gate details, requirements/tasks templates, case st
 ## Relevance
 
 New shows are recurring work. Without a checklist, two failure modes repeat: **episode ID extraction** fails for unfamiliar enclosure URL shapes, and episodes stall after STT if SI never runs. Since **2026-07-01**, standard **`podcast_rss`** sources are picked up automatically by `get_podcast_rss_content_source_ids()` in `si_sensor` — Gate 2 (manual SI allowlist) is **no longer required** for normal podcast onboarding. Gate 1 (regex) remains mandatory when preflight exit code is **2**.
+
+Since **2026-07-27**, every onboarding **must** revise the public Finfluencers Directory on [[projects/gor-blog]] (playbook Requirement 13 / PR 5): add or update `docs/directory/index.md`, and add `_profiles.json` when the show should appear under **Covered on finfluencers.trade**. Example: [investing-unscripted-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/investing-unscripted-ingestion.md).
 
 ## Three gates (summary)
 
@@ -34,15 +36,19 @@ New shows are recurring work. Without a checklist, two failure modes repeat: **e
 
 ## Rollout shape
 
-Four PRs plus wrap-up: **Preflight script** → **Regex + validator** (conditional) → **Operational** `add_new_rss_source_job` → **docs + verification scripts** → `/wrapup` / wiki sync. Large catalogs may need **STT credit pacing** across multiple ElevenLabs billing cycles (see [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md)).
+Pipeline PRs plus directory + wrap-up: **Preflight script** → **Regex + validator** (conditional) → **Operational** `add_new_rss_source_job` → **docs + SI discovery verification** → **gor-blog directory** (required) → monitoring → `/wrapup` / wiki sync. Large catalogs may need **STT credit pacing** across multiple ElevenLabs billing cycles (see [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md)).
+
+**Ops tips (2026-07-27):** Launch `add_new_rss_source_job` from **Jobs** with flat job-level YAML (no `ops:` wrapper). Local BigQuery against `dagster_prod` uses location **`europe-north1`**. Covered `_profiles.json` can ship before Supabase `shows` sync (app `/show/{slug}` 404s until `mat_shows` has ActionableSignals).
 
 ## Which projects use this
 
 - [[projects/gor_dagster]] — implementation home
-- [[products/finfluencer-trade]] — product outcome (`ContentSource` / signals)
+- [[projects/gor-blog]] — Finfluencers Directory revision (required every onboarding)
+- [[products/finfluencer-trade]] — product outcome (`ContentSource` / signals / directory)
 
 ## Related pages
 
 - [[projects/gor_dagster]] — Stage 1 RSS ingestion and operations table
+- [[projects/gor-blog]] — directory content
 - [[entities/dagster]] — orchestration context
 - [[concepts/actionable-signal]] — downstream VIEW gates

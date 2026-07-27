@@ -47,7 +47,7 @@ LLM layer uses multi-provider configuration registry (Gemini, GPT, Claude) with 
 
 ## Current status
 
-Active development. Pipeline is production-ready for core transcription and facts extraction. Speaker attribution and signal tracking are mature. Blog is live with 14+ published posts. **Gemini 3.5 Flash-Lite** is production SI/FE (**2026-07-27** — `si-gem35fl-recursive` @450s / `fe-gem35fl-recursive` @1800s; ActionableSignal FE priority 1). **LinkedIn enrichment** wrapped **2026-07-23** ([[concepts/linkedin-enrichment]]). **App (finfluencer-tracker):** **subscription entitlement SSOT** live on production (**2026-07-27** — profile tier for UI + RLS; Stripe billing-only; [[concepts/subscription-entitlement-ssot]]). **CNBC IPO scoreboard** at **`/cnbc-ipo`** (**2026-07-11**). Public conversion funnel (**2026-07-10** — see [[projects/finfluencer-tracker]]).
+Active development. Pipeline is production-ready for core transcription and facts extraction. Speaker attribution and signal tracking are mature. Blog is live with 14+ published posts. **Investing Unscripted** onboarded (**2026-07-27** — 10th RSS source; directory Covered). **Gemini 3.5 Flash-Lite** is production SI/FE (**2026-07-27** — `si-gem35fl-recursive` @450s / `fe-gem35fl-recursive` @1800s; ActionableSignal FE priority 1). **LinkedIn enrichment** wrapped **2026-07-23** ([[concepts/linkedin-enrichment]]). **App (finfluencer-tracker):** **subscription entitlement SSOT** live on production (**2026-07-27** — profile tier for UI + RLS; Stripe billing-only; [[concepts/subscription-entitlement-ssot]]). **CNBC IPO scoreboard** at **`/cnbc-ipo`** (**2026-07-11**). Public conversion funnel (**2026-07-10** — see [[projects/finfluencer-tracker]]).
 
 ## Key cross-repo decisions
 

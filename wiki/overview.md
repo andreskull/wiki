@@ -23,7 +23,7 @@ Three products, one methodology, one wiki. Updated: 2026-07-27.
 
 ## Active development
 
-`gor_dagster` has in-progress feature folders under `docs/features/` (batch-integration, post-cutoff IPO resolution, etc.). **Gemini 3.5 Flash-Lite migration** wrapped **2026-07-27** — production SI/FE gem35fl. **finfluencer-tracker subscription entitlement SSOT** wrapped **2026-07-27** — see [[concepts/subscription-entitlement-ssot]]. **LinkedIn enrichment** **2026-07-23** ([[concepts/linkedin-enrichment]]). **CNBC IPO scoreboard** **2026-07-11**. Landing conversion funnel **2026-07-10**. Temporary feature docs are not indexed until `/wrapup`.
+`gor_dagster` has in-progress feature folders under `docs/features/` (batch-integration, post-cutoff IPO resolution, etc.). **Investing Unscripted** RSS onboarding wrapped **2026-07-27** — tenth podcast source; Pattern 6 twin; directory Covered on gor-blog. **Gemini 3.5 Flash-Lite migration** wrapped **2026-07-27** — production SI/FE gem35fl. **finfluencer-tracker subscription entitlement SSOT** wrapped **2026-07-27** — see [[concepts/subscription-entitlement-ssot]]. **LinkedIn enrichment** **2026-07-23** ([[concepts/linkedin-enrichment]]). **CNBC IPO scoreboard** **2026-07-11**. Landing conversion funnel **2026-07-10**. Temporary feature docs are not indexed until `/wrapup`.
 
 ## Key concepts to know
 
@@ -37,7 +37,7 @@ Three products, one methodology, one wiki. Updated: 2026-07-27.
 - [[concepts/curation-learning]] — fund-noise similarity, unique-ticker bar 0.85, Stage 0.75 promotion (2026-07-07)
 - [[concepts/linkedin-enrichment]] — trust-tiered LinkedIn URLs; trusted-only Supabase sync; no third-party API (2026-07-23)
 - [[concepts/subscription-entitlement-ssot]] — profile tier = app entitlement; Stripe billing-only; reconcile + RLS close (2026-07-27)
-- [[concepts/onboarding-new-podcast-source]] — gor_dagster: add a podcast RSS end-to-end (regex gate; SI auto-discovers `podcast_rss` since 2026-07-01)
+- [[concepts/onboarding-new-podcast-source]] — gor_dagster: add a podcast RSS end-to-end (regex gate; SI auto-discovers `podcast_rss`; Finfluencers Directory required since 2026-07-27)
 - [[concepts/botastico-ssl-certificates]] — botastico: GCP LB managed certs, auto-renew, renewal-failure-only alerts (2026-07-15)
 
 ## Open threads
