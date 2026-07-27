@@ -4,8 +4,8 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-07-23
-tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, linkedin]
+updated: 2026-07-27
+tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, linkedin, gemini]
 ---
 
 # gor_dagster
@@ -89,7 +89,7 @@ Docs: [Unified Transcript Schema](file:///Users/andreskull/gor_dagster/docs/sche
 
 Two-stage pipeline: **LLM Identification** then **Transcript Hydration**.
 
-**LLM Identification (Stage 4a):** Production uses **memory-centric recursive SI** via **`si-gem31fl-recursive`** (wrapped **2026-07-01** — [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md)): three-wave algorithm (roster bootstrap → parallel 300s window passes → optional resolution → deterministic fold). Maintains live speaker memory, delta-only LLM output, show priors from BigQuery, evidence-gated merges with retroactive label rewrite. ~13 passes / ~100s wallclock on 90-min episodes (observed on Compound list-2 rescue). Legacy single-pass and older recursive configs remain as artifact-priority compat tails (`si-dsv4fr-58k`, grok-era ids).
+**LLM Identification (Stage 4a):** Production uses **memory-centric recursive SI** via **`si-gem35fl-recursive`** (@**450s** windows; model promote **2026-07-27** — [gemini-35-flash-lite-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md); algorithm [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md)): three-wave algorithm (roster bootstrap → parallel window passes → optional resolution → deterministic fold). In-pass fallback: gem35fl → gem31fl → dsv4fr-recursive. Prior **`si-gem31fl-recursive`** artefacts stay readable via source-priority. Legacy single-pass configs remain as compat tails (`si-dsv4fr-58k`, grok-era ids).
 
 An LLM classifies each utterance's speaker at one of three confidence levels (`full_name`, `partial_name`, `unknown`). The output — a flat segment array with `source_utterance_start/end` references — is written to `gs://gor-stt-transcripts/identification/{episode_id}/{provider}_{llm_config_id}.json`. Eight+ LLM model families supported via config registry. Anchor enforcement ensures `full_name` attributions require explicit textual evidence (self-introduction, name mention, etc.); speakers without anchors are forced to `Unknown`.
 
@@ -113,7 +113,7 @@ Docs: [Speaker Attribution Architecture](file:///Users/andreskull/gor_dagster/do
 
 An LLM reads the hydrated transcript and extracts financial predictions: stock picks, position disclosures (start/hold/close long/short), recommendations. Each extracted item becomes a `PotentialPrediction` row in BigQuery. Runs in parallel with `IndividualQuote` creation from the same hydrated transcript.
 
-FE model selection: production **`fe-gem31fl-recursive`** (paired with recursive SI); chooses the best available hydration (per `Pipeline Model Priority and Retries` policy). Retries upward only — if a lower-priority hydration succeeds first, FE runs on it, then automatically re-runs on a better hydration when available.
+FE model selection: production **`fe-gem35fl-recursive`** (@**1800s** windows; paired with recursive SI; promote **2026-07-27**). Job-level retry second slot remains **`fe-dsv4fr-58k`**. Chooses the best available hydration (per `Pipeline Model Priority and Retries` policy). Retries upward only — if a lower-priority hydration succeeds first, FE runs on it, then automatically re-runs on a better hydration when available.
 
 `PotentialPrediction` is the raw store. It holds everything including duplicates (from running with different FE configs). `ActionableSignal` is a VIEW over it with deduplication logic.
 
@@ -236,7 +236,7 @@ Production uses **three** datasets for the core pipeline. Default `bigquery_reso
 ### The ActionableSignal VIEW — critical rules
 
 - **Never DELETE from `ActionableSignal`** — it's a VIEW. Delete from `PotentialPrediction` instead.
-- **FE config priority deduplication** — only the highest-priority `fe_config_id` per episode appears. Priority order (**`gor_dagster/sql/views/ActionableSignal.sql` `fe_priority`**): **`fe-gpt-5.2`** (1) → **`fe-gpt-5`** (2) → **`fe-dsv4fr-65k`** / **`fe-dsv4fr-58k`** (DeepSeek tiers) → **`fe-grok-4-fast-reasoning*`** (~5–8) → other / unknown. **`scripts/update_actionable_signal_view.py`** deploys edits to `fe_priority`.
+- **FE config priority deduplication** — only the highest-priority `fe_config_id` per episode appears. Priority order (**`gor_dagster/sql/views/ActionableSignal.sql` `fe_priority`**, promote **2026-07-27**): **`fe-gem35fl-recursive`** (1) → **`fe-gem31fl-recursive`** (2) → **`fe-gpt-5.2`** → **`fe-gpt-5`** → **`fe-dsv4fr-*`** → **`fe-grok-4-fast-reasoning*`** → other / unknown. **`scripts/update_actionable_signal_view.py`** deploys edits to `fe_priority`.
 - **Proof-segment speaker gate** — every row requires `proof_segments_speaker_status = 'resolved'`. No created_at cutoff. `display_name` on proof segments resolves at `mat_signals` build from `FinfluencerNameVariant`, not stored in `PotentialPrediction`. **73,261** resolved / **42** long-tail partial-pending as of **2026-07-01**. [[concepts/proof-segment-speaker-resolution]]
 
 ### GCS storage structure
@@ -276,7 +276,7 @@ Docs: [Dynamic Allocation API](file:///Users/andreskull/gor_dagster/docs/api/dyn
 
 ### Pipeline model priority and retries
 
-Central policy in **`gor_dagster/configs/pipeline_eligibility.py`**. Production SI/FE primary ladder (**2026-06-15**, recursive wrap **2026-07-01**): **`si-gem31fl-recursive`** / **`fe-gem31fl-recursive`** (Gemini 2.5 Flash memory-centric recursive); **`si-dsv4fr-58k`** / **`fe-dsv4fr-58k`** retained for backward-compat artifact selection only; Grok-era ids remain compatibility tails. Narrative: **[recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md)**, **[deepseek-v4-flash-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/deepseek-v4-flash-migration.md)**. Governs:
+Central policy in **`gor_dagster/configs/pipeline_eligibility.py`**. Production SI/FE (**2026-07-27**): **`si-gem35fl-recursive`** (@450s) / **`fe-gem35fl-recursive`** (@1800s); in-pass fallback gem35fl → gem31fl → dsv4fr-recursive; gem31fl + dsv4fr/grok/gpt remain source-priority / ActionableSignal-readable. Keep **four ladder surfaces distinct** (in-pass ≠ SI/FE job retry ≠ source-priority). Narrative: **[gemini-35-flash-lite-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md)**, **[recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md)**, **[pipeline-model-priority-and-retries.md](file:///Users/andreskull/gor_dagster/docs/architecture/pipeline-model-priority-and-retries.md)**. Governs:
 - Which LLM configs are eligible for SI (Speaker Identification), HY (Hydration), FE (Facts Extraction)
 - Duration-based SI starting config (short episodes vs long)
 - Upward-only retries — FE always picks the best available hydration, re-runs automatically on improvement
@@ -310,9 +310,9 @@ Docs: [Supabase Schema Spec](file:///Users/andreskull/gor_dagster/docs/architect
 
 ### Pipeline monitoring dashboard
 
-A Dash/Plotly dashboard (`stt_monitoring_dashboard.py`) with real-time pipeline metrics. Sections: STT provider performance comparison, speaker attribution quality (anchor coverage, F1 scores), LLM cost per episode, data quality tracking, error monitoring, golden reference evaluation scores. Run with `poetry run streamlit run stt_monitoring_dashboard.py`.
+A Dash/Plotly **pipeline dashboard** (`pipeline_dashboard/`) with real-time metrics. Sections: STT/SI/FE process monitoring, recursive SI monitoring, **Model Quality Comparison** (SI/FE proxies by `llm_config_id` + model family — **2026-07-27**), LinkedIn/instrument curation, costs, errors. Family map: `pipeline_dashboard/config_registry.py` `config_id_to_family`.
 
-Docs: [Pipeline Dashboard Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/pipeline-dashboard-architecture.md)
+Docs: [Pipeline Dashboard Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/pipeline-dashboard-architecture.md), [gemini-35-flash-lite-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md)
 
 ---
 
@@ -382,7 +382,8 @@ Key rule: all Python code must be written to `.py` files before execution — ne
 | Podcast RSS SI discovery | `si_sensor` queries all active `podcast_rss` ContentSources via `get_podcast_rss_content_source_ids()` — no per-onboarding allowlist (2026-07-01). [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md) |
 | Pattern 6 Megaphone ARML | `extract_episode_id_from_enclosure_url()` branch for `feeds.megaphone.fm/{slug}` shows with `ARML{digits}.mp3`; Megaphone slug valid as `ContentSource.external_id`. [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md) |
 | ElevenLabs mono-speaker SI hardening | Resplit at unify (120s windows); auto-heal at SI load from GCS raw (`elevenlabs_unified_heal.py`); healable stuck exclusion; merged-segment coverage via `merge_metadata.merged_utterances`. [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md) |
-| Recursive LLM extraction (memory-centric SI/FE) | Production **`si-gem31fl-recursive`** / **`fe-gem31fl-recursive`**; three-wave bootstrap → windows → resolution → fold; show priors; delta-only ops. Wrapped **2026-07-01**. Batch backlog delivery: `docs/features/batch-integration/` Phase 5. [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md) |
+| Recursive LLM extraction (memory-centric SI/FE) | Algorithm wrapped **2026-07-01**; production model **`si-gem35fl-recursive`** (@450s) / **`fe-gem35fl-recursive`** (@1800s) since **2026-07-27**. Batch backlog delivery: `docs/features/batch-integration/` Phase 5. [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md) |
+| Gemini 3.5 Flash-Lite migration | Dual cost/quality gate; SI cost waiver @450; four ladder surfaces distinct; ActionableSignal `fe-gem35fl-recursive` priority 1; dashboard quality-by-family. Wrapped **2026-07-27**. [gemini-35-flash-lite-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md) |
 | ContentItem load-job idempotency | RSS batch dedupe + `content_item_insert_already_present` guard prevents duplicate physical rows on load-job retry (2026-06-30). Extends [contentitem-dedupe-and-cleanup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/contentitem-dedupe-and-cleanup.md) |
 | CNBC IPO scoreboard (SPCX v1) | BQ snapshot mats → Supabase RPC `get_ipo_scoreboard_page`; since-call perf SQL; public `/cnbc-ipo`; **kept picks only** in UI; social + blog deferred. [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md) |
 | LinkedIn enrichment (trust-tiered) | Discovery never auto-writes profiles; trusted-only Supabase sync; published audit 100% trusted-or-none; no third-party LinkedIn API (2026-07-23). [[concepts/linkedin-enrichment]] |
@@ -407,6 +408,7 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 | 2026-07-01 | Motley Fool Hidden Gems RSS onboarding (Pattern 6 ARML, Megaphone slug, STT pacing, source-agnostic SI; 2247 episodes) | [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md) |
 | 2026-07-11 | CNBC IPO scoreboard — SPCX public page, BQ→Supabase sync, OG/SEO; social + blog deferred | [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md) |
 | 2026-07-23 | LinkedIn enrichment — discovery + curation + published audit; trusted-only frontend sync; no third-party API | [linkedin-enrichment.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/linkedin-enrichment.md) |
+| 2026-07-27 | Gemini 3.5 Flash-Lite migration — SI @450 / FE @1800; LinkedIn + tk slice; dashboard quality-by-family | [gemini-35-flash-lite-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md) |
 | 2026-05-15 | Pytest `not expensive` green track (permanent reference; suite alignment) | [pytest-not-expensive-green.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/pytest-not-expensive-green.md) |
 | 2026-05-14 | ContentItem deduplication, ingest guard, BQ apply pipeline | [contentitem-dedupe-and-cleanup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/contentitem-dedupe-and-cleanup.md) — runbook [contentitem-dedupe-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/contentitem-dedupe-runbook.md) |
 | 2026-05-14 | Compound and Friends (Pippa) RSS onboarding + SI allowlist extension | [compound-and-friends-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/compound-and-friends-ingestion.md) |
@@ -427,7 +429,10 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 | Finfluencer and show profiles | `finfluencer-and-show-profiles/` |
 | Social share previews | `social-share-previews/` |
 | Post-cutoff IPO resolution | `post-cutoff-ipo-resolution/` — Inc 1–8 backfill gate ✅ (2026-06-28); frozen DATA_REFRESH curation ongoing |
-| LinkedIn outreach intros | `linkedin-outreach-intro-personalization/` — separate from enrichment wrapup |
+| LinkedIn outreach intros | `linkedin-outreach-intro-personalization/` — tasks complete; wrapup pending |
+| Investing Unscripted ingestion | `investing-unscripted-ingestion/` — onboarding in progress |
+
+**Wrapped 2026-07-27:** `gemini-35-flash-lite-migration/` → [gemini-35-flash-lite-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md) (SI @450 / FE @1800; ActionableSignal priority 1; dashboard Model Quality Comparison)
 
 **Wrapped 2026-07-23:** `linkedin-enrichment/` → [linkedin-enrichment.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/linkedin-enrichment.md) (trust-tiered discovery; published 100% trusted-or-none; no third-party API)
 
@@ -469,6 +474,7 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 | Resolution backlog monitoring | `scripts/analyze_resolution_backlog.py`, `scripts/analyze_resolution_drill.py` — see [resolution-pipeline-efficiency.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/resolution-pipeline-efficiency.md) |
 | CNBC IPO scoreboard (SPCX) | [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md); verify: `scripts/verify_ipo_scoreboard_rpc_prod.py`, `scripts/analyze_hot_ipo_scoreboard_candidates.py` |
 | LinkedIn enrichment / audit CSV | [linkedin-enrichment.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/linkedin-enrichment.md); [linkedin-audit-csv-agent-instructions.md](file:///Users/andreskull/gor_dagster/docs/operations/linkedin-audit-csv-agent-instructions.md); `scripts/linkedin_coverage_cost_report.py`, `scripts/verify_linkedin_supabase_sync.py` |
+| Gemini 3.5 Flash-Lite promote / rollback | [gemini-35-flash-lite-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md); decision [promotion_decision.md](file:///Users/andreskull/gor_dagster/docs/analytics/gemini-35-flash-lite-migration/promotion_decision.md); [rollback_checklist.md](file:///Users/andreskull/gor_dagster/docs/analytics/gemini-35-flash-lite-migration/rollback_checklist.md) |
 | SPY benchmark identity verification | [spy-figi-consolidation-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/spy-figi-consolidation-runbook.md), `scripts/verify_spy_single_identity.py` |
 | Schema management | [Schema Management](file:///Users/andreskull/gor_dagster/docs/operations/schema-management.md) |
 | Configuration reference | [Configuration Reference](file:///Users/andreskull/gor_dagster/docs/operations/configuration-reference.md) |

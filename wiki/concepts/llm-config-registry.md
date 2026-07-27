@@ -4,7 +4,7 @@ title: "LLM Config Registry"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-07-01
+updated: 2026-07-27
 tags: [llm, configuration, registry, experimentation, multi-model]
 ---
 
@@ -26,11 +26,23 @@ Rather than hardcoding model names and prompts into individual assets, all LLM c
 
 ## Config IDs in use
 
-**Production pipeline (2026-07-01):** **`si-gem31fl-recursive`** / **`fe-gem31fl-recursive`** — memory-centric recursive SI/FE (see [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md)).
+**Production pipeline (2026-07-27):** **`si-gem35fl-recursive`** (@450s) / **`fe-gem35fl-recursive`** (@1800s) — Gemini 3.5 Flash-Lite memory-centric recursive SI/FE. See [gemini-35-flash-lite-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md) and [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md).
 
-**Compat / experimentation tails:** `si-dsv4fr-58k`, `fe-dsv4fr-58k`, grok-era `si-grok-*` / `fe-grok-*`, `fe-gpt-5.2`
+**Prior production / readable:** **`si-gem31fl-recursive`** / **`fe-gem31fl-recursive`** (kept in source-priority + ActionableSignal priority 2)
+
+**Compat / experimentation tails:** `si-dsv4fr-58k`, `fe-dsv4fr-58k`, grok-era `si-grok-*` / `fe-grok-*`, `fe-gpt-5.2`, `tk_gem35fl_*` / `tk_gem31fl_*` token-ceiling grids
+
+**LinkedIn discovery:** `linkedin-gemini-flash` → model `gemini-3.5-flash-lite` (2026-07-27)
 
 **Legacy speaker attribution eval configs:** `gemini`, `gemini_20`, `gemini_25_pro`, `gpt5`, `gpt4o`, `gpt4o_mini`, `o3_mini`, `claude4_sonnet`
+
+## Ladder surfaces (do not conflate)
+
+| Surface | Role |
+|---------|------|
+| In-pass model fallback | `RECURSIVE_MODEL_FALLBACK_CHAINS_DEFAULT` — retry a pass with next model |
+| SI/FE job retry | `PIPELINE_*_RETRY_CONFIG_IDS` — next job attempt after failure |
+| Source-priority | Which existing artefact wins for HY/FE consumption |
 
 ## GCS naming convention
 
@@ -45,4 +57,5 @@ Results are stored with config ID in the path:
 
 - [[concepts/speaker-attribution]]
 - [[concepts/actionable-signal]]
+- [[concepts/linkedin-enrichment]]
 - [[entities/dagster]]

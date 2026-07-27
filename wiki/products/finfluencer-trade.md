@@ -47,7 +47,7 @@ LLM layer uses multi-provider configuration registry (Gemini, GPT, Claude) with 
 
 ## Current status
 
-Active development. Pipeline is production-ready for core transcription and facts extraction. Speaker attribution and signal tracking are mature. Blog is live with 14+ published posts. **LinkedIn enrichment** wrapped **2026-07-23** ([[concepts/linkedin-enrichment]]). **App (finfluencer-tracker):** **subscription entitlement SSOT** live on production (**2026-07-27** — profile tier for UI + RLS; Stripe billing-only; [[concepts/subscription-entitlement-ssot]]). **CNBC IPO scoreboard** at **`/cnbc-ipo`** (**2026-07-11**). Public conversion funnel (**2026-07-10** — see [[projects/finfluencer-tracker]]).
+Active development. Pipeline is production-ready for core transcription and facts extraction. Speaker attribution and signal tracking are mature. Blog is live with 14+ published posts. **Gemini 3.5 Flash-Lite** is production SI/FE (**2026-07-27** — `si-gem35fl-recursive` @450s / `fe-gem35fl-recursive` @1800s; ActionableSignal FE priority 1). **LinkedIn enrichment** wrapped **2026-07-23** ([[concepts/linkedin-enrichment]]). **App (finfluencer-tracker):** **subscription entitlement SSOT** live on production (**2026-07-27** — profile tier for UI + RLS; Stripe billing-only; [[concepts/subscription-entitlement-ssot]]). **CNBC IPO scoreboard** at **`/cnbc-ipo`** (**2026-07-11**). Public conversion funnel (**2026-07-10** — see [[projects/finfluencer-tracker]]).
 
 ## Key cross-repo decisions
 
@@ -55,7 +55,7 @@ Active development. Pipeline is production-ready for core transcription and fact
 - STT transcripts stored in `gor-stt-transcripts` GCS bucket (hardcoded, not from env var)
 - **Backend data (BigQuery / GCS):** all pipeline and integration environments — local, branch, and production — use the **production** datasets and buckets (`dagster_prod`, `dagster_shared`, shared media/STT storage). There is no separate staging warehouse for backend analytics (see [[entities/bigquery]]).
 - **finfluencer-tracker (app layer):** **two Supabase instances** — one for **production** and one for **development** — so app/auth data can be isolated while the app still reads pipeline data sourced from production backend stores.
-- Facts extraction uses `ActionableSignal` VIEW over `PotentialPrediction` table — deduplicates by FE config priority
+- Facts extraction uses `ActionableSignal` VIEW over `PotentialPrediction` table — deduplicates by FE config priority (`fe-gem35fl-recursive` rank 1 since **2026-07-27**)
 - Blog (`gor-blog`) uses MkDocs; its `docs/` folder is the site source, not project documentation
 - **Public app funnel (2026-07-10):** leaderboards and `/upgrade` public; monetization at Spectator→Trader column mask + profile depth; Googlebot gets SPA not og-meta empty body ([[projects/finfluencer-tracker]])
 - **Entitlement SSOT (2026-07-27):** `user_profiles.subscription_tier` is app entitlement; Stripe is billing-only; webhook + reconcile self-heal; combined-performance base SELECT closed ([[concepts/subscription-entitlement-ssot]])

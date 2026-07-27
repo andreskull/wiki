@@ -135,3 +135,7 @@ Append-only. Grep recent entries: `grep "^## \[" log.md | tail -10`
 ## [2026-07-23] sync | gor_dagster — LinkedIn enrichment wrapup: new [[concepts/linkedin-enrichment]]; updated [[projects/gor_dagster]] (Stage 6, Supabase sync, architecture decisions, completed features, ops); updated [[projects/finfluencer-tracker]] (profile LinkedIn, decisions); updated [[products/finfluencer-trade]], [[overview]], [[index]].
 
 ## [2026-07-27] sync | finfluencer-tracker — Subscription entitlement SSOT wrapup: new [[concepts/subscription-entitlement-ssot]]; updated [[projects/finfluencer-tracker]] (status, decisions, completed features, Supabase notes); updated [[products/finfluencer-trade]], [[overview]], [[index]].
+
+## [2026-07-27] wrapup | gor_dagster | Gemini 3.5 Flash-Lite migration — permanent doc `docs/architecture/features/gemini-35-flash-lite-migration.md`; production SI `si-gem35fl-recursive` @450s / FE `fe-gem35fl-recursive` @1800s; ActionableSignal priority 1; dashboard Model Quality Comparison; deleted `docs/features/gemini-35-flash-lite-migration/`. Analytics promotion/rollback docs retained. Repo `WIKI.md` updated.
+
+## [2026-07-27] sync | gor_dagster — Gemini 3.5 Flash-Lite wrapup: updated [[projects/gor_dagster]] (Stages 4a/5, ActionableSignal fe_priority, pipeline eligibility, dashboard, completed features); [[concepts/speaker-attribution]], [[concepts/actionable-signal]], [[concepts/llm-config-registry]]; [[products/finfluencer-trade]], [[overview]], [[index]].

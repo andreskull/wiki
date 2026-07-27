@@ -31,7 +31,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Product | Status |
 |------|---------|--------|
-| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **LinkedIn enrichment** wrapped **2026-07-23**; **CNBC IPO scoreboard** **2026-07-11**; recursive LLM extraction **2026-07-01**; post-cutoff IPO backfill gate **2026-06-28** |
+| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **Gemini 3.5 Flash-Lite** SI/FE prod **2026-07-27**; **LinkedIn enrichment** **2026-07-23**; **CNBC IPO scoreboard** **2026-07-11**; recursive LLM extraction **2026-07-01** |
 | [[wiki/projects/gor-blog]] | finfluencer.trade | Active — CTA pattern shipped (Cramer post); apex `/api/subscribe` via landing rewrite; `api/newsletter/`; `research/cramer/` |
 | [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **subscription entitlement SSOT** **2026-07-27**; LinkedIn profiles **2026-07-23**; **CNBC IPO scoreboard** **2026-07-11**; landing funnel **2026-07-10** |
 | [[wiki/projects/rattaproff]] | rattaproff | Operational — gsheet sync safety **2026-07-13**; permalink backfill + gsheet restore (Jun 2026); 20 storefronts |
@@ -54,10 +54,10 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Description |
 |------|-------------|
-| [[wiki/concepts/speaker-attribution]] | Two-stage LLM pipeline; production recursive SI (`si-gem31fl-recursive`); Stage 2 hydration O(U log W + W), FR-6 membership; ElevenLabs mono-speaker hardening (2026-07-01) |
-| [[wiki/concepts/actionable-signal]] | Final output VIEW — speaker-gated, not a table |
+| [[wiki/concepts/speaker-attribution]] | Two-stage LLM pipeline; production recursive SI (`si-gem35fl-recursive` @450s, 2026-07-27); Stage 2 hydration O(U log W + W), FR-6 membership; ElevenLabs mono-speaker hardening |
+| [[wiki/concepts/actionable-signal]] | Final output VIEW — speaker-gated; FE priority 1 = `fe-gem35fl-recursive` (2026-07-27) |
 | [[wiki/concepts/signal-performance]] | Signal → horizons: truncation, implicit flip; SPY benchmark `BBG000BDTBL9`; as-of exit pricing (2026-06-30) |
-| [[wiki/concepts/llm-config-registry]] | Multi-model experimentation; production `si-gem31fl-recursive` / `fe-gem31fl-recursive` (2026-07-01) |
+| [[wiki/concepts/llm-config-registry]] | Multi-model experimentation; production `si-gem35fl-recursive` / `fe-gem35fl-recursive` (2026-07-27) |
 | [[wiki/concepts/spec-driven-development]] | The development methodology loop |
 | [[wiki/concepts/huf-eur-pipeline-pricing]] | rattaproff: HUF sheet vs per-site EUR recompute for Woo diffs |
 | [[wiki/concepts/gsheet-ground-truth-sync]] | rattaproff: grow-only sheet writes, `__sync_status` marker, GCS fallback (2026-07-13) |

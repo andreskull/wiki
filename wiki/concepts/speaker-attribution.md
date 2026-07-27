@@ -4,7 +4,7 @@ title: "Speaker Attribution"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-07-01
+updated: 2026-07-27
 tags: [speaker-attribution, stt, llm, transcript, diarization, elevenlabs]
 ---
 
@@ -14,7 +14,7 @@ The process of identifying and naming speakers in a podcast transcript. A two-st
 
 ## How it works
 
-**Stage 1 — LLM Identification:** Production uses **memory-centric recursive SI** (`si-gem31fl-recursive`, shipped **2026-06-15**, wrapped **2026-07-01**): three-wave algorithm — roster bootstrap (1 call) → parallel 300s window passes (delta-only ops against live speaker memory) → optional resolution → deterministic fold. Show priors from BigQuery seed bootstrap; evidence-gated merges rewrite labels retroactively. Output: identification file at `gs://gor-stt-transcripts/identification/{episode_id}/{provider}_{llm_config_id}.json`. Legacy configs (`si-dsv4fr-58k`, grok-era) remain as artifact-priority compat tails.
+**Stage 1 — LLM Identification:** Production uses **memory-centric recursive SI** (`si-gem35fl-recursive` @ **450s**, promoted **2026-07-27** — see [gemini-35-flash-lite-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md)): three-wave algorithm — roster bootstrap (1 call) → parallel window passes (delta-only ops against live speaker memory) → optional resolution → deterministic fold. Prior production was `si-gem31fl-recursive` @300s (kept in source-priority / fallback). Show priors from BigQuery seed bootstrap; evidence-gated merges rewrite labels retroactively. Output: identification file at `gs://gor-stt-transcripts/identification/{episode_id}/{provider}_{llm_config_id}.json`. Compat tails (`si-gem31fl-recursive`, `si-dsv4fr-*`, grok-era) remain for artefact priority.
 
 Single-pass mode and eight+ LLM config families remain available via the registry (Gemini, GPT, Claude, etc.).
 
@@ -52,6 +52,7 @@ Permanent reference: [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dag
 
 ## Related pages
 
+- [Gemini 3.5 Flash-Lite migration](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md)
 - [Recursive LLM extraction](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md)
 - [[concepts/proof-segment-speaker-resolution]]
 - [Proof-segment speaker resolution](file:///Users/andreskull/gor_dagster/docs/architecture/features/proof-segment-speaker-resolution.md)

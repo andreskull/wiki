@@ -4,7 +4,7 @@ title: "ActionableSignal"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-07-01
+updated: 2026-07-27
 tags: [actionable-signal, prediction, facts-extraction, bigquery, view]
 ---
 
@@ -16,7 +16,7 @@ The final, deduplicated output of the finfluencer.trade pipeline — a structure
 
 `ActionableSignal` is a **BigQuery VIEW** over the `PotentialPrediction` table, not a table itself. It applies two filters:
 
-1. **FE config priority deduplication** — when multiple facts extraction runs exist for an episode (e.g., during evaluation), only the highest-priority FE config's predictions appear. Canonical order (**`gor_dagster/sql/views/ActionableSignal.sql`**, `fe_priority`): `fe-gpt-5.2` → `fe-gpt-5` → **`fe-dsv4fr-*`** (DeepSeek) → retained **`fe-grok-4-fast-reasoning*`** tiers → unknown/other.
+1. **FE config priority deduplication** — when multiple facts extraction runs exist for an episode (e.g., during evaluation), only the highest-priority FE config's predictions appear. Canonical order (**`gor_dagster/sql/views/ActionableSignal.sql`**, `fe_priority`, promote **2026-07-27**): **`fe-gem35fl-recursive`** (1) → **`fe-gem31fl-recursive`** (2) → `fe-gpt-5.2` → `fe-gpt-5` → **`fe-dsv4fr-*`** → retained **`fe-grok-4-fast-reasoning*`** → unknown/other. Deploy via `scripts/update_actionable_signal_view.py`.
 2. **Proof-segment speaker gate** — only rows with `proof_segments_speaker_status = 'resolved'` are visible. Unresolved secondary speakers in evidence quotes hide signals until curators resolve them via the unified dashboard queue.
 
 ## Proof-segment display names
@@ -28,6 +28,7 @@ The final, deduplicated output of the finfluencer.trade pipeline — a structure
 - **Never `DELETE FROM ActionableSignal`** — it's a VIEW. Delete from `PotentialPrediction` directly.
 - **No created_at cutoff** — the speaker gate applies to all signals, historical and new.
 - Signals reappear automatically after proof segments are fully resolved.
+- Preferring a new FE config in `fe_priority` does **not** invalidate prior artefacts — source-priority / historical PP rows remain.
 
 ## Pipeline position
 
@@ -36,14 +37,16 @@ Facts Extraction (Stage 5) → `PotentialPrediction` → `ActionableSignal` VIEW
 ## Projects using it
 
 - [[projects/gor_dagster]]
+- [[projects/finfluencer-tracker]] (via Supabase mats over ActionableSignal)
 
 ## Related pages
 
-- [DeepSeek-V4-Flash migration](file:///Users/andreskull/gor_dagster/docs/architecture/features/deepseek-v4-flash-migration.md) (FE priority + production ladder context)
+- [Gemini 3.5 Flash-Lite migration](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md) (FE priority 1 + production FE)
+- [DeepSeek-V4-Flash migration](file:///Users/andreskull/gor_dagster/docs/architecture/features/deepseek-v4-flash-migration.md) (historical FE ladder context)
 - [[concepts/proof-segment-speaker-resolution]]
 - [Proof-segment speaker resolution feature doc](file:///Users/andreskull/gor_dagster/docs/architecture/features/proof-segment-speaker-resolution.md)
 - [[concepts/signal-performance]]
 - [[concepts/speaker-attribution]]
+- [[concepts/llm-config-registry]]
 - [[concepts/resolution-pipeline-efficiency]]
-- [[concepts/spec-driven-development]]
 - [[entities/bigquery]]
