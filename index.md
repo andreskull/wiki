@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-07-15
+updated: 2026-07-27
 ---
 
 # Wiki Index
@@ -31,9 +31,9 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Product | Status |
 |------|---------|--------|
-| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **CNBC IPO scoreboard** wrapped **2026-07-11** (`/cnbc-ipo`, SPCX v1); recursive LLM extraction **2026-07-01**; proof-segment gate **2026-07-01**; post-cutoff IPO backfill gate **2026-06-28** |
+| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **LinkedIn enrichment** wrapped **2026-07-23**; **CNBC IPO scoreboard** **2026-07-11**; recursive LLM extraction **2026-07-01**; post-cutoff IPO backfill gate **2026-06-28** |
 | [[wiki/projects/gor-blog]] | finfluencer.trade | Active — CTA pattern shipped (Cramer post); apex `/api/subscribe` via landing rewrite; `api/newsletter/`; `research/cramer/` |
-| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **CNBC IPO scoreboard** live **2026-07-11** (`/cnbc-ipo`); landing conversion funnel **2026-07-10** |
+| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **subscription entitlement SSOT** **2026-07-27**; LinkedIn profiles **2026-07-23**; **CNBC IPO scoreboard** **2026-07-11**; landing funnel **2026-07-10** |
 | [[wiki/projects/rattaproff]] | rattaproff | Operational — gsheet sync safety **2026-07-13**; permalink backfill + gsheet restore (Jun 2026); 20 storefronts |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Active |
 | [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | Public kit + SSRN 6643379 — CSVs, scripts, paper |
@@ -65,6 +65,8 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/concepts/proof-segment-speaker-resolution]] | Proof-segment quote speakers → Finfluencer; ActionableSignal gate; display_name at sync (2026-07-01) |
 | [[wiki/concepts/resolution-pipeline-efficiency]] | gor_dagster: JW matcher, re-attempt union, backlog sweeps, alias-on-resolve |
 | [[wiki/concepts/curation-learning]] | gor_dagster: fund-noise similarity, unique-ticker bar 0.85, Stage 0.75 promotion (2026-07-07) |
+| [[wiki/concepts/linkedin-enrichment]] | gor_dagster + tracker: trust-tiered LinkedIn URLs; trusted-only Supabase sync; no third-party API (2026-07-23) |
+| [[wiki/concepts/subscription-entitlement-ssot]] | finfluencer-tracker: profile tier = app entitlement; Stripe billing-only; reconcile + RLS close (2026-07-27) |
 | [[wiki/concepts/botastico-ssl-certificates]] | botastico: GCP LB managed certs, auto-renew, renewal-failure monitoring (2026-07-15) |
 
 ---

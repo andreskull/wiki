@@ -4,8 +4,8 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-07-11
-tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase]
+updated: 2026-07-23
+tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, linkedin]
 ---
 
 # gor_dagster
@@ -144,6 +144,8 @@ Unresolvable instruments queue in `PendingInstrumentResolution`. **Re-attempt ma
 
 **Speaker Resolution:** Maps named speakers to `Finfluencer` via `SpeakerMatchScorer` (Jaro-Winkler + org context). Production thresholds: fuzzy auto-resolve **0.935**; org-conflict override **disabled** (1.00). Unresolved speakers queue in `PendingSpeakerResolution`.
 
+**LinkedIn enrichment (2026-07-23):** On auto-create (when `SPEAKER_ENABLE_LINKEDIN_DISCOVERY` is on), resolution may run Gemini+search discovery (`linkedin-gemini-flash`) and queue corroborated candidates — **never** auto-write profiles. Trusted LinkedIn URLs (Notion seed, curator Accept/Set URL, speaker-create XOR URL/unavailable) sync to Supabase `finfluencers.linkedin_url`. Published cohort **100% trusted-or-none**. No third-party LinkedIn API. Permanent doc: [linkedin-enrichment.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/linkedin-enrichment.md). Wiki: [[concepts/linkedin-enrichment]].
+
 **Proof-segment speaker resolution (2026-07-01):** After prediction-level resolution, `_resolve_proof_segment_speakers` resolves each distinct speaker in `proof_segments[]`. Multi-token unresolved secondaries appear in the **unified dashboard queue** (ranked by `predictions_blocked`); `resolve_proof_segment_speaker()` writes `finfluencer_id` back to all affected predictions. `content_quality.proof_segment_speaker_backfill` propagates manual resolutions historically. `display_name` for quotes is enriched at `mat_signals` build (`actionable_signal_sql`), not stored in BQ. Permanent doc: [proof-segment-speaker-resolution.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/proof-segment-speaker-resolution.md). Wiki: [[concepts/proof-segment-speaker-resolution]].
 
 **Backlog sweep asset:** `resolution_backlog_sweep` — dry-run preview then mark eligible; drain with resolution job. One-time sweeps unlocked **237** instrument + **18** speaker hashes (2026-06-09).
@@ -198,8 +200,11 @@ Production uses **three** datasets for the core pipeline. Default `bigquery_reso
 | `FinfluencerNameVariant` | All known name variants for a Finfluencer (used for resolution) |
 | `FinfluencerBioHistory` | Historical bios with effective dates |
 | `FinfluencerAffiliation` | Organisation + role, used for resolution boosting |
-| `FinfluencerPlatformProfile` | Social/platform profiles per Finfluencer |
-| `ContentItemContributor` | Links an episode to a Finfluencer (host, guest, author) |
+| `FinfluencerPlatformProfile` | Social/platform profiles per Finfluencer (`provenance_json` for LinkedIn trust tiers) |
+| `PendingLinkedInResolution` | Uncertain LinkedIn candidates for curator review |
+| `LinkedInLookupAttempt` | Append-only LinkedIn discovery cost/outcome log |
+| `LinkedInCoverage` | **VIEW** — coverage KPIs by segment (signal-bearing / long-tail) |
+| `ContentItemContributor` | Links an episode to a Finfluencer (host, guest, author) — schema may exist; LinkedIn show names use PP→ContentItem→ContentSource |
 | `IndividualQuote` | One utterance from the hydrated transcript, attributed to a speaker |
 | `FinancialInstrument` | Canonical stock/instrument (FIGI, ticker, exchange, sector) |
 | `PotentialPrediction` | Raw LLM extraction — all hypotheses including duplicates across FE configs |
@@ -297,6 +302,8 @@ BigQuery is the system of record. Supabase mirrors selected tables for the app (
 
 **CNBC IPO scoreboard (2026-07-11):** Dedicated snapshot path for post-IPO CNBC cohort picks — `mat_ipo_scoreboard_{signals,leaderboard,summary}` in `dagster_shared` → Supabase `ipo_scoreboard_*` tables → RPC `get_ipo_scoreboard_page`. Since-call performance via `IpoScoreboardSinceCallPerformance` (not fixed horizons). Public app route **`/cnbc-ipo`** on [[projects/finfluencer-tracker]]; v1 ticker **SPCX** only. UI shows **kept picks only** (`is_kept`); repeat mentions hidden from feed. Social honeypot + gor-blog launch **deferred** (sparse post-IPO pick frequency). Permanent doc: [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md). Ops: `scripts/verify_ipo_scoreboard_rpc_prod.py`, `scripts/analyze_hot_ipo_scoreboard_candidates.py`.
 
+**LinkedIn URL sync (2026-07-23):** `finfluencers.linkedin_url` receives only **trusted** provenance (Notion seed + curator / speaker-create writes). Provisional discovery rows stay in BQ. Ops: `scripts/verify_linkedin_supabase_sync.py`. [[concepts/linkedin-enrichment]]
+
 The app does not write to synced analytical tables — signal and performance data flow BigQuery → Supabase.
 
 Docs: [Supabase Schema Spec](file:///Users/andreskull/gor_dagster/docs/architecture/supabase-schema-spec.md), [Supabase Sync Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/supabase-sync-architecture.md)
@@ -378,6 +385,7 @@ Key rule: all Python code must be written to `.py` files before execution — ne
 | Recursive LLM extraction (memory-centric SI/FE) | Production **`si-gem31fl-recursive`** / **`fe-gem31fl-recursive`**; three-wave bootstrap → windows → resolution → fold; show priors; delta-only ops. Wrapped **2026-07-01**. Batch backlog delivery: `docs/features/batch-integration/` Phase 5. [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md) |
 | ContentItem load-job idempotency | RSS batch dedupe + `content_item_insert_already_present` guard prevents duplicate physical rows on load-job retry (2026-06-30). Extends [contentitem-dedupe-and-cleanup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/contentitem-dedupe-and-cleanup.md) |
 | CNBC IPO scoreboard (SPCX v1) | BQ snapshot mats → Supabase RPC `get_ipo_scoreboard_page`; since-call perf SQL; public `/cnbc-ipo`; **kept picks only** in UI; social + blog deferred. [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md) |
+| LinkedIn enrichment (trust-tiered) | Discovery never auto-writes profiles; trusted-only Supabase sync; published audit 100% trusted-or-none; no third-party LinkedIn API (2026-07-23). [[concepts/linkedin-enrichment]] |
 
 ---
 
@@ -398,6 +406,7 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 | 2026-07-01 | Recursive LLM extraction — memory-centric SI/FE (wrapped) | [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md) |
 | 2026-07-01 | Motley Fool Hidden Gems RSS onboarding (Pattern 6 ARML, Megaphone slug, STT pacing, source-agnostic SI; 2247 episodes) | [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md) |
 | 2026-07-11 | CNBC IPO scoreboard — SPCX public page, BQ→Supabase sync, OG/SEO; social + blog deferred | [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md) |
+| 2026-07-23 | LinkedIn enrichment — discovery + curation + published audit; trusted-only frontend sync; no third-party API | [linkedin-enrichment.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/linkedin-enrichment.md) |
 | 2026-05-15 | Pytest `not expensive` green track (permanent reference; suite alignment) | [pytest-not-expensive-green.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/pytest-not-expensive-green.md) |
 | 2026-05-14 | ContentItem deduplication, ingest guard, BQ apply pipeline | [contentitem-dedupe-and-cleanup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/contentitem-dedupe-and-cleanup.md) — runbook [contentitem-dedupe-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/contentitem-dedupe-runbook.md) |
 | 2026-05-14 | Compound and Friends (Pippa) RSS onboarding + SI allowlist extension | [compound-and-friends-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/compound-and-friends-ingestion.md) |
@@ -418,6 +427,9 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 | Finfluencer and show profiles | `finfluencer-and-show-profiles/` |
 | Social share previews | `social-share-previews/` |
 | Post-cutoff IPO resolution | `post-cutoff-ipo-resolution/` — Inc 1–8 backfill gate ✅ (2026-06-28); frozen DATA_REFRESH curation ongoing |
+| LinkedIn outreach intros | `linkedin-outreach-intro-personalization/` — separate from enrichment wrapup |
+
+**Wrapped 2026-07-23:** `linkedin-enrichment/` → [linkedin-enrichment.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/linkedin-enrichment.md) (trust-tiered discovery; published 100% trusted-or-none; no third-party API)
 
 **Wrapped 2026-07-11:** `cnbc-ipo-scoreboard-social/` → [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md) (live **`https://finfluencers.trade/cnbc-ipo`**; SPCX v1; increments 7–8 social/blog deferred; monitor pick frequency before expansion)
 
@@ -456,6 +468,7 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 | Instrument resolution | [FIGI Instrument Cleanup Guide](file:///Users/andreskull/gor_dagster/docs/operations/figi-instrument-cleanup-guide.md) |
 | Resolution backlog monitoring | `scripts/analyze_resolution_backlog.py`, `scripts/analyze_resolution_drill.py` — see [resolution-pipeline-efficiency.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/resolution-pipeline-efficiency.md) |
 | CNBC IPO scoreboard (SPCX) | [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md); verify: `scripts/verify_ipo_scoreboard_rpc_prod.py`, `scripts/analyze_hot_ipo_scoreboard_candidates.py` |
+| LinkedIn enrichment / audit CSV | [linkedin-enrichment.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/linkedin-enrichment.md); [linkedin-audit-csv-agent-instructions.md](file:///Users/andreskull/gor_dagster/docs/operations/linkedin-audit-csv-agent-instructions.md); `scripts/linkedin_coverage_cost_report.py`, `scripts/verify_linkedin_supabase_sync.py` |
 | SPY benchmark identity verification | [spy-figi-consolidation-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/spy-figi-consolidation-runbook.md), `scripts/verify_spy_single_identity.py` |
 | Schema management | [Schema Management](file:///Users/andreskull/gor_dagster/docs/operations/schema-management.md) |
 | Configuration reference | [Configuration Reference](file:///Users/andreskull/gor_dagster/docs/operations/configuration-reference.md) |
@@ -480,5 +493,6 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 - [[concepts/llm-config-registry]]
 - [[concepts/onboarding-new-podcast-source]]
 - [[concepts/resolution-pipeline-efficiency]]
+- [[concepts/linkedin-enrichment]]
 - [[entities/dagster]]
 - [[entities/bigquery]]

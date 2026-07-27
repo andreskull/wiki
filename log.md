@@ -129,3 +129,9 @@ Append-only. Grep recent entries: `grep "^## \[" log.md | tail -10`
 ## [2026-07-13] sync | rattaproff — GSheet ground-truth sync safety: new repo doc `docs/architecture/features/gsheet-ground-truth-sync.md`; new [[concepts/gsheet-ground-truth-sync]]; updated [[projects/rattaproff]] (architecture decisions, completed features, current status), [[products/rattaproff]], [[overview]], repo `WIKI.md`, [[index]].
 
 ## [2026-07-15] sync | botastico — July SSL cert incident + monitoring: new [[projects/botastico]] (GCP LB certs, `ssl_cert_monitor`, uptime checks); new [[concepts/botastico-ssl-certificates]]; new [[decisions/botastico-gcp-managed-ssl-2026-07]]; updated [[products/botastico]], [[overview]], repo `WIKI.md`, [[index]].
+
+## [2026-07-23] wrapup | gor_dagster | LinkedIn enrichment — permanent doc `docs/architecture/features/linkedin-enrichment.md`; trust-tiered discovery; published 100% trusted-or-none; no third-party API; deleted `docs/features/linkedin-enrichment/`; temp smoke/threshold scripts removed. Repo `WIKI.md` updated.
+
+## [2026-07-23] sync | gor_dagster — LinkedIn enrichment wrapup: new [[concepts/linkedin-enrichment]]; updated [[projects/gor_dagster]] (Stage 6, Supabase sync, architecture decisions, completed features, ops); updated [[projects/finfluencer-tracker]] (profile LinkedIn, decisions); updated [[products/finfluencer-trade]], [[overview]], [[index]].
+
+## [2026-07-27] sync | finfluencer-tracker — Subscription entitlement SSOT wrapup: new [[concepts/subscription-entitlement-ssot]]; updated [[projects/finfluencer-tracker]] (status, decisions, completed features, Supabase notes); updated [[products/finfluencer-trade]], [[overview]], [[index]].
