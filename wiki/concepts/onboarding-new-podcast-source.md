@@ -4,7 +4,7 @@ title: "Onboarding a new podcast source"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-05-13
-updated: 2026-07-27
+updated: 2026-08-02
 tags: [rss, dagster, content-source, pipeline, si-sensor, gor_dagster, gor-blog]
 ---
 
@@ -39,6 +39,8 @@ Since **2026-07-27**, every onboarding **must** revise the public Finfluencers D
 Pipeline PRs plus directory + wrap-up: **Preflight script** → **Regex + validator** (conditional) → **Operational** `add_new_rss_source_job` → **docs + SI discovery verification** → **gor-blog directory** (required) → monitoring → `/wrapup` / wiki sync. Large catalogs may need **STT credit pacing** across multiple ElevenLabs billing cycles (see [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md)).
 
 **Ops tips (2026-07-27):** Launch `add_new_rss_source_job` from **Jobs** with flat job-level YAML (no `ops:` wrapper). Local BigQuery against `dagster_prod` uses location **`europe-north1`**. Covered `_profiles.json` can ship before Supabase `shows` sync (app `/show/{slug}` 404s until `mat_shows` has ActionableSignals).
+
+**Ops tips (2026-08-01 / Chit Chat Stocks):** Do **not** require a manual `add_new_rss_source_job` re-launch for idempotency — retired from the playbook checklist. When only an Apple Podcasts ID is known, preflight may discover `feedUrl` via iTunes lookup (`itunes.apple.com/lookup?id=…`) and still derive `external_id` from the host feed slug (never the Apple ID). Example: [chit-chat-stocks-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/chit-chat-stocks-ingestion.md) (11th `podcast_rss` source; Pattern 6; Covered mapping deferred at wrap-up).
 
 ## Which projects use this
 

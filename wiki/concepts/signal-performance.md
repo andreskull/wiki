@@ -4,7 +4,7 @@ title: "Signal performance (truncation & implicit flip)"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-08
-updated: 2026-06-30
+updated: 2026-08-04
 tags: [performance, actionable-signal, bigquery, truncation, finfluencer-trade]
 ---
 
@@ -44,11 +44,12 @@ Implicit closes do **not** apply across tickers (e.g. long AMD does not close lo
 ## Projects using it
 
 - [[projects/gor_dagster]] — computes and stores performance.
-- [[projects/finfluencer-tracker]] — reads mirrored `signal_performance` / current performance from Supabase.
+- [[projects/finfluencer-tracker]] — reads mirrored `signal_performance` / current performance from Supabase; also builds **cumulative** equity curves from those rows + SPY daily prices ([[concepts/cumulative-performance-charts]]).
 
 ## Related pages
 
 - [[concepts/actionable-signal]]
+- [[concepts/cumulative-performance-charts]]
 - [[projects/gor_dagster]]
 - [[entities/bigquery]]
 - [[wiki/sources/2026-04-07-cramer-mad-money-performance-methodology]] — research note tying methodology to Cramer analysis

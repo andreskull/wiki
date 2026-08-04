@@ -4,7 +4,7 @@ title: "gor-blog"
 product: finfluencer-trade
 project: gor-blog
 created: 2026-04-06
-updated: 2026-07-27
+updated: 2026-08-02
 tags: [blog, mkdocs, content, finfluencer, research, articles, newsletter, convertkit]
 ---
 
@@ -85,7 +85,7 @@ Every blog post in `docs/blog/posts/` must include the CTAs codified in [[concep
 
 ## Current status
 
-Live site with active publication. 14+ posts published. Directory operational — **Investing Unscripted** added under Covered (`data-key` / `_profiles.json` slug `investing-unscripted`, **2026-07-27**; paired with [[projects/gor_dagster]] RSS onboarding). Every new pipeline show must revise the directory (playbook Requirement 13 — [[concepts/onboarding-new-podcast-source]]). **Newsletter:** footer form POSTs to **`/api/subscribe`** on gor-blog (Vercel serverless). When the blog is viewed via **`finfluencers.trade/blog/...`**, the landing app (**[[projects/finfluencer-tracker]]**) rewrites **`/api/subscribe`** to **`blog.finfluencers.trade`** so subscriptions work at apex. Registered app users can still be merged into Kit tag **`GOR_NEWSLETTER_SUBS`** via CLI import (see repo `api/newsletter/`). **Cramer post CTA pattern** (hero + inline + end-of-post dual card + internal links) is implemented on the Cramer methodology post (`jim-cramer-stock-picks-study.md`); CSS classes **`.ft-cta-hero`** / **`.ft-cta-inline`** in `docs/stylesheets/extra.css` — see [`WIKI.md`](file:///Users/andreskull/gor-blog/WIKI.md) § *Blog post CTA pattern*. Cramer working paper is public on **SSRN** and **GitHub** (see [[projects/cramer-mad-money-research]]); private `research/cramer/` holds export/spec/admin files only.
+Live site with active publication. 14+ posts published. Directory operational — **Investing Unscripted** under Covered (`investing-unscripted`, **2026-07-27**). **Chit Chat Stocks** already has a directory entry (`data-key=chit-chat-stocks`); Covered `_profiles.json` mapping still **deferred** after pipeline onboarding **2026-08-02** ([[projects/gor_dagster]]). Every new pipeline show must revise the directory (playbook Requirement 13 — [[concepts/onboarding-new-podcast-source]]). **Newsletter:** footer form POSTs to **`/api/subscribe`** on gor-blog (Vercel serverless). When the blog is viewed via **`finfluencers.trade/blog/...`**, the landing app (**[[projects/finfluencer-tracker]]**) rewrites **`/api/subscribe`** to **`blog.finfluencers.trade`** so subscriptions work at apex. Registered app users can still be merged into Kit tag **`GOR_NEWSLETTER_SUBS`** via CLI import (see repo `api/newsletter/`). **Cramer post CTA pattern** (hero + inline + end-of-post dual card + internal links) is implemented on the Cramer methodology post (`jim-cramer-stock-picks-study.md`); CSS classes **`.ft-cta-hero`** / **`.ft-cta-inline`** in `docs/stylesheets/extra.css` — see [`WIKI.md`](file:///Users/andreskull/gor-blog/WIKI.md) § *Blog post CTA pattern*. Cramer working paper is public on **SSRN** and **GitHub** (see [[projects/cramer-mad-money-research]]); private `research/cramer/` holds export/spec/admin files only.
 
 ## Related pages
 

@@ -35,7 +35,7 @@ All repos at `/Users/andreskull/[repo-name]`.
 |---|---|---|
 | `gor_dagster` | finfluencer.trade | Rich — architecture/, operations/, schemas/, analytics/, features/ |
 | `gor-blog` | finfluencer.trade | MkDocs site — docs/ IS the blog; posts at docs/blog/posts/ |
-| `finfluencer-tracker` | finfluencer.trade | Minimal — one doc file |
+| `finfluencer-tracker` | finfluencer.trade | Growing — `docs/architecture/` + feature wrapups (charts 2026-08-04) |
 | `rattaproff` | rattaproff | Scaffold — architecture/, operations/, schemas/ exist but sparse |
 | `botastico*` | botastico | Not yet indexed |
 | `spec-driven-ai-coding` | — | Methodology project, not a product repo |

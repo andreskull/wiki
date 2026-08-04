@@ -4,8 +4,8 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-07-27
-tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement]
+updated: 2026-08-04
+tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export]
 ---
 
 # finfluencer-tracker
@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-07-27)
+## Current status (2026-08-04)
+
+**Cumulative performance charts shipped** — profile vs S&P, `/compare` head-to-head, Play animation, watermarked PNG/JPEG/MP4 export. See [[concepts/cumulative-performance-charts]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/cumulative-performance-comparison-charts.md).
 
 **Subscription entitlement SSOT live on production** — profile tier is the only app entitlement source; Stripe is billing-only with webhook + reconcile self-heal; combined-performance base-table loophole closed; H9 client self-upgrade closed. See [[concepts/subscription-entitlement-ssot]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/subscription-entitlement-ssot.md).
 
@@ -37,7 +39,8 @@ Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in pro
 | `/cnbc-ipo` (IPO scoreboard) | Public | Public | Public |
 | Leaderboards (`/leaderboard`, `/shows`) | Public (masked columns same as Spectator) | Unchanged | Unchanged |
 | `/upgrade` (Pricing) | Public | Unchanged | Unchanged |
-| Finfluencer profile | Teaser + free-account gate | Featured-3 full; others Trader-gated | Full |
+| `/compare` | Login + entitlement on locked subjects | Free list; locked → upgrade | Full picker |
+| Finfluencer profile (incl. cumulative chart) | Teaser + free-account gate | Featured-3 full; others Trader-gated | Full |
 | Show profile | Teaser + free-account gate | Full | Full |
 | `/signals`, `/settings`, … | Login required | Login required | Login required |
 
@@ -60,6 +63,8 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [README](file:///Users/andreskull/finfluencer-tracker/docs/architecture/README.md) | Index |
 | [system-overview](file:///Users/andreskull/finfluencer-tracker/docs/architecture/system-overview.md) | Stack, Vercel, routing |
 | [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md) | Supabase prod/dev, BQ → app path, entitlement SSOT summary |
+| [cumulative-performance-comparison-charts](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/cumulative-performance-comparison-charts.md) | Cumulative % charts, `/compare`, Play, export (**2026-08-04**) |
+| [daily-marks-plan](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/daily-marks-plan.md) | Parked: true daily portfolio marks (future) |
 | [subscription-entitlement-ssot](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/subscription-entitlement-ssot.md) | Profile SSOT, reconcile, RLS close (**2026-07-27**) |
 | [landing-conversion-improvements](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-conversion-improvements.md) | Public funnel, SEO, anon RPC pattern (**2026-07-10**) |
 | [feedback-system](file:///Users/andreskull/finfluencer-tracker/docs/architecture/feedback-system.md) | `/feedback` roadmap (**2026-06-02**) |
@@ -70,6 +75,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-08-04 | Cumulative performance comparison charts | [cumulative-performance-comparison-charts.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/cumulative-performance-comparison-charts.md) |
 | 2026-07-27 | Subscription entitlement SSOT | [subscription-entitlement-ssot.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/subscription-entitlement-ssot.md) |
 | 2026-07-23 | LinkedIn URL on finfluencer profiles (trusted sync) | Cross-repo: [linkedin-enrichment.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/linkedin-enrichment.md) |
 | 2026-07-11 | CNBC IPO scoreboard (`/cnbc-ipo`, SPCX v1) | Cross-repo: [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md) |
@@ -80,6 +86,11 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-08-04 | Compare S&P optional (default off); plan-locked picks refused at picker | Head-to-head first; avoid dead-end dual-upgrade selection |
+| 2026-08-03 | Holding period ≠ chart lookback (two orthogonal controls) | Book selection vs viewport; both URL-synced |
+| 2026-08-03 | Shared `chartExportFrame` for PNG and every MP4 frame | Pixel parity; MP4 needs silent AAC + end-hold + AAC tail-pad |
+| 2026-07-30 | Waypoint-anchored SPY-shaped intra-window path (`eq_weight_chainlinked_waypoint_shaped_v3`) | Cuts mean abs error vs linear; still approximate — not for drawdown/vol |
+| 2026-07-30 | Benchmark when flat (idle days earn S&P, not cash) | Removes cash-drag between picks; product copy must disclose |
 | 2026-07-27 | Profile is app entitlement SSOT; Stripe billing-only | RLS cannot call Stripe; dual truth caused Trader UI + Spectator data |
 | 2026-07-27 | `check-subscription` reconciles then returns profile | Self-heals missed webhooks; no Stripe-only unlock / no union |
 | 2026-07-27 | Close combined-performance base SELECT; security-definer masked views | Public all-rows leaderboard without Spectator paid-metric leak |
@@ -95,6 +106,8 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 - **Entitlement:** `user_profiles.subscription_tier` (+ status, `stripe_customer_id`, `cancel_at_period_end`, `subscription_reconciled_at`); writers are service-role edge functions only (H9); `get_user_tier()` drives RLS / masked views
 - **`finfluencer_combined_performance_public`** + **`leaderboard`** — security-definer masked views; base table not readable by anon
+- **`benchmark_daily_prices`** — SPY daily adj_close (synced from BigQuery `PriceHistory`)
+- **`get_cumulative_performance_series(...)`** — security-definer RPC; entitlement mirrors TierGate / `is_free_tier` ([[concepts/cumulative-performance-charts]])
 - **`get_ipo_scoreboard_page(p_ticker)`** RPC — CNBC IPO scoreboard payload
 - **`landing_stats()`** RPC — landing stats bar
 - **`show_summary_stats()` / `show_distinct_ticker_counts()`** — guest `/shows` columns
@@ -111,6 +124,7 @@ Shipped MVP scope: [`gor_dagster/docs/MVP_MASTER_PLAN.md`](file:///Users/andresk
 - Email capture / newsletter on landing
 - Embedded Stripe Payment Element migration
 - IPO scoreboard access model changes
+- True daily portfolio marks (parked — [daily-marks-plan.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/daily-marks-plan.md)); show↔show compare; non-S&P benchmarks
 
 ## Wiki sync
 
@@ -121,6 +135,7 @@ Vault indexes **WIKI.md** and all of **`docs/`** except **`docs/features/`**. Ru
 - [[products/finfluencer-trade]]
 - [[projects/gor_dagster]]
 - [[projects/gor-blog]]
+- [[concepts/cumulative-performance-charts]]
 - [[concepts/subscription-entitlement-ssot]]
 - [[concepts/signal-performance]]
 - [[concepts/linkedin-enrichment]]

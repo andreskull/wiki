@@ -4,8 +4,8 @@ title: "finfluencer.trade"
 product: finfluencer-trade
 project: null
 created: 2026-04-06
-updated: 2026-07-27
-tags: [finfluencer, finance, pipeline, dagster, blog, tracking, linkedin, stripe, entitlement]
+updated: 2026-08-04
+tags: [finfluencer, finance, pipeline, dagster, blog, tracking, linkedin, stripe, entitlement, charts]
 ---
 
 # finfluencer.trade
@@ -28,7 +28,7 @@ The platform follows financial influencers (podcasters, YouTubers, analysts) and
 |---|---|
 | [[projects/gor_dagster]] | Data pipeline — ingestion, transcription, speaker attribution, facts extraction, signal generation. The core backend. |
 | [[projects/gor-blog]] | Public MkDocs site — blog, directory, articles; private **`research/cramer/`** for Cramer internal export scripts and specs (public data kit: [[projects/cramer-mad-money-research]]) |
-| [[projects/finfluencer-tracker]] | App + landing on Vercel — auth, billing, leaderboards, conversion funnel; entitlement SSOT **2026-07-27** ([[concepts/subscription-entitlement-ssot]]) |
+| [[projects/finfluencer-tracker]] | App + landing on Vercel — auth, billing, leaderboards, cumulative charts / `/compare` / export (**2026-08-04** [[concepts/cumulative-performance-charts]]); entitlement SSOT **2026-07-27** ([[concepts/subscription-entitlement-ssot]]) |
 | [[projects/cramer-mad-money-research]] | Public reproducibility + working paper (SSRN 6643379) — Cramer / *Mad Money* 2018–2024 |
 
 ## Architecture summary
@@ -47,10 +47,11 @@ LLM layer uses multi-provider configuration registry (Gemini, GPT, Claude) with 
 
 ## Current status
 
-Active development. Pipeline is production-ready for core transcription and facts extraction. Speaker attribution and signal tracking are mature. Blog is live with 14+ published posts. **Investing Unscripted** onboarded (**2026-07-27** — 10th RSS source; directory Covered). **Gemini 3.5 Flash-Lite** is production SI/FE (**2026-07-27** — `si-gem35fl-recursive` @450s / `fe-gem35fl-recursive` @1800s; ActionableSignal FE priority 1). **LinkedIn enrichment** wrapped **2026-07-23** ([[concepts/linkedin-enrichment]]). **App (finfluencer-tracker):** **subscription entitlement SSOT** live on production (**2026-07-27** — profile tier for UI + RLS; Stripe billing-only; [[concepts/subscription-entitlement-ssot]]). **CNBC IPO scoreboard** at **`/cnbc-ipo`** (**2026-07-11**). Public conversion funnel (**2026-07-10** — see [[projects/finfluencer-tracker]]).
+Active development. Pipeline is production-ready for core transcription and facts extraction. Speaker attribution and signal tracking are mature. Blog is live with 14+ published posts. **Chit Chat Stocks** onboarded (**2026-08-02** — 11th RSS source; Pattern 6; directory Covered mapping deferred). **Investing Unscripted** (**2026-07-27** — directory Covered). **Gemini 3.5 Flash-Lite** is production SI/FE (**2026-07-27** — `si-gem35fl-recursive` @450s / `fe-gem35fl-recursive` @1800s; ActionableSignal FE priority 1). **LinkedIn enrichment** wrapped **2026-07-23** ([[concepts/linkedin-enrichment]]). **App (finfluencer-tracker):** **cumulative performance charts** shipped (**2026-08-04** — [[concepts/cumulative-performance-charts]]); **subscription entitlement SSOT** live (**2026-07-27** — [[concepts/subscription-entitlement-ssot]]). **CNBC IPO scoreboard** at **`/cnbc-ipo`** (**2026-07-11**).
 
 ## Key cross-repo decisions
 
+- **Cumulative charts / SPY sync (2026-07-30 → 2026-08-04):** App RPC builds chain-linked equity curves from mirrored signals + SPY `benchmark_daily_prices` synced from BigQuery `PriceHistory`; waypoint-shaped intra-window path (not true daily marks) ([[concepts/cumulative-performance-charts]])
 - **LinkedIn URLs (2026-07-23):** Only trusted provenance syncs BQ → Supabase `finfluencers.linkedin_url` → tracker profiles; discovery never auto-publishes ([[concepts/linkedin-enrichment]])
 - STT transcripts stored in `gor-stt-transcripts` GCS bucket (hardcoded, not from env var)
 - **Backend data (BigQuery / GCS):** all pipeline and integration environments — local, branch, and production — use the **production** datasets and buckets (`dagster_prod`, `dagster_shared`, shared media/STT storage). There is no separate staging warehouse for backend analytics (see [[entities/bigquery]]).
@@ -79,6 +80,7 @@ Use these when you need **growth**, **app MVP scope**, or **post-MVP product bac
 - [[projects/gor-blog]]
 - [[projects/cramer-mad-money-research]]
 - [[projects/finfluencer-tracker]]
+- [[concepts/cumulative-performance-charts]]
 - [[concepts/subscription-entitlement-ssot]]
 - [[concepts/linkedin-enrichment]]
 - [[concepts/actionable-signal]]
