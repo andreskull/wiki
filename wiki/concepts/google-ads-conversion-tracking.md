@@ -97,6 +97,7 @@ Specified in `finfluencer-tracker` → `docs/features/conversion-measurement-pla
 - When a UI shows a **name**, verify the underlying **ID**. Names go stale after rebrands; IDs do not.
 - When replacing a broken tracking object, read the **original's actual scope** first. Never guess narrower by default.
 - Before concluding a signal is missing, check whether the product already emits it and is simply not wired up.
+- A campaign's conversion goal being set to a **category** (e.g. "Registreerumised") does not bypass an action's primary/secondary status. Secondary actions inside that category still only report to "All conversions" and are excluded from bid optimisation — checked 2026-08-11 against a campaign-specific-goal PMax campaign that seemed, from the campaigns table's conversion breakdown alone, to be bidding on a secondary action. It was not; that breakdown is the "All conversions" column, not "Conversions." When this comes up again, verify on the **conversion action's own settings page** ("Toimingu optimeerimine" states outright whether it's used for bid optimisation), not from a campaign table's attribution column.
 
 ## Related pages
 
