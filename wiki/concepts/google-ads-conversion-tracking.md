@@ -79,9 +79,11 @@ The exercise did earn one thing: it proved the GA4 → Ads chain works once the 
 
 **Update 2026-08-11 — the "missing entirely" half of this section is now shipped and live in production.** `finfluencer-tracker`'s conversion measurement plan (Phases 1–3) instrumented `purchase`, `paywall_hit`, `profile_viewed`, `leaderboard_engaged`, `signals_engaged` and `onboarding_completed`. `purchase`, `paywall_hit`, `profile_viewed`, `leaderboard_engaged` and `signals_engaged` were confirmed firing on production 2026-08-11 (real Stripe purchase for `purchase`; GA4 Realtime for the rest). `onboarding_completed` is implemented but not yet confirmed live — it fires once per user, so confirming it needs a not-yet-onboarded account.
 
-The app now emits 15 custom events total (16 counting `sign_up`, which predates this plan and is already a GA4 key event / Ads primary). **None of the 15 are exposed to Ads yet** — that is the entire remaining scope, tracked as Phase 4 in `docs/features/conversion-measurement-plan/tasks.md`:
+The app now emits 16 custom events. `sign_up` predates this plan and is already a GA4 key event / Ads primary. Of the other 15, **10 are intended to become key events and 5 deliberately are not** — the per-event decision, with reasoning, is the table in `docs/features/conversion-measurement-plan/requirements.md` → "GA4 configuration".
 
-`purchase`, `paywall_hit`, `profile_viewed`, `leaderboard_engaged`, `signals_engaged`, `onboarding_completed`, `comparison_created`, `begin_checkout`, `performance_chart_viewed`, `performance_chart_period_changed`, `animation_played`, `export_requested`, `export_completed`, `share_completed`, `watermark_link_tapped`.
+To become key events (none are yet, so none are visible to Ads — this is the entire remaining scope): `purchase`, `comparison_created`, `begin_checkout`, `onboarding_completed`, `paywall_hit`, `profile_viewed`, `leaderboard_engaged`, `signals_engaged`, `performance_chart_viewed`, `share_completed`.
+
+Deliberately staying ordinary events: `performance_chart_period_changed`, `animation_played`, `export_requested`, `export_completed`, `watermark_link_tapped` — sub-interactions and inbound-landing events. Same reasoning as the `view_page` retirement above: an event is free, key-event status is not.
 
 **Progress so far on Phase 4:**
 - `newsletter_signup` removed as a GA4 key event 2026-08-11 (Task 4.1) — it belonged to `gor-blog`, not this app, and had never fired here; see the `view_page` postmortem above for the same class of mistake. GA4 key events are now exactly `sign_up` (primary in Ads) — the 15 above are un-keyed and unimported.
