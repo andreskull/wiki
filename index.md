@@ -33,7 +33,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 |------|---------|--------|
 | [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **source quotes** + **LinkedIn outreach** wrapped **2026-08-11**; Chit Chat Stocks **2026-08-02**; Gemini 3.5 Flash-Lite SI/FE **2026-07-27**; LinkedIn enrichment **2026-07-23** |
 | [[wiki/projects/gor-blog]] | finfluencer.trade | Active — platform-update post + Kit send **2026-08-14**; directory Covered + Investing Unscripted **2026-07-27**; CTA pattern; apex `/api/subscribe`; `api/newsletter/` |
-| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **Reddit Ads pixel** **2026-08-17**; **cumulative performance charts** **2026-08-04**; **subscription entitlement SSOT** **2026-07-27**; LinkedIn profiles **2026-07-23**; **CNBC IPO scoreboard** **2026-07-11**; landing funnel **2026-07-10** |
+| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **Explore nav** **2026-08-17**; **Reddit Ads pixel** **2026-08-17**; **cumulative performance charts** **2026-08-04**; **subscription entitlement SSOT** **2026-07-27**; LinkedIn profiles **2026-07-23**; **CNBC IPO scoreboard** **2026-07-11**; landing funnel **2026-07-10** |
 | [[wiki/projects/rattaproff]] | rattaproff | Operational — category URL export from Woo slugs **2026-08-14**; gsheet sync safety **2026-07-13**; permalink backfill + gsheet restore (Jun 2026); 20 storefronts |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Active |
 | [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | Public kit + SSRN 6643379 — CSVs, scripts, paper |

@@ -28,7 +28,7 @@ The platform follows financial influencers (podcasters, YouTubers, analysts) and
 |---|---|
 | [[projects/gor_dagster]] | Data pipeline — ingestion, transcription, speaker attribution, facts extraction, signal generation. The core backend. |
 | [[projects/gor-blog]] | Public MkDocs site — blog, directory, articles; private **`research/cramer/`** for Cramer internal export scripts and specs (public data kit: [[projects/cramer-mad-money-research]]) |
-| [[projects/finfluencer-tracker]] | App + landing on Vercel — auth, billing, leaderboards, cumulative charts / `/compare` / export (**2026-08-04** [[concepts/cumulative-performance-charts]]); Reddit pixel `SignUp` (**2026-08-17** [[concepts/reddit-ads-conversion-tracking]]); entitlement SSOT **2026-07-27** ([[concepts/subscription-entitlement-ssot]]) |
+| [[projects/finfluencer-tracker]] | App + landing on Vercel — auth, billing, leaderboards, cumulative charts / `/compare` / export (**2026-08-04** [[concepts/cumulative-performance-charts]]); marketing **Explore** nav to Leaderboard / Compare / Shows (**2026-08-17**); Reddit pixel `SignUp` (**2026-08-17** [[concepts/reddit-ads-conversion-tracking]]); entitlement SSOT **2026-07-27** ([[concepts/subscription-entitlement-ssot]]) |
 | [[projects/cramer-mad-money-research]] | Public reproducibility + working paper (SSRN 6643379) — Cramer / *Mad Money* 2018–2024 |
 
 ## Architecture summary
@@ -47,7 +47,7 @@ LLM layer uses multi-provider configuration registry (Gemini, GPT, Claude) with 
 
 ## Current status
 
-Active development. Pipeline is production-ready for core transcription and facts extraction. Speaker attribution and signal tracking are mature. Blog is live with 14+ published posts. Platform-update post + Kit send **2026-08-14** ([[projects/gor-blog]]). **Signal source quotes** restored (**2026-08-11** — [[concepts/signal-source-quote]]). **LinkedIn outreach** Notion drafts + chart videos shipped (**2026-08-11** — [[concepts/linkedin-outreach]]; human LinkedIn send only). **Chit Chat Stocks** onboarded (**2026-08-02**). **Gemini 3.5 Flash-Lite** is production SI/FE (**2026-07-27**). **LinkedIn enrichment** wrapped **2026-07-23** ([[concepts/linkedin-enrichment]]). **App:** **Reddit Ads pixel** (`SignUp` + `PageVisit`, **2026-08-17** — [[concepts/reddit-ads-conversion-tracking]]); **cumulative performance charts** (**2026-08-04**); **subscription entitlement SSOT** (**2026-07-27**); **CNBC IPO scoreboard** `/cnbc-ipo` (**2026-07-11**).
+Active development. Pipeline is production-ready for core transcription and facts extraction. Speaker attribution and signal tracking are mature. Blog is live with 14+ published posts. Platform-update post + Kit send **2026-08-14** ([[projects/gor-blog]]). **Signal source quotes** restored (**2026-08-11** — [[concepts/signal-source-quote]]). **LinkedIn outreach** Notion drafts + chart videos shipped (**2026-08-11** — [[concepts/linkedin-outreach]]; human LinkedIn send only). **Chit Chat Stocks** onboarded (**2026-08-02**). **Gemini 3.5 Flash-Lite** is production SI/FE (**2026-07-27**). **LinkedIn enrichment** wrapped **2026-07-23** ([[concepts/linkedin-enrichment]]). **App:** marketing **Explore** nav (Leaderboard / Compare / Shows, **2026-08-17**); **Reddit Ads pixel** (`SignUp` + `PageVisit`, **2026-08-17** — [[concepts/reddit-ads-conversion-tracking]]); **cumulative performance charts** (**2026-08-04**); **subscription entitlement SSOT** (**2026-07-27**); **CNBC IPO scoreboard** `/cnbc-ipo` (**2026-07-11**).
 
 ## Key cross-repo decisions
 
@@ -61,7 +61,7 @@ Active development. Pipeline is production-ready for core transcription and fact
 - **finfluencer-tracker (app layer):** **two Supabase instances** — one for **production** and one for **development** — so app/auth data can be isolated while the app still reads pipeline data sourced from production backend stores.
 - Facts extraction uses `ActionableSignal` VIEW over `PotentialPrediction` table — deduplicates by FE config priority (`fe-gem35fl-recursive` rank 1 since **2026-07-27**)
 - Blog (`gor-blog`) uses MkDocs; its `docs/` folder is the site source, not project documentation
-- **Public app funnel (2026-07-10):** leaderboards and `/upgrade` public; monetization at Spectator→Trader column mask + profile depth; Googlebot gets SPA not og-meta empty body ([[projects/finfluencer-tracker]])
+- **Public app funnel (2026-07-10, nav 2026-08-17):** leaderboards and `/upgrade` public; marketing header/footer Explore menu to Leaderboard / Compare / Shows; monetization at Spectator→Trader column mask + profile depth; Googlebot gets SPA not og-meta empty body ([[projects/finfluencer-tracker]])
 - **Entitlement SSOT (2026-07-27):** `user_profiles.subscription_tier` is app entitlement; Stripe is billing-only; webhook + reconcile self-heal; combined-performance base SELECT closed ([[concepts/subscription-entitlement-ssot]])
 
 ## Planning and strategy (durable docs)

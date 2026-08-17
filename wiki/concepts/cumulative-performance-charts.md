@@ -4,7 +4,7 @@ title: "Cumulative performance charts"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-08-04
-updated: 2026-08-04
+updated: 2026-08-17
 tags: [performance, charts, compare, export, supabase, spy, entitlement]
 ---
 
@@ -24,7 +24,7 @@ Intra-window path is **waypoint-anchored, SPY-shaped** (not linear) — residual
 
 ## Relevance
 
-Primary shareable performance story for growth/social; gated by the same entitlement model as profile depth ([[concepts/subscription-entitlement-ssot]]). Depends on SPY daily sync from BigQuery `PriceHistory` → Supabase `benchmark_daily_prices` ([[projects/gor_dagster]]).
+Primary shareable performance story for growth/social; gated by the same entitlement model as profile depth ([[concepts/subscription-entitlement-ssot]]). Depends on SPY daily sync from BigQuery `PriceHistory` → Supabase `benchmark_daily_prices` ([[projects/gor_dagster]]). Marketing chrome: `/compare` is in the Explore menu on every marketing page (shipped **2026-08-17**).
 
 ## Which projects use it
 

@@ -5,7 +5,7 @@ product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
 updated: 2026-08-17
-tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads]
+tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation]
 ---
 
 # finfluencer-tracker
@@ -22,6 +22,8 @@ Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in pro
 
 ## Current status (2026-08-17)
 
+**Marketing Explore nav live** — header dropdown + mobile hamburger + footer Product column expose Leaderboard, Compare, and Shows on every marketing page (`/`, `/methodology`, `/privacy`, `/terms`). Single source: `src/config/marketingNav.ts` `EXPLORE_LINKS`. [Feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/public-navigation-discoverability.md).
+
 **Reddit Ads pixel live** — consent-gated `PageVisit` + `SignUp` on production; Conversions campaign optimises on `SignUp`; Traffic Max paused. See [[concepts/reddit-ads-conversion-tracking]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/reddit-pixel-tracking.md).
 
 **Cumulative performance charts shipped** — profile vs S&P, `/compare` head-to-head, Play animation, watermarked PNG/JPEG/MP4 export. See [[concepts/cumulative-performance-charts]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/cumulative-performance-comparison-charts.md).
@@ -34,7 +36,7 @@ Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in pro
 
 **CNBC IPO scoreboard live** at **`/cnbc-ipo`** — public, no auth; Supabase RPC `get_ipo_scoreboard_page`.
 
-**Public conversion funnel shipped (2026-07-10).** Anonymous visitors browse `/leaderboard` and `/shows` without login; profile depth gated behind free Spectator signup; Trader for non-featured finfluencer data.
+**Public conversion funnel shipped (2026-07-10).** Anonymous visitors browse `/leaderboard` and `/shows` without login; profile depth gated behind free Spectator signup; Trader for non-featured finfluencer data. Persistent marketing chrome to those routes shipped **2026-08-17**.
 
 ## Access model
 
@@ -69,6 +71,7 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md) | Supabase prod/dev, BQ → app path, entitlement SSOT summary |
 | [cumulative-performance-comparison-charts](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/cumulative-performance-comparison-charts.md) | Cumulative % charts, `/compare`, Play, export (**2026-08-04**) |
 | [reddit-pixel-tracking](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/reddit-pixel-tracking.md) | Reddit pixel, consent gate, SignUp conversion (**2026-08-17**) |
+| [public-navigation-discoverability](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/public-navigation-discoverability.md) | Marketing Explore nav to Leaderboard / Compare / Shows (**2026-08-17**) |
 | [daily-marks-plan](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/daily-marks-plan.md) | Parked: true daily portfolio marks (future) |
 | [subscription-entitlement-ssot](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/subscription-entitlement-ssot.md) | Profile SSOT, reconcile, RLS close (**2026-07-27**) |
 | [landing-conversion-improvements](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-conversion-improvements.md) | Public funnel, SEO, anon RPC pattern (**2026-07-10**) |
@@ -80,6 +83,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-08-17 | Public navigation discoverability | [public-navigation-discoverability.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/public-navigation-discoverability.md) |
 | 2026-08-17 | Reddit pixel tracking | [reddit-pixel-tracking.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/reddit-pixel-tracking.md) |
 | 2026-08-04 | Cumulative performance comparison charts | [cumulative-performance-comparison-charts.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/cumulative-performance-comparison-charts.md) |
 | 2026-07-27 | Subscription entitlement SSOT | [subscription-entitlement-ssot.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/subscription-entitlement-ssot.md) |
@@ -92,6 +96,9 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-08-17 | Marketing Explore destinations live in `EXPLORE_LINKS` only | Header, mobile, and footer must not drift; do not reuse `AppSidebar` `navItems` |
+| 2026-08-17 | Do not `forceMount` the Explore `NavigationMenu` panel | Crawl paths already exist via homepage CTAs + footer; force-mounting hides a duplicate nav from screen readers |
+| 2026-08-17 | Hero teaser NAME column: trim `lg` fixed tracks, keep `1.2fr 1fr` | 50/50 split costs the h1 a fold line; `min-w-0` + oversized numeric columns was the collapse |
 | 2026-08-14 | Reddit `pixel.js` gated in our code; no-choice default matches Google Consent Mode | Reddit ignores Consent Mode; US/UK/CA never see the EEA banner so a click-to-accept gate left ad visitors unmeasured |
 | 2026-08-12 | Reddit `SignUp` rides `maybeTrackSignUp`; `conversionId = user.id` | One dedupe path with Google; keeps Pixel + future CAPI collapsible |
 | 2026-08-12 | Advanced Matching: privacy clause now, hashed email not sent | Avoid a second privacy review without shipping PII at current volume |
