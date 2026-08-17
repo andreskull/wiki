@@ -4,8 +4,8 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-08-02
-tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, linkedin, gemini, podcast-rss]
+updated: 2026-08-11
+tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, linkedin, gemini, podcast-rss, outreach, source-quote]
 ---
 
 # gor_dagster
@@ -238,6 +238,7 @@ Production uses **three** datasets for the core pipeline. Default `bigquery_reso
 - **Never DELETE from `ActionableSignal`** — it's a VIEW. Delete from `PotentialPrediction` instead.
 - **FE config priority deduplication** — only the highest-priority `fe_config_id` per episode appears. Priority order (**`gor_dagster/sql/views/ActionableSignal.sql` `fe_priority`**, promote **2026-07-27**): **`fe-gem35fl-recursive`** (1) → **`fe-gem31fl-recursive`** (2) → **`fe-gpt-5.2`** → **`fe-gpt-5`** → **`fe-dsv4fr-*`** → **`fe-grok-4-fast-reasoning*`** → other / unknown. **`scripts/update_actionable_signal_view.py`** deploys edits to `fe_priority`.
 - **Proof-segment speaker gate** — every row requires `proof_segments_speaker_status = 'resolved'`. No created_at cutoff. `display_name` on proof segments resolves at `mat_signals` build from `FinfluencerNameVariant`, not stored in `PotentialPrediction`. **73,261** resolved / **42** long-tail partial-pending as of **2026-07-01**. [[concepts/proof-segment-speaker-resolution]]
+- **`raw_source_quote`** — finfluencer's own words from attributed `proof_segments`; blank beats approximate. Forward FE write + coverage check + historical backfill wrapped **2026-08-11**. [[concepts/signal-source-quote]]
 
 ### GCS storage structure
 
@@ -253,7 +254,8 @@ gs://gor-stt-transcripts/           ← hardcoded in definitions.py (line 206)
 
 gs://gor-media-prod/                ← from GCS_BUCKET_NAME env var
 ├── sources/podcasts/{show_id}/{episode_id}.mp3
-└── images/{entity_id}/{filename}
+├── images/{entity_id}/{filename}
+└── outreach/charts/{finfluencer_id}/   ← LinkedIn outreach MP4s (signed URL → Notion)
 ```
 
 ---
@@ -416,6 +418,9 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 | 2026-07-27 | Gemini 3.5 Flash-Lite migration — SI @450 / FE @1800; LinkedIn + tk slice; dashboard quality-by-family | [gemini-35-flash-lite-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md) |
 | 2026-07-27 | Investing Unscripted RSS onboarding (Pattern 6 twin; directory Covered; 272/272 downloaded) | [investing-unscripted-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/investing-unscripted-ingestion.md) |
 | 2026-08-02 | Chit Chat Stocks RSS onboarding (Pattern 6 twin; iTunes feed discovery; 801/802 downloaded; Covered mapping deferred) | [chit-chat-stocks-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/chit-chat-stocks-ingestion.md) |
+| 2026-08-11 | Signal source-quote restoration (forward fix, trim, backfill → Supabase) | [signal-source-quote-restoration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/signal-source-quote-restoration.md) |
+| 2026-08-11 | LinkedIn outreach intro personalization (match + Notion draft comments) | [linkedin-outreach-intro-personalization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/linkedin-outreach-intro-personalization.md) |
+| 2026-08-11 | LinkedIn outreach performance content (chart video + unpublished best-pick; manual LinkedIn send) | [linkedin-outreach-performance-content.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/linkedin-outreach-performance-content.md) |
 | 2026-05-15 | Pytest `not expensive` green track (permanent reference; suite alignment) | [pytest-not-expensive-green.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/pytest-not-expensive-green.md) |
 | 2026-05-14 | ContentItem deduplication, ingest guard, BQ apply pipeline | [contentitem-dedupe-and-cleanup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/contentitem-dedupe-and-cleanup.md) — runbook [contentitem-dedupe-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/contentitem-dedupe-runbook.md) |
 | 2026-05-14 | Compound and Friends (Pippa) RSS onboarding + SI allowlist extension | [compound-and-friends-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/compound-and-friends-ingestion.md) |
@@ -436,7 +441,11 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 | Finfluencer and show profiles | `finfluencer-and-show-profiles/` |
 | Social share previews | `social-share-previews/` |
 | Post-cutoff IPO resolution | `post-cutoff-ipo-resolution/` — Inc 1–8 backfill gate ✅ (2026-06-28); frozen DATA_REFRESH curation ongoing |
-| LinkedIn outreach intros | `linkedin-outreach-intro-personalization/` — tasks complete; wrapup pending |
+| Data-driven sector ETF registry | `data-driven-sector-etf-registry/` |
+
+**Wrapped 2026-08-11:** `signal-source-quote-restoration/` → [signal-source-quote-restoration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/signal-source-quote-restoration.md) (~35.8k quotes restored; attributable **99.967%**; [[concepts/signal-source-quote]])
+
+**Wrapped 2026-08-11:** `linkedin-outreach-intro-personalization/` + `linkedin-outreach-performance-content/` → [intro-personalization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/linkedin-outreach-intro-personalization.md) + [performance-content.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/linkedin-outreach-performance-content.md) ([[concepts/linkedin-outreach]]; no LinkedIn send automation)
 
 **Wrapped 2026-07-27:** `investing-unscripted-ingestion/` → [investing-unscripted-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/investing-unscripted-ingestion.md) (272/272 downloaded; Pattern 6 twin; gor-blog Covered `investing-unscripted`; STT draining; app `/show/` awaits `mat_shows`)
 
@@ -482,6 +491,8 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 | Resolution backlog monitoring | `scripts/analyze_resolution_backlog.py`, `scripts/analyze_resolution_drill.py` — see [resolution-pipeline-efficiency.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/resolution-pipeline-efficiency.md) |
 | CNBC IPO scoreboard (SPCX) | [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md); verify: `scripts/verify_ipo_scoreboard_rpc_prod.py`, `scripts/analyze_hot_ipo_scoreboard_candidates.py` |
 | LinkedIn enrichment / audit CSV | [linkedin-enrichment.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/linkedin-enrichment.md); [linkedin-audit-csv-agent-instructions.md](file:///Users/andreskull/gor_dagster/docs/operations/linkedin-audit-csv-agent-instructions.md); `scripts/linkedin_coverage_cost_report.py`, `scripts/verify_linkedin_supabase_sync.py` |
+| LinkedIn outreach (Notion drafts + charts) | [[concepts/linkedin-outreach]]; runbook [linkedin-outreach-intro-agent-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/linkedin-outreach-intro-agent-runbook.md); runner `scripts/run_linkedin_outreach_pipeline.sh` |
+| Signal source-quote backfill (periodic top-up) | [[concepts/signal-source-quote]]; [signal-source-quote-backfill.md](file:///Users/andreskull/gor_dagster/docs/operations/signal-source-quote-backfill.md); `scripts/backfill_signal_source_quotes.py` |
 | Gemini 3.5 Flash-Lite promote / rollback | [gemini-35-flash-lite-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md); decision [promotion_decision.md](file:///Users/andreskull/gor_dagster/docs/analytics/gemini-35-flash-lite-migration/promotion_decision.md); [rollback_checklist.md](file:///Users/andreskull/gor_dagster/docs/analytics/gemini-35-flash-lite-migration/rollback_checklist.md) |
 | SPY benchmark identity verification | [spy-figi-consolidation-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/spy-figi-consolidation-runbook.md), `scripts/verify_spy_single_identity.py` |
 | Schema management | [Schema Management](file:///Users/andreskull/gor_dagster/docs/operations/schema-management.md) |
@@ -508,5 +519,7 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 - [[concepts/onboarding-new-podcast-source]]
 - [[concepts/resolution-pipeline-efficiency]]
 - [[concepts/linkedin-enrichment]]
+- [[concepts/linkedin-outreach]]
+- [[concepts/signal-source-quote]]
 - [[entities/dagster]]
 - [[entities/bigquery]]

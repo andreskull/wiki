@@ -43,4 +43,5 @@ Primary shareable performance story for growth/social; gated by the same entitle
 - [[projects/gor_dagster]]
 - [[concepts/signal-performance]]
 - [[concepts/subscription-entitlement-ssot]]
+- [[concepts/linkedin-outreach]] — reuses this chart stack for outreach MP4s (headless render)
 - [[products/finfluencer-trade]]

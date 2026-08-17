@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-08-04
+updated: 2026-08-17
 ---
 
 # Wiki Index
@@ -22,7 +22,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | Page | Description |
 |------|-------------|
 | [[wiki/products/finfluencer-trade]] | Financial influencer accountability platform — planning hub (growth + MVP docs on product page) |
-| [[wiki/products/rattaproff]] | WooCommerce multi-store automation — 7 storefronts; HUF→EUR pricing [[wiki/concepts/huf-eur-pipeline-pricing]]; gsheet sync safety [[wiki/concepts/gsheet-ground-truth-sync]] |
+| [[wiki/products/rattaproff]] | WooCommerce multi-store automation — 20 storefronts; HUF→EUR pricing [[wiki/concepts/huf-eur-pipeline-pricing]]; gsheet sync safety [[wiki/concepts/gsheet-ground-truth-sync]]; category URL export (Woo slugs, 2026-08-14) |
 | [[wiki/products/botastico]] | Partially indexed — [[projects/botastico]] SSL/monitoring (2026-07-15); [[projects/botastico-api]] (2026-05-18); other repos pending |
 
 ---
@@ -31,10 +31,10 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Product | Status |
 |------|---------|--------|
-| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **Chit Chat Stocks** onboarded **2026-08-02** (11th RSS); **Investing Unscripted** **2026-07-27**; **Gemini 3.5 Flash-Lite** SI/FE prod **2026-07-27**; **LinkedIn enrichment** **2026-07-23** |
-| [[wiki/projects/gor-blog]] | finfluencer.trade | Active — directory Covered + Investing Unscripted **2026-07-27**; Chit Chat Stocks Covered mapping deferred **2026-08-02**; CTA pattern; apex `/api/subscribe`; `api/newsletter/` |
-| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **cumulative performance charts** **2026-08-04**; **subscription entitlement SSOT** **2026-07-27**; LinkedIn profiles **2026-07-23**; **CNBC IPO scoreboard** **2026-07-11**; landing funnel **2026-07-10** |
-| [[wiki/projects/rattaproff]] | rattaproff | Operational — gsheet sync safety **2026-07-13**; permalink backfill + gsheet restore (Jun 2026); 20 storefronts |
+| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **source quotes** + **LinkedIn outreach** wrapped **2026-08-11**; Chit Chat Stocks **2026-08-02**; Gemini 3.5 Flash-Lite SI/FE **2026-07-27**; LinkedIn enrichment **2026-07-23** |
+| [[wiki/projects/gor-blog]] | finfluencer.trade | Active — platform-update post + Kit send **2026-08-14**; directory Covered + Investing Unscripted **2026-07-27**; CTA pattern; apex `/api/subscribe`; `api/newsletter/` |
+| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **Reddit Ads pixel** **2026-08-17**; **cumulative performance charts** **2026-08-04**; **subscription entitlement SSOT** **2026-07-27**; LinkedIn profiles **2026-07-23**; **CNBC IPO scoreboard** **2026-07-11**; landing funnel **2026-07-10** |
+| [[wiki/projects/rattaproff]] | rattaproff | Operational — category URL export from Woo slugs **2026-08-14**; gsheet sync safety **2026-07-13**; permalink backfill + gsheet restore (Jun 2026); 20 storefronts |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Active |
 | [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | Public kit + SSRN 6643379 — CSVs, scripts, paper |
 | [[wiki/projects/botastico-api]] | botastico | Active — chat image attachments **2026-05-18** ([feature doc](file:///Users/andreskull/botastico-api/docs/architecture/features/botastico-chat-image-attachments.md)); Cloud Run Flask; `slack_chat_logs` Pub/Sub consumer |
@@ -66,10 +66,13 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/concepts/resolution-pipeline-efficiency]] | gor_dagster: JW matcher, re-attempt union, backlog sweeps, alias-on-resolve |
 | [[wiki/concepts/curation-learning]] | gor_dagster: fund-noise similarity, unique-ticker bar 0.85, Stage 0.75 promotion (2026-07-07) |
 | [[wiki/concepts/linkedin-enrichment]] | gor_dagster + tracker: trust-tiered LinkedIn URLs; trusted-only Supabase sync; no third-party API (2026-07-23) |
+| [[wiki/concepts/signal-source-quote]] | gor_dagster: `raw_source_quote` from proof_segments; blank beats approximate; backfill + FE forward fix (2026-08-11) |
+| [[wiki/concepts/linkedin-outreach]] | gor_dagster + tracker: Notion Accepted drafts + optional chart MP4; human LinkedIn send only (2026-08-11) |
 | [[wiki/concepts/subscription-entitlement-ssot]] | finfluencer-tracker: profile tier = app entitlement; Stripe billing-only; reconcile + RLS close (2026-07-27) |
 | [[wiki/concepts/cumulative-performance-charts]] | finfluencer-tracker: cumulative % profile + `/compare` + watermarked export; SPY sync; waypoint-shaped path (2026-08-04) |
 | [[wiki/concepts/botastico-ssl-certificates]] | botastico: GCP LB managed certs, auto-renew, renewal-failure monitoring (2026-07-15) |
 | [[wiki/concepts/google-ads-conversion-tracking]] | finfluencers.trade paid measurement — ONE Google tag `G-BLE3H05Q5T` → GA4 `485294334` + `AW-18322362149`; legacy "Finfluencers.Bet" name renamed 2026-08-04; trust IDs not names |
+| [[wiki/concepts/reddit-ads-conversion-tracking]] | finfluencers.trade Reddit pixel — `SignUp` + `PageVisit`, consent gate before `pixel.js`; Conversions campaign live, Traffic Max paused (2026-08-17) |
 
 ---
 

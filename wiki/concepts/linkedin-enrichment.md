@@ -4,7 +4,7 @@ title: "LinkedIn enrichment (trust-tiered)"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-07-23
-updated: 2026-07-23
+updated: 2026-08-11
 tags: [linkedin, finfluencer, curation, supabase, dagster, bigquery]
 ---
 
@@ -57,4 +57,5 @@ coverage (2026-07-23) — identity/trust is the bottleneck, not search cost.
 - [[projects/gor_dagster]]
 - [[projects/finfluencer-tracker]]
 - [[products/finfluencer-trade]]
+- [[concepts/linkedin-outreach]] — uses trusted LinkedIn URLs for contact matching when present
 - [[entities/bigquery]]

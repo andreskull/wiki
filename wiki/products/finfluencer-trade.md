@@ -4,7 +4,7 @@ title: "finfluencer.trade"
 product: finfluencer-trade
 project: null
 created: 2026-04-06
-updated: 2026-08-04
+updated: 2026-08-17
 tags: [finfluencer, finance, pipeline, dagster, blog, tracking, linkedin, stripe, entitlement, charts]
 ---
 
@@ -28,7 +28,7 @@ The platform follows financial influencers (podcasters, YouTubers, analysts) and
 |---|---|
 | [[projects/gor_dagster]] | Data pipeline — ingestion, transcription, speaker attribution, facts extraction, signal generation. The core backend. |
 | [[projects/gor-blog]] | Public MkDocs site — blog, directory, articles; private **`research/cramer/`** for Cramer internal export scripts and specs (public data kit: [[projects/cramer-mad-money-research]]) |
-| [[projects/finfluencer-tracker]] | App + landing on Vercel — auth, billing, leaderboards, cumulative charts / `/compare` / export (**2026-08-04** [[concepts/cumulative-performance-charts]]); entitlement SSOT **2026-07-27** ([[concepts/subscription-entitlement-ssot]]) |
+| [[projects/finfluencer-tracker]] | App + landing on Vercel — auth, billing, leaderboards, cumulative charts / `/compare` / export (**2026-08-04** [[concepts/cumulative-performance-charts]]); Reddit pixel `SignUp` (**2026-08-17** [[concepts/reddit-ads-conversion-tracking]]); entitlement SSOT **2026-07-27** ([[concepts/subscription-entitlement-ssot]]) |
 | [[projects/cramer-mad-money-research]] | Public reproducibility + working paper (SSRN 6643379) — Cramer / *Mad Money* 2018–2024 |
 
 ## Architecture summary
@@ -47,12 +47,15 @@ LLM layer uses multi-provider configuration registry (Gemini, GPT, Claude) with 
 
 ## Current status
 
-Active development. Pipeline is production-ready for core transcription and facts extraction. Speaker attribution and signal tracking are mature. Blog is live with 14+ published posts. **Chit Chat Stocks** onboarded (**2026-08-02** — 11th RSS source; Pattern 6; directory Covered mapping deferred). **Investing Unscripted** (**2026-07-27** — directory Covered). **Gemini 3.5 Flash-Lite** is production SI/FE (**2026-07-27** — `si-gem35fl-recursive` @450s / `fe-gem35fl-recursive` @1800s; ActionableSignal FE priority 1). **LinkedIn enrichment** wrapped **2026-07-23** ([[concepts/linkedin-enrichment]]). **App (finfluencer-tracker):** **cumulative performance charts** shipped (**2026-08-04** — [[concepts/cumulative-performance-charts]]); **subscription entitlement SSOT** live (**2026-07-27** — [[concepts/subscription-entitlement-ssot]]). **CNBC IPO scoreboard** at **`/cnbc-ipo`** (**2026-07-11**).
+Active development. Pipeline is production-ready for core transcription and facts extraction. Speaker attribution and signal tracking are mature. Blog is live with 14+ published posts. Platform-update post + Kit send **2026-08-14** ([[projects/gor-blog]]). **Signal source quotes** restored (**2026-08-11** — [[concepts/signal-source-quote]]). **LinkedIn outreach** Notion drafts + chart videos shipped (**2026-08-11** — [[concepts/linkedin-outreach]]; human LinkedIn send only). **Chit Chat Stocks** onboarded (**2026-08-02**). **Gemini 3.5 Flash-Lite** is production SI/FE (**2026-07-27**). **LinkedIn enrichment** wrapped **2026-07-23** ([[concepts/linkedin-enrichment]]). **App:** **Reddit Ads pixel** (`SignUp` + `PageVisit`, **2026-08-17** — [[concepts/reddit-ads-conversion-tracking]]); **cumulative performance charts** (**2026-08-04**); **subscription entitlement SSOT** (**2026-07-27**); **CNBC IPO scoreboard** `/cnbc-ipo` (**2026-07-11**).
 
 ## Key cross-repo decisions
 
+- **Reddit pixel (2026-08-17):** consent-gated `pixel.js`; `SignUp` rides `maybeTrackSignUp`; Conversions campaign live, Traffic Max paused ([[concepts/reddit-ads-conversion-tracking]])
 - **Cumulative charts / SPY sync (2026-07-30 → 2026-08-04):** App RPC builds chain-linked equity curves from mirrored signals + SPY `benchmark_daily_prices` synced from BigQuery `PriceHistory`; waypoint-shaped intra-window path (not true daily marks) ([[concepts/cumulative-performance-charts]])
 - **LinkedIn URLs (2026-07-23):** Only trusted provenance syncs BQ → Supabase `finfluencers.linkedin_url` → tracker profiles; discovery never auto-publishes ([[concepts/linkedin-enrichment]])
+- **LinkedIn outreach (2026-08-11):** Notion Accepted drafts + optional claim=chart MP4; no LinkedIn API send ([[concepts/linkedin-outreach]])
+- **Source quotes (2026-08-11):** `raw_source_quote` from proof_segments; blank beats approximate; synced to Supabase `signals` ([[concepts/signal-source-quote]])
 - STT transcripts stored in `gor-stt-transcripts` GCS bucket (hardcoded, not from env var)
 - **Backend data (BigQuery / GCS):** all pipeline and integration environments — local, branch, and production — use the **production** datasets and buckets (`dagster_prod`, `dagster_shared`, shared media/STT storage). There is no separate staging warehouse for backend analytics (see [[entities/bigquery]]).
 - **finfluencer-tracker (app layer):** **two Supabase instances** — one for **production** and one for **development** — so app/auth data can be isolated while the app still reads pipeline data sourced from production backend stores.
@@ -80,9 +83,13 @@ Use these when you need **growth**, **app MVP scope**, or **post-MVP product bac
 - [[projects/gor-blog]]
 - [[projects/cramer-mad-money-research]]
 - [[projects/finfluencer-tracker]]
+- [[concepts/reddit-ads-conversion-tracking]]
+- [[concepts/google-ads-conversion-tracking]]
 - [[concepts/cumulative-performance-charts]]
 - [[concepts/subscription-entitlement-ssot]]
 - [[concepts/linkedin-enrichment]]
+- [[concepts/linkedin-outreach]]
+- [[concepts/signal-source-quote]]
 - [[concepts/actionable-signal]]
 - [[concepts/speaker-attribution]]
 - [[entities/dagster]]

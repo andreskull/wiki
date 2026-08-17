@@ -4,7 +4,7 @@ title: "gor-blog"
 product: finfluencer-trade
 project: gor-blog
 created: 2026-04-06
-updated: 2026-08-02
+updated: 2026-08-14
 tags: [blog, mkdocs, content, finfluencer, research, articles, newsletter, convertkit]
 ---
 
@@ -26,7 +26,7 @@ The public voice of the platform. Publishes research on finfluencer prediction q
 - **Content format:** Markdown (blog posts, directory)
 - **Hosting:** [Vercel](https://vercel.com/) — static build (`mkdocs build` / `vercel-build`); env and domains documented in the repo `README.md`
 - **Assets:** Fonts, logos, images in `docs/assets/`
-- **Newsletter / Kit:** `api/newsletter/` — `send.py`, ConvertKit client, `import_registered_users.py` (Supabase → same tag as footer, `GOR_NEWSLETTER_SUBS`). Wrap-up: [`registered-users-kit-import.md`](file:///Users/andreskull/gor-blog/api/newsletter/registered-users-kit-import.md); full ops in [`README.md`](file:///Users/andreskull/gor-blog/api/newsletter/README.md).
+- **Newsletter / Kit:** `api/newsletter/` — `send.py` (sitemap digest), ConvertKit client, `import_registered_users.py` (Supabase → `GOR_NEWSLETTER_SUBS`), custom one-off uploaders (`send_may_announcement.py`, `send_august_announcement.py`). Wrap-ups: [`registered-users-kit-import.md`](file:///Users/andreskull/gor-blog/api/newsletter/registered-users-kit-import.md), [`cumulative-compare-launch.md`](file:///Users/andreskull/gor-blog/api/newsletter/cumulative-compare-launch.md); full ops in [`README.md`](file:///Users/andreskull/gor-blog/api/newsletter/README.md).
 
 ## Important structural note
 
@@ -50,7 +50,7 @@ gor-blog/
 └── api/                     ← newsletter / Kit integration code
 ```
 
-Internal implementation notes that are tightly coupled to specific code modules sit next to that code (e.g. `api/newsletter/registered-users-kit-import.md`), not under `features/`.
+Internal implementation notes that are tightly coupled to specific code modules sit next to that code (e.g. `api/newsletter/registered-users-kit-import.md`, `api/newsletter/cumulative-compare-launch.md`), not under `features/`.
 
 ## Published content (as of 2026-04-06)
 
@@ -85,7 +85,7 @@ Every blog post in `docs/blog/posts/` must include the CTAs codified in [[concep
 
 ## Current status
 
-Live site with active publication. 14+ posts published. Directory operational — **Investing Unscripted** under Covered (`investing-unscripted`, **2026-07-27**). **Chit Chat Stocks** already has a directory entry (`data-key=chit-chat-stocks`); Covered `_profiles.json` mapping still **deferred** after pipeline onboarding **2026-08-02** ([[projects/gor_dagster]]). Every new pipeline show must revise the directory (playbook Requirement 13 — [[concepts/onboarding-new-podcast-source]]). **Newsletter:** footer form POSTs to **`/api/subscribe`** on gor-blog (Vercel serverless). When the blog is viewed via **`finfluencers.trade/blog/...`**, the landing app (**[[projects/finfluencer-tracker]]**) rewrites **`/api/subscribe`** to **`blog.finfluencers.trade`** so subscriptions work at apex. Registered app users can still be merged into Kit tag **`GOR_NEWSLETTER_SUBS`** via CLI import (see repo `api/newsletter/`). **Cramer post CTA pattern** (hero + inline + end-of-post dual card + internal links) is implemented on the Cramer methodology post (`jim-cramer-stock-picks-study.md`); CSS classes **`.ft-cta-hero`** / **`.ft-cta-inline`** in `docs/stylesheets/extra.css` — see [`WIKI.md`](file:///Users/andreskull/gor-blog/WIKI.md) § *Blog post CTA pattern*. Cramer working paper is public on **SSRN** and **GitHub** (see [[projects/cramer-mad-money-research]]); private `research/cramer/` holds export/spec/admin files only.
+Live site with active publication. Platform-update post **2026-08-14**: *Cumulative Curves, Head-to-Head Compare, and Every Show We Track* (`https://finfluencers.trade/blog/2026/08/14/cumulative-performance-and-show-leaderboards/`). Kit broadcast `25439881` the same day; `last_newsletter_date` **2026-08-14**. Custom one-off senders live next to `send.py` — wrap-up [`cumulative-compare-launch.md`](file:///Users/andreskull/gor-blog/api/newsletter/cumulative-compare-launch.md). Directory operational — **Investing Unscripted** under Covered (`investing-unscripted`, **2026-07-27**). **Chit Chat Stocks** already has a directory entry (`data-key=chit-chat-stocks`); Covered `_profiles.json` mapping still **deferred** after pipeline onboarding **2026-08-02** ([[projects/gor_dagster]]). Every new pipeline show must revise the directory (playbook Requirement 13 — [[concepts/onboarding-new-podcast-source]]). **Newsletter:** footer form POSTs to **`/api/subscribe`** on gor-blog (Vercel serverless). When the blog is viewed via **`finfluencers.trade/blog/...`**, the landing app (**[[projects/finfluencer-tracker]]**) rewrites **`/api/subscribe`** to **`blog.finfluencers.trade`** so subscriptions work at apex. Registered app users can still be merged into Kit tag **`GOR_NEWSLETTER_SUBS`** via CLI import (see repo `api/newsletter/`). **CTA pattern** (hero + inline + end-of-post dual card + internal links): Cramer study plus the 2026-08-14 platform post. End cards are an equal-width green-border grid (`.ft-cta-endpost`). Raw HTML asset paths in posts must be root-absolute (`/assets/...`). CSS in `docs/stylesheets/extra.css` — see [`WIKI.md`](file:///Users/andreskull/gor-blog/WIKI.md) § *Blog post CTA pattern*. Cramer working paper is public on **SSRN** and **GitHub** (see [[projects/cramer-mad-money-research]]); private `research/cramer/` holds export/spec/admin files only.
 
 ## Related pages
 

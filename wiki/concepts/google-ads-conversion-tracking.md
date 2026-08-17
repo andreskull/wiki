@@ -4,7 +4,7 @@ title: "Google Ads / GA4 conversion tracking (finfluencers.trade)"
 product: finfluencer-trade
 project: null
 created: 2026-08-04
-updated: 2026-08-11
+updated: 2026-08-17
 tags: [google-ads, ga4, analytics, conversion-tracking, marketing]
 ---
 
@@ -88,11 +88,17 @@ Deliberately staying ordinary events: `performance_chart_period_changed`, `anima
 **Progress on Phase 4:**
 - `newsletter_signup` removed as a GA4 key event 2026-08-11 (Task 4.1) — it belonged to `gor-blog`, not this app, and had never fired here; see the `view_page` postmortem above for the same class of mistake.
 - **2026-08-11 — Tasks 4.2 and 4.3 done.** 9 of the 10 intended key events are GA4-keyed and imported to Ads as **secondary**: `purchase`, `comparison_created`, `begin_checkout`, `paywall_hit`, `profile_viewed`, `leaderboard_engaged`, `signals_engaged`, `performance_chart_viewed`, `share_completed`. Ads conversion goals now: `Registreerumine` (`sign_up` primary, plus the retired page-load action, secondary), `Kaasamine`/Engagement (7 secondary — carries the account-default badge, see the caution below), `Maksmise alustamine`/Begin checkout (`begin_checkout`, secondary), `Ost`/Purchase (`purchase`, secondary). `onboarding_completed` remains un-keyed — it fires once per user and hadn't fired for a fresh account yet as of this note.
+- **2026-08-12 — `onboarding_completed` keyed in GA4.** Confirmed present in Recent events for a fresh account and starred as a key event, making 10/11 GA4 key events total (with `sign_up`). Not yet imported to Ads as of this note — it postdated the 2026-08-11 import batch.
+- **2026-08-13 — `onboarding_completed` imported to Ads as secondary.** Action: **`Finfluencers.Trade (web) onboarding_completed`**, `ctId=7718039729`, category `Kaasamine` (matching the other 7 engagement-style events). Same wizard path as the 2026-08-11 batch: Konversioonid → "Kuva kõik konversioonitoimingud" → **+** → tick only "Konversioonid veebisaidil" → Salvesta ja jätka → "Mitme konversioonitoimingu loomine lingitud kontolt" → Vali → Finfluencers.Trade 485294334 → tick only `onboarding_completed` → category Kaasamine → Lõpeta. Created as Esmane by the wizard (same forced-Primary-at-creation default as before), demoted via its own Seaded page → Muuda seadeid → Toimingu optimeerimine → "Teisene toiming" → Salvesta, verified by reload (settings page reads "Kaasamised, Teisene toiming"). `Kaasamine` category now holds 8 secondary actions. This closes out the 10-event Task 4.2/4.3 import list — all 10 intended key events are now GA4-keyed and imported to Ads as secondary, `purchase`'s GA4 key-event status pending (Task 4.2, blocked on GA4 admin lag, not an Ads issue).
 - **A real trap surfaced during import, worth knowing if you touch this again:** Ads' bulk-import wizard forces every newly-created action to Primary and disables the Secondary option — this is a creation-time-only restriction, not a permanent one. It was confirmed reversible by demoting `begin_checkout` (the sole member of its category) immediately after creation via the action's own Seaded page. Creating the 9 as Primary first was safe only because neither live campaign used any of the three categories involved (`Ost`/`Maksmise alustamine`/`Kaasamine` were all 0/2 campaigns) and the Search campaign runs Maximize Clicks, which ignores conversions entirely — check that before assuming the same safety net applies elsewhere.
 - **Do not promote anything to primary as a side effect of an earlier task.** `sign_up`, and later `purchase` and `comparison_created` (per D1's gated sequencing), are the only conversions that should ever be primary. `Kaasamine` now carries the "account-default goal" badge — if any campaign is ever switched to account-default goals, it would inherit whatever is primary inside it, so keep those 7 secondary.
 - **2026-08-11 note if you are picking this up fresh**: `docs/features/conversion-measurement-plan/requirements.md`'s "GA4 configuration" and "Google Ads configuration" acceptance criteria previously listed two different, both-incomplete subsets of these 15 events (missing `signals_engaged` from both, and missing 5 others from one or the other). That was corrected the same day — `requirements.md` and `tasks.md` Task 4.2 now agree and are both authoritative. If you find them disagreeing again, that itself is worth fixing before proceeding, not just picking one.
 
 Specified in `finfluencer-tracker` → `docs/features/conversion-measurement-plan/`.
+
+**Not yet "shipped" — deliberately.** Tasks 4.6 (`comparison_created` → primary, gate: ≥1 week after Task 4.5's bid-strategy switch, ~2026-08-19) and 4.7 (`purchase` → primary, gate: ≥1 month of real purchase data, ~2026-09-11) remain open. `docs/features/conversion-measurement-plan/{requirements,design}.md`'s status lines were refreshed 2026-08-13 to say so honestly rather than left at their stale 2026-08-05 drafting-phase text; neither claims "shipped" (Task 5.4 stays open until 4.7 closes).
+
+**2026-08-13 — both remaining gates folded into the daily Ads review.** The Cowork-side `ads-performance-morning-review` scheduled task (`/Users/andreskull/Claude/Scheduled/ads-performance-morning-review/SKILL.md`, section A7) now checks each run whether `purchase` has cleared GA4's Recent-events admin lag (unblocks Task 4.2's last key event) and whether the 4.6/4.7 date gates have passed — it reports readiness but does not star events or promote anything itself, matching this file's standing "do not promote as a side effect" rule. There is also an older, stale `google-ads-morning-review` task directory on disk (`/Users/andreskull/Claude/Scheduled/google-ads-morning-review/`, last touched 2026-08-05) — superseded by `ads-performance-morning-review`, which now also covers Reddit Ads; don't confuse the two if both show up in a directory listing.
 
 ## Lessons that generalise
 
@@ -106,4 +112,5 @@ Specified in `finfluencer-tracker` → `docs/features/conversion-measurement-pla
 
 - [[products/finfluencer-trade]]
 - [[projects/finfluencer-tracker]]
+- [[concepts/reddit-ads-conversion-tracking]] — parallel Reddit pixel; same `maybeTrackSignUp` moment
 - [[concepts/subscription-entitlement-ssot]]

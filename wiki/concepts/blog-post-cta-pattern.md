@@ -4,7 +4,7 @@ title: "Blog post CTA pattern"
 product: finfluencer-trade
 project: gor-blog
 created: 2026-05-05
-updated: 2026-05-06
+updated: 2026-08-14
 tags: [blog, cta, conversion, funnel, growth, mkdocs]
 ---
 
@@ -34,9 +34,11 @@ Every blog post in `gor-blog/docs/blog/posts/` must include items 1–4 before p
 
 2. **Inline mid-article module.** A callout box after the TL;DR or opening conclusions. Different copy from the above-fold module to avoid repetition. Example: *"Want to see signals like these as they happen? Browse the live leaderboard →"*.
 
-3. **Expanded end-of-post block.** Alongside the existing newsletter subscribe form, add a second CTA linking to the live product (leaderboard or relevant profile). Two CTAs side-by-side; newsletter remains primary.
+3. **Expanded end-of-post block.** Two product CTAs side-by-side (`.ft-cta-endpost`): equal-width grid, shared green border, buttons aligned at the bottom. Pair with the existing newsletter footer as needed.
 
-4. **Internal product links in the body.** Wherever the post mentions a specific finfluencer, signal type, or data slice, link to the corresponding live page (`/finfluencer/<slug>`, `/signals?slice=...`, `/leaderboard`, `/methodology`). No UTM tags on internal links.
+4. **Internal product links in the body.** Wherever the post mentions a specific finfluencer, signal type, or data slice, link to the corresponding live page (`/finfluencer/<slug>`, `/signals?slice=...`, `/leaderboard`, `/compare`, `/shows`, `/methodology`). Open product links in a new tab (`target="_blank" rel="noopener noreferrer"`). No UTM tags on internal links.
+
+Raw HTML embeds (`<video>`, `<img src>`) must use **root-absolute** paths (`/assets/...`). MkDocs does not rewrite relative paths inside raw HTML; dated blog URLs will 404.
 
 ## Optional / template-level (set once across all posts)
 
@@ -46,7 +48,7 @@ Every blog post in `gor-blog/docs/blog/posts/` must include items 1–4 before p
 
 ## Implementation reference (gor-blog)
 
-First complete application: **May 2026** — [`jim-cramer-stock-picks-study.md`](file:///Users/andreskull/gor-blog/docs/blog/posts/jim-cramer-stock-picks-study.md) (live: `https://finfluencers.trade/blog/2026/04/27/what-i-learned-from-16701-jim-cramer-stock-picks/`). Shared styles: **`docs/stylesheets/extra.css`** — **`.ft-cta-hero`**, **`.ft-cta-hero__copy`**, **`.ft-cta-hero__button`**, **`.ft-cta-inline`**. End-of-post block on that post uses the newsletter card plus a secondary leaderboard CTA (per-post HTML until a theme-level rollout). Durable notes: [`WIKI.md`](file:///Users/andreskull/gor-blog/WIKI.md) § *Blog post CTA pattern*.
+First complete application: **May 2026** — [`jim-cramer-stock-picks-study.md`](file:///Users/andreskull/gor-blog/docs/blog/posts/jim-cramer-stock-picks-study.md). Equal-width end-card grid: **August 2026** — [`cumulative-performance-and-show-leaderboards.md`](file:///Users/andreskull/gor-blog/docs/blog/posts/cumulative-performance-and-show-leaderboards.md). Shared styles: **`docs/stylesheets/extra.css`** — **`.ft-cta-hero`**, **`.ft-cta-inline`**, **`.ft-cta-endpost`**. Durable notes: [`WIKI.md`](file:///Users/andreskull/gor-blog/WIKI.md) § *Blog post CTA pattern*.
 
 ## Style guidelines
 

@@ -4,7 +4,7 @@ title: "rattaproff"
 product: rattaproff
 project: rattaproff
 created: 2026-04-06
-updated: 2026-07-13
+updated: 2026-08-14
 tags: [woocommerce, ecommerce, automation, gcp, bigquery, indexing, supplier, python, google-sheets]
 ---
 
@@ -39,18 +39,21 @@ Everything in one repo: supplier catalogue ingestion, reconciliation with Google
 - `indexing_dispatcher_function/` — Cloud Function, 200 URLs/day limit
 - `dashboard_app.py` / `indexing_dashboard.py` — monitoring UIs
 - `gsheet.py` / `sheet_utils.py` — Google Sheets reconciliation; safe ground-truth writes ([[concepts/gsheet-ground-truth-sync]])
+- `generate_category_urls.py` — live category permalinks from Woo REST slugs (not sheet-name transliteration); gitignored `category_urls_<domain>.csv` in repo root. [category-url-export.md](file:///Users/andreskull/rattaproff/docs/architecture/category-url-export.md)
 
 ## Architecture decisions
 
 - **No staging tab in live spreadsheet** — Google Sheets 10M-cell limit is per file across all tabs; ~40k×118 cols is already ~4.8M cells; duplicating data in-file would risk hard failures.
 - **GCS before sheet** — `sync_sheet_with_ground_truth` snapshots intended ground truth to GCS before writing the sheet; readers fall back if sync-status is incomplete.
 - **`__sync_status` marker** — tiny auto-created tab; `in_progress` during write, `complete` only after all chunks + trim succeed.
+- **Category URLs come from Woo slugs** — WordPress `sanitize_title` owns the path. Guessing from translated sheet names 404s (`arrière` → `arri-re`). Exporter walks parent slugs from `/products/categories`.
 
 ## Completed features
 
 - **Permalink redirect resolution** — v1/v2 backfills complete; gsheet disaster recovery (June 2026). [permalink-redirect-resolution.md](file:///Users/andreskull/rattaproff/docs/architecture/features/permalink-redirect-resolution.md)
 - **HUF/EUR per-site pricing** — [huf-eur-per-site-pricing.md](file:///Users/andreskull/rattaproff/docs/architecture/huf-eur-per-site-pricing.md)
 - **GSheet ground-truth sync safety** — grow-only in-place writes, sync-status marker, GCS fallback (July 2026). [gsheet-ground-truth-sync.md](file:///Users/andreskull/rattaproff/docs/architecture/features/gsheet-ground-truth-sync.md)
+- **Category URL export** — Woo-slug lists regenerated 2026-08-14. [category-url-export.md](file:///Users/andreskull/rattaproff/docs/architecture/category-url-export.md)
 
 ## Docs structure
 
@@ -60,7 +63,7 @@ Everything in one repo: supplier catalogue ingestion, reconciliation with Google
 
 ## Current status
 
-Operational. **Gsheet:** restored to ~40k rows (July 2026); robot write path hardened — no manual `__sync_status` setup needed (created on first post-deploy write). **Permalink backfill:** complete (608k+ pretty cache permalinks). **HUF/EUR:** default rate 350 HUF/EUR (`DEFAULT_HUF_EUR_RATE`); per-site overrides in `SITE_HUF_EUR_RATES` (empty = default).
+Operational. **Gsheet:** restored to ~40k rows (July 2026); robot write path hardened — no manual `__sync_status` setup needed (created on first post-deploy write). **Permalink backfill:** complete (608k+ pretty cache permalinks). **HUF/EUR:** default rate 350 HUF/EUR (`DEFAULT_HUF_EUR_RATE`); per-site overrides in `SITE_HUF_EUR_RATES` (empty = default). **Category URL lists:** regenerate with `python generate_category_urls.py` (env `rp-3.11`); files at repo root `category_urls_*.csv` (gitignored). Exporter covers the `process.py` shops except **tudobike.pt**.
 
 Before robot execute after any gsheet incident: `scripts/summarize_change_plan.py` then `scripts/verify_gsheet_row_count.py`.
 
