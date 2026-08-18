@@ -57,4 +57,5 @@ Do not optimise on `PageVisit`. Traffic objective cannot be edited in place.
 - [[projects/finfluencer-tracker]]
 - [[products/finfluencer-trade]]
 - [[concepts/google-ads-conversion-tracking]]
+- [[concepts/session-replay-analytics]] — same production-host / stored-choice / EEA fail-closed allow-check shape
 - [[concepts/subscription-entitlement-ssot]]

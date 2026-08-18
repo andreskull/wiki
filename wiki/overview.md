@@ -2,16 +2,16 @@
 type: overview
 title: "Wiki Overview"
 created: 2026-04-06
-updated: 2026-08-17
+updated: 2026-08-18
 ---
 
 # Wiki Overview
 
-Three products, one methodology, one wiki. Updated: 2026-08-17.
+Three products, one methodology, one wiki. Updated: 2026-08-18.
 
 ## Products
 
-**[[products/finfluencer-trade]]** — Financial influencer accountability platform. Ingests podcast content, transcribes it, extracts stock picks, tracks prediction performance. Core repos: `gor_dagster` (data pipeline), `gor-blog` (public site + **`api/newsletter/`**; private **`research/cramer/`** — platform-update post + Kit send **2026-08-14**), **`finfluencer-tracker`** (Vercel app + landing — marketing **Explore** nav **2026-08-17**; **Reddit Ads pixel** **2026-08-17** [[concepts/reddit-ads-conversion-tracking]]; **cumulative performance charts** **2026-08-04** [[concepts/cumulative-performance-charts]]; **subscription entitlement SSOT** **2026-07-27** [[concepts/subscription-entitlement-ssot]]; **CNBC IPO scoreboard** `/cnbc-ipo` **2026-07-11**; public conversion funnel **2026-07-10**; see [[projects/finfluencer-tracker]]). **`cramer-mad-money-research`** — public kit + SSRN [6643379](https://ssrn.com/abstract=6643379). Pipeline production-ready; **Gemini 3.5 Flash-Lite** production SI/FE (**2026-07-27**); **signal source-quote restoration** + **LinkedIn outreach** (Notion drafts + chart videos; manual LinkedIn send) wrapped **2026-08-11** ([[concepts/signal-source-quote]], [[concepts/linkedin-outreach]]); **LinkedIn enrichment** **2026-07-23** ([[concepts/linkedin-enrichment]]). Active `gor_dagster` feature folders under `docs/features/` (batch-integration, post-cutoff IPO, others).
+**[[products/finfluencer-trade]]** — Financial influencer accountability platform. Ingests podcast content, transcribes it, extracts stock picks, tracks prediction performance. Core repos: `gor_dagster` (data pipeline), `gor-blog` (public site + **`api/newsletter/`**; private **`research/cramer/`** — platform-update post + Kit send **2026-08-14**), **`finfluencer-tracker`** (Vercel app + landing — **Clarity session replay** **2026-08-18** [[concepts/session-replay-analytics]]; marketing **Explore** nav **2026-08-17**; **Reddit Ads pixel** **2026-08-17** [[concepts/reddit-ads-conversion-tracking]]; **cumulative performance charts** **2026-08-04** [[concepts/cumulative-performance-charts]]; **subscription entitlement SSOT** **2026-07-27** [[concepts/subscription-entitlement-ssot]]; **CNBC IPO scoreboard** `/cnbc-ipo` **2026-07-11**; public conversion funnel **2026-07-10**; see [[projects/finfluencer-tracker]]). **`cramer-mad-money-research`** — public kit + SSRN [6643379](https://ssrn.com/abstract=6643379). Pipeline production-ready; **Gemini 3.5 Flash-Lite** production SI/FE (**2026-07-27**); **signal source-quote restoration** + **LinkedIn outreach** (Notion drafts + chart videos; manual LinkedIn send) wrapped **2026-08-11** ([[concepts/signal-source-quote]], [[concepts/linkedin-outreach]]); **LinkedIn enrichment** **2026-07-23** ([[concepts/linkedin-enrichment]]). Active `gor_dagster` feature folders under `docs/features/` (batch-integration, post-cutoff IPO, others).
 
 **[[products/rattaproff]]** — WooCommerce multi-store automation for a network of **20** e-commerce storefronts. Single repo. Handles supplier ingestion, **HUF→EUR pricing** (default 350 HUF/EUR; per-site overrides optional — [[concepts/huf-eur-pipeline-pricing]]), publishing, and Google Indexing API quota management. **GSheet ground-truth sync safety** (July 2026) — grow-only robot writes, `__sync_status` marker, GCS fallback — [[concepts/gsheet-ground-truth-sync]]. **Category URL export** (2026-08-14) — Woo REST slugs → gitignored `category_urls_*.csv`. Repo docs: `docs/architecture/huf-eur-per-site-pricing.md`, `docs/architecture/features/gsheet-ground-truth-sync.md`, `docs/architecture/category-url-export.md`.
 
@@ -23,7 +23,7 @@ Three products, one methodology, one wiki. Updated: 2026-08-17.
 
 ## Active development
 
-`gor_dagster` has in-progress feature folders under `docs/features/` (batch-integration, post-cutoff IPO resolution, etc.). **Signal source-quote restoration** + **LinkedIn outreach** wrapped **2026-08-11**. **finfluencer-tracker marketing Explore nav** wrapped **2026-08-17**. **finfluencer-tracker Reddit pixel** wrapped **2026-08-17**. **finfluencer-tracker cumulative performance charts** wrapped **2026-08-04**. **gor-blog platform-update blog + Kit send** wrapped **2026-08-14**. Temporary feature docs are not indexed until `/wrapup`.
+`gor_dagster` has in-progress feature folders under `docs/features/` (batch-integration, post-cutoff IPO resolution, etc.). **finfluencer-tracker session replay (Clarity)** wrapped **2026-08-18**. **Signal source-quote restoration** + **LinkedIn outreach** wrapped **2026-08-11**. **finfluencer-tracker marketing Explore nav** wrapped **2026-08-17**. **finfluencer-tracker Reddit pixel** wrapped **2026-08-17**. **finfluencer-tracker cumulative performance charts** wrapped **2026-08-04**. **gor-blog platform-update blog + Kit send** wrapped **2026-08-14**. Temporary feature docs are not indexed until `/wrapup`.
 
 ## Key concepts to know
 
@@ -41,6 +41,7 @@ Three products, one methodology, one wiki. Updated: 2026-08-17.
 - [[concepts/subscription-entitlement-ssot]] — profile tier = app entitlement; Stripe billing-only; reconcile + RLS close (2026-07-27)
 - [[concepts/cumulative-performance-charts]] — profile `/compare` cumulative % curves + export; waypoint-shaped path; SPY `benchmark_daily_prices` (2026-08-04)
 - [[concepts/reddit-ads-conversion-tracking]] — Reddit pixel `SignUp` / `PageVisit`; consent gate before `pixel.js`; Conversions campaign live (2026-08-17)
+- [[concepts/session-replay-analytics]] — Microsoft Clarity on Production; analytics consent; Balanced + Settings mask; weekly review until 2026-09-17 (2026-08-18)
 - [[concepts/onboarding-new-podcast-source]] — gor_dagster: add a podcast RSS end-to-end (regex gate; SI auto-discovers `podcast_rss`; Finfluencers Directory required since 2026-07-27)
 - [[concepts/botastico-ssl-certificates]] — botastico: GCP LB managed certs, auto-renew, renewal-failure-only alerts (2026-07-15)
 
@@ -49,4 +50,4 @@ Three products, one methodology, one wiki. Updated: 2026-08-17.
 - Botastico: **`botastico-api`** + **`botastico`** monorepo indexed (SSL/monitoring 2026-07-15); portal/script/stripe/etc. still thin in wiki
 - `rattaproff` — category URL export from Woo slugs (2026-08-14); HUF/EUR pricing note (May 2026)
 - **`gor_dagster` feature folders in flight** — wiki gains permanent `docs/architecture/features/` entries as each wraps up
-- **finfluencer-tracker:** Reddit CAPI / Advanced Matching deferred; Terminal SKU / product map deferred; magic-link deliverability deferred; true daily portfolio marks parked ([[concepts/cumulative-performance-charts]], [[concepts/reddit-ads-conversion-tracking]])
+- **finfluencer-tracker:** Clarity weekly review until **2026-09-17**; official Clarity↔GA4 OAuth link deferred; Reddit CAPI / Advanced Matching deferred; Terminal SKU / product map deferred; magic-link deliverability deferred; true daily portfolio marks parked ([[concepts/session-replay-analytics]], [[concepts/cumulative-performance-charts]], [[concepts/reddit-ads-conversion-tracking]])

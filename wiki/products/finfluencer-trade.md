@@ -4,8 +4,8 @@ title: "finfluencer.trade"
 product: finfluencer-trade
 project: null
 created: 2026-04-06
-updated: 2026-08-17
-tags: [finfluencer, finance, pipeline, dagster, blog, tracking, linkedin, stripe, entitlement, charts]
+updated: 2026-08-18
+tags: [finfluencer, finance, pipeline, dagster, blog, tracking, linkedin, stripe, entitlement, charts, clarity, session-replay]
 ---
 
 # finfluencer.trade
@@ -28,7 +28,7 @@ The platform follows financial influencers (podcasters, YouTubers, analysts) and
 |---|---|
 | [[projects/gor_dagster]] | Data pipeline — ingestion, transcription, speaker attribution, facts extraction, signal generation. The core backend. |
 | [[projects/gor-blog]] | Public MkDocs site — blog, directory, articles; private **`research/cramer/`** for Cramer internal export scripts and specs (public data kit: [[projects/cramer-mad-money-research]]) |
-| [[projects/finfluencer-tracker]] | App + landing on Vercel — auth, billing, leaderboards, cumulative charts / `/compare` / export (**2026-08-04** [[concepts/cumulative-performance-charts]]); marketing **Explore** nav to Leaderboard / Compare / Shows (**2026-08-17**); Reddit pixel `SignUp` (**2026-08-17** [[concepts/reddit-ads-conversion-tracking]]); entitlement SSOT **2026-07-27** ([[concepts/subscription-entitlement-ssot]]) |
+| [[projects/finfluencer-tracker]] | App + landing on Vercel — auth, billing, leaderboards, cumulative charts / `/compare` / export (**2026-08-04** [[concepts/cumulative-performance-charts]]); marketing **Explore** nav to Leaderboard / Compare / Shows (**2026-08-17**); Reddit pixel `SignUp` (**2026-08-17** [[concepts/reddit-ads-conversion-tracking]]); **Clarity session replay** (**2026-08-18** [[concepts/session-replay-analytics]]); entitlement SSOT **2026-07-27** ([[concepts/subscription-entitlement-ssot]]) |
 | [[projects/cramer-mad-money-research]] | Public reproducibility + working paper (SSRN 6643379) — Cramer / *Mad Money* 2018–2024 |
 
 ## Architecture summary
@@ -47,10 +47,11 @@ LLM layer uses multi-provider configuration registry (Gemini, GPT, Claude) with 
 
 ## Current status
 
-Active development. Pipeline is production-ready for core transcription and facts extraction. Speaker attribution and signal tracking are mature. Blog is live with 14+ published posts. Platform-update post + Kit send **2026-08-14** ([[projects/gor-blog]]). **Signal source quotes** restored (**2026-08-11** — [[concepts/signal-source-quote]]). **LinkedIn outreach** Notion drafts + chart videos shipped (**2026-08-11** — [[concepts/linkedin-outreach]]; human LinkedIn send only). **Chit Chat Stocks** onboarded (**2026-08-02**). **Gemini 3.5 Flash-Lite** is production SI/FE (**2026-07-27**). **LinkedIn enrichment** wrapped **2026-07-23** ([[concepts/linkedin-enrichment]]). **App:** marketing **Explore** nav (Leaderboard / Compare / Shows, **2026-08-17**); **Reddit Ads pixel** (`SignUp` + `PageVisit`, **2026-08-17** — [[concepts/reddit-ads-conversion-tracking]]); **cumulative performance charts** (**2026-08-04**); **subscription entitlement SSOT** (**2026-07-27**); **CNBC IPO scoreboard** `/cnbc-ipo` (**2026-07-11**).
+Active development. Pipeline is production-ready for core transcription and facts extraction. Speaker attribution and signal tracking are mature. Blog is live with 14+ published posts. Platform-update post + Kit send **2026-08-14** ([[projects/gor-blog]]). **Signal source quotes** restored (**2026-08-11** — [[concepts/signal-source-quote]]). **LinkedIn outreach** Notion drafts + chart videos shipped (**2026-08-11** — [[concepts/linkedin-outreach]]; human LinkedIn send only). **Chit Chat Stocks** onboarded (**2026-08-02**). **Gemini 3.5 Flash-Lite** is production SI/FE (**2026-07-27**). **LinkedIn enrichment** wrapped **2026-07-23** ([[concepts/linkedin-enrichment]]). **App:** **Clarity session replay** (Production, consent-gated, masked, **2026-08-18** — [[concepts/session-replay-analytics]]); marketing **Explore** nav (Leaderboard / Compare / Shows, **2026-08-17**); **Reddit Ads pixel** (`SignUp` + `PageVisit`, **2026-08-17** — [[concepts/reddit-ads-conversion-tracking]]); **cumulative performance charts** (**2026-08-04**); **subscription entitlement SSOT** (**2026-07-27**); **CNBC IPO scoreboard** `/cnbc-ipo` (**2026-07-11**).
 
 ## Key cross-repo decisions
 
+- **Clarity session replay (2026-08-18):** Production-only Microsoft Clarity; same analytics-consent gate as GA4/Reddit; Balanced + Settings page-root mask; four funnel events in GA4 (not Ads conversions); weekly review until **2026-09-17** ([[concepts/session-replay-analytics]])
 - **Reddit pixel (2026-08-17):** consent-gated `pixel.js`; `SignUp` rides `maybeTrackSignUp`; Conversions campaign live, Traffic Max paused ([[concepts/reddit-ads-conversion-tracking]])
 - **Cumulative charts / SPY sync (2026-07-30 → 2026-08-04):** App RPC builds chain-linked equity curves from mirrored signals + SPY `benchmark_daily_prices` synced from BigQuery `PriceHistory`; waypoint-shaped intra-window path (not true daily marks) ([[concepts/cumulative-performance-charts]])
 - **LinkedIn URLs (2026-07-23):** Only trusted provenance syncs BQ → Supabase `finfluencers.linkedin_url` → tracker profiles; discovery never auto-publishes ([[concepts/linkedin-enrichment]])
@@ -83,6 +84,7 @@ Use these when you need **growth**, **app MVP scope**, or **post-MVP product bac
 - [[projects/gor-blog]]
 - [[projects/cramer-mad-money-research]]
 - [[projects/finfluencer-tracker]]
+- [[concepts/session-replay-analytics]]
 - [[concepts/reddit-ads-conversion-tracking]]
 - [[concepts/google-ads-conversion-tracking]]
 - [[concepts/cumulative-performance-charts]]

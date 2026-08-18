@@ -4,7 +4,7 @@ title: "Google Ads / GA4 conversion tracking (finfluencers.trade)"
 product: finfluencer-trade
 project: null
 created: 2026-08-04
-updated: 2026-08-17
+updated: 2026-08-18
 tags: [google-ads, ga4, analytics, conversion-tracking, marketing]
 ---
 
@@ -85,6 +85,8 @@ Intended key events: `purchase`, `comparison_created`, `begin_checkout`, `onboar
 
 Deliberately staying ordinary events: `performance_chart_period_changed`, `animation_played`, `export_requested`, `export_completed`, `watermark_link_tapped` — sub-interactions and inbound-landing events. Same reasoning as the `view_page` retirement above: an event is free, key-event status is not.
 
+**2026-08-18 — four more ordinary events for session replay pairing** (`signup_method_click`, `magic_link_requested`, `auth_callback_error`, `onboarding_view`). They let GA4 counts join Clarity film. **Never** star them as key events and **never** import them as Google Ads conversions. `sign_up` stays the bidding signal. Qualitative replay: [[concepts/session-replay-analytics]].
+
 **Progress on Phase 4:**
 - `newsletter_signup` removed as a GA4 key event 2026-08-11 (Task 4.1) — it belonged to `gor-blog`, not this app, and had never fired here; see the `view_page` postmortem above for the same class of mistake.
 - **2026-08-11 — Tasks 4.2 and 4.3 done.** 9 of the 10 intended key events are GA4-keyed and imported to Ads as **secondary**: `purchase`, `comparison_created`, `begin_checkout`, `paywall_hit`, `profile_viewed`, `leaderboard_engaged`, `signals_engaged`, `performance_chart_viewed`, `share_completed`. Ads conversion goals now: `Registreerumine` (`sign_up` primary, plus the retired page-load action, secondary), `Kaasamine`/Engagement (7 secondary — carries the account-default badge, see the caution below), `Maksmise alustamine`/Begin checkout (`begin_checkout`, secondary), `Ost`/Purchase (`purchase`, secondary). `onboarding_completed` remains un-keyed — it fires once per user and hadn't fired for a fresh account yet as of this note.
@@ -113,4 +115,5 @@ Specified in `finfluencer-tracker` → `docs/features/conversion-measurement-pla
 - [[products/finfluencer-trade]]
 - [[projects/finfluencer-tracker]]
 - [[concepts/reddit-ads-conversion-tracking]] — parallel Reddit pixel; same `maybeTrackSignUp` moment
+- [[concepts/session-replay-analytics]] — Clarity film; four new GA4 events are ordinary only, never Ads conversions
 - [[concepts/subscription-entitlement-ssot]]
