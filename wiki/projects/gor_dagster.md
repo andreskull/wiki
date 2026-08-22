@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-08-11
+updated: 2026-08-19
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, linkedin, gemini, podcast-rss, outreach, source-quote]
 ---
 
@@ -385,8 +385,8 @@ Key rule: all Python code must be written to `.py` files before execution — ne
 | SPY single benchmark FIGI | SPY/US canonical FIGI **`BBG000BDTBL9`**; FI UUID unchanged; dashboard FIGI-first + ticker/exchange fallback; daily `spy_single_identity` asset check; performance exit uses as-of price join. [spy-canonical-figi-consolidation.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/spy-canonical-figi-consolidation.md) |
 | Podcast RSS SI discovery | `si_sensor` queries all active `podcast_rss` ContentSources via `get_podcast_rss_content_source_ids()` — no per-onboarding allowlist (2026-07-01). [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md) |
 | Pattern 6 Megaphone ARML | `extract_episode_id_from_enclosure_url()` branch for `feeds.megaphone.fm/{slug}` shows with `ARML{digits}.mp3`; Megaphone slug valid as `ContentSource.external_id`. [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md). Reused without code change for Investing Unscripted (**2026-07-27**) and Chit Chat Stocks (**2026-08-02**). |
-| Finfluencers Directory on every podcast onboarding | Playbook Requirement 13 / PR 5: revise gor-blog `docs/directory/index.md` (+ `_profiles.json` for Covered). [onboarding-new-podcast-source.md](file:///Users/andreskull/gor_dagster/docs/operations/onboarding-new-podcast-source.md); example [investing-unscripted-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/investing-unscripted-ingestion.md) |
-| No mandatory idempotent job re-launch | Playbook PR 3 no longer requires re-running `add_new_rss_source_job` for idempotency (retired **2026-08-01** / Chit Chat Stocks). Job remains idempotent. |
+| Finfluencers Directory on every podcast onboarding | Playbook Requirement 12 / PR 5: revise gor-blog `docs/directory/index.md` (+ `_profiles.json` for Covered). [onboarding-new-podcast-source.md](file:///Users/andreskull/gor_dagster/docs/operations/onboarding-new-podcast-source.md); example [investing-unscripted-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/investing-unscripted-ingestion.md) |
+| No onboarding idempotency requirement | Former playbook Requirement 9 (safe re-runs) retired **2026-08-19**. Proven across prior shows; do not include in new specs. Manual `add_new_rss_source_job` re-launch was already dropped **2026-08-01**. |
 | Apple ID → RSS via iTunes lookup | When only an Apple Podcasts ID is known, preflight may call `itunes.apple.com/lookup?id=…` for `feedUrl`, then derive `external_id` from the host feed slug. [chit-chat-stocks-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/chit-chat-stocks-ingestion.md) |
 | ElevenLabs mono-speaker SI hardening | Resplit at unify (120s windows); auto-heal at SI load from GCS raw (`elevenlabs_unified_heal.py`); healable stuck exclusion; merged-segment coverage via `merge_metadata.merged_utterances`. [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md) |
 | Recursive LLM extraction (memory-centric SI/FE) | Algorithm wrapped **2026-07-01**; production model **`si-gem35fl-recursive`** (@450s) / **`fe-gem35fl-recursive`** (@1800s) since **2026-07-27**. Batch backlog delivery: `docs/features/batch-integration/` Phase 5. [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md) |

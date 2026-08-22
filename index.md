@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-08-18
+updated: 2026-08-22
 ---
 
 # Wiki Index
@@ -33,7 +33,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 |------|---------|--------|
 | [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **source quotes** + **LinkedIn outreach** wrapped **2026-08-11**; Chit Chat Stocks **2026-08-02**; Gemini 3.5 Flash-Lite SI/FE **2026-07-27**; LinkedIn enrichment **2026-07-23** |
 | [[wiki/projects/gor-blog]] | finfluencer.trade | Active — platform-update post + Kit send **2026-08-14**; directory Covered + Investing Unscripted **2026-07-27**; CTA pattern; apex `/api/subscribe`; `api/newsletter/` |
-| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **Clarity session replay** **2026-08-18**; **Explore nav** **2026-08-17**; **Reddit Ads pixel** **2026-08-17**; **cumulative performance charts** **2026-08-04**; **subscription entitlement SSOT** **2026-07-27**; LinkedIn profiles **2026-07-23**; **CNBC IPO scoreboard** **2026-07-11**; landing funnel **2026-07-10** |
+| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **feedback Declined + admin note** **2026-08-22**; **Clarity session replay** **2026-08-18**; **Explore nav** **2026-08-17**; **Reddit Ads pixel** **2026-08-17**; **cumulative performance charts** **2026-08-04**; **subscription entitlement SSOT** **2026-07-27**; LinkedIn profiles **2026-07-23**; **CNBC IPO scoreboard** **2026-07-11**; landing funnel **2026-07-10** |
 | [[wiki/projects/rattaproff]] | rattaproff | Operational — category URL export from Woo slugs **2026-08-14**; gsheet sync safety **2026-07-13**; permalink backfill + gsheet restore (Jun 2026); 20 storefronts |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Active |
 | [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | Public kit + SSRN 6643379 — CSVs, scripts, paper |
@@ -61,7 +61,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/concepts/spec-driven-development]] | The development methodology loop |
 | [[wiki/concepts/huf-eur-pipeline-pricing]] | rattaproff: HUF sheet vs per-site EUR recompute for Woo diffs |
 | [[wiki/concepts/gsheet-ground-truth-sync]] | rattaproff: grow-only sheet writes, `__sync_status` marker, GCS fallback (2026-07-13) |
-| [[wiki/concepts/onboarding-new-podcast-source]] | gor_dagster: playbook for new RSS → ActionableSignal; directory PR required; iTunes feed discovery + no mandatory idempotent re-launch (2026-08-02); SI auto-discovers podcast_rss |
+| [[wiki/concepts/onboarding-new-podcast-source]] | gor_dagster: playbook for new RSS → ActionableSignal; directory PR required (Req 12); no idempotency requirement (retired 2026-08-19); iTunes feed discovery; SI auto-discovers podcast_rss |
 | [[wiki/concepts/proof-segment-speaker-resolution]] | Proof-segment quote speakers → Finfluencer; ActionableSignal gate; display_name at sync (2026-07-01) |
 | [[wiki/concepts/resolution-pipeline-efficiency]] | gor_dagster: JW matcher, re-attempt union, backlog sweeps, alias-on-resolve |
 | [[wiki/concepts/curation-learning]] | gor_dagster: fund-noise similarity, unique-ticker bar 0.85, Stage 0.75 promotion (2026-07-07) |
@@ -74,6 +74,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/concepts/google-ads-conversion-tracking]] | finfluencers.trade paid measurement — ONE Google tag `G-BLE3H05Q5T` → GA4 `485294334` + `AW-18322362149`; legacy "Finfluencers.Bet" name renamed 2026-08-04; trust IDs not names |
 | [[wiki/concepts/reddit-ads-conversion-tracking]] | finfluencers.trade Reddit pixel — `SignUp` + `PageVisit`, consent gate before `pixel.js`; Conversions campaign live, Traffic Max paused (2026-08-17) |
 | [[wiki/concepts/session-replay-analytics]] | finfluencers.trade Microsoft Clarity — Production-only replay; analytics consent; Balanced + Settings mask; four GA4 funnel events never Ads conversions (2026-08-18) |
+| [[wiki/concepts/feedback-roadmap]] | finfluencer-tracker native `/feedback` board — Declined + public admin note; `notify_requested_at` intent marker; vote allowlist; never rewrite `handle_feedback_notification()` (2026-08-22) |
 
 ---
 

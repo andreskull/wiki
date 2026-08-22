@@ -4,8 +4,8 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-08-18
-tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay]
+updated: 2026-08-22
+tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap]
 ---
 
 # finfluencer-tracker
@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-08-18)
+## Current status (2026-08-22)
+
+**Feedback board can decline with a public admin note** — fifth status `declined`, mandatory note (table CHECK), `notify_requested_at` intent marker, vote allowlist on both RLS policies. Orphaned posts (`user_id` NULL) disable “Email the submitter” instead of silently skipping. See [[concepts/feedback-roadmap]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feedback-decline-with-note.md). Living system: [feedback-system.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/feedback-system.md).
 
 **Microsoft Clarity session replay live** — Production only, analytics consent, Balanced masking, Settings page-root mask, credential URLs skipped. Weekly review in [session-replay-review.md](file:///Users/andreskull/finfluencer-tracker/docs/ops/session-replay-review.md); exit-criteria **2026-09-17**. See [[concepts/session-replay-analytics]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/session-replay-analytics.md).
 
@@ -75,10 +77,11 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [reddit-pixel-tracking](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/reddit-pixel-tracking.md) | Reddit pixel, consent gate, SignUp conversion (**2026-08-17**) |
 | [session-replay-analytics](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/session-replay-analytics.md) | Clarity replay, consent gate, masking, funnel events (**2026-08-18**) |
 | [public-navigation-discoverability](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/public-navigation-discoverability.md) | Marketing Explore nav to Leaderboard / Compare / Shows (**2026-08-17**) |
+| [feedback-decline-with-note](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feedback-decline-with-note.md) | Declined status, admin note, notify intent marker (**2026-08-22**) |
 | [daily-marks-plan](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/daily-marks-plan.md) | Parked: true daily portfolio marks (future) |
 | [subscription-entitlement-ssot](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/subscription-entitlement-ssot.md) | Profile SSOT, reconcile, RLS close (**2026-07-27**) |
 | [landing-conversion-improvements](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-conversion-improvements.md) | Public funnel, SEO, anon RPC pattern (**2026-07-10**) |
-| [feedback-system](file:///Users/andreskull/finfluencer-tracker/docs/architecture/feedback-system.md) | `/feedback` roadmap (**2026-06-02**) |
+| [feedback-system](file:///Users/andreskull/finfluencer-tracker/docs/architecture/feedback-system.md) | Living `/feedback` system: schema, RLS, notify-moderators, admin panel (**2026-06-02**, declined **2026-08-22**) |
 
 Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/finfluencer-tracker/docs/auth-sharing-landing-app.md).
 
@@ -86,6 +89,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-08-22 | Feedback: declined status with admin note | [feedback-decline-with-note.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feedback-decline-with-note.md) |
 | 2026-08-18 | Session replay & behavioural analytics | [session-replay-analytics.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/session-replay-analytics.md) |
 | 2026-08-17 | Public navigation discoverability | [public-navigation-discoverability.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/public-navigation-discoverability.md) |
 | 2026-08-17 | Reddit pixel tracking | [reddit-pixel-tracking.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/reddit-pixel-tracking.md) |
@@ -100,6 +104,9 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-08-22 | `notify_requested_at` intent marker, not `oldStatus !== newStatus` | A status-only gate can't express "notify with no status change" or "status changed, don't email"; the trigger fires on column mention, the edge function's own value comparison decides whether to send |
+| 2026-08-22 | Vote insert/delete narrowed to `under_review`/`planned` allowlist on **both** policies | Closed a pre-existing gap (API allowed votes on any status; only the UI hid the control) at the same time `declined` was added, rather than patching declined in isolation |
+| 2026-08-22 | Disable “Email the submitter” when `user_id` is null; do not hide it | Most production posts are orphaned (`ON DELETE SET NULL`); a checked box that cannot send trains the admin to distrust the control |
 | 2026-08-18 | Clarity is the sole vendor module; `isClarityAllowed` matches Reddit’s allow-check shape | Same host / env / stored-choice / EEA fail-closed gate as GA4 and the pixel |
 | 2026-08-18 | Settings recorded but page-root masked; no SPA pause API | Clarity cannot stop mid-document; visit/clicks stay, email/plan/amounts never upload |
 | 2026-08-18 | Four signup funnel events in GA4; six replay-only in Clarity; empty unmask allowlist | 30-day film vs durable counts; new events are never Ads conversions |
@@ -135,7 +142,8 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 - **`get_ipo_scoreboard_page(p_ticker)`** RPC — CNBC IPO scoreboard payload
 - **`landing_stats()`** RPC — landing stats bar
 - **`show_summary_stats()` / `show_distinct_ticker_counts()`** — guest `/shows` columns
-- Promotion: Preview → development Supabase + Stripe test; production Vercel → production Supabase + live Stripe
+- **`feedback_posts`** — statuses include `declined`; `admin_note` + `notify_requested_at`; vote RLS allowlist `under_review`/`planned`; never rewrite `handle_feedback_notification()` ([[concepts/feedback-roadmap]])
+- Promotion: Preview → development Supabase + Stripe test; production Vercel → production Supabase + live Stripe. Edge function `notify-moderators` deploys **twice**.
 
 ## MVP and planning docs (cross-repo)
 
@@ -151,6 +159,7 @@ Shipped MVP scope: [`gor_dagster/docs/MVP_MASTER_PLAN.md`](file:///Users/andresk
 - True daily portfolio marks (parked — [daily-marks-plan.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/daily-marks-plan.md)); show↔show compare; non-S&P benchmarks
 - Reddit Conversions API + Advanced Matching hashed email (pixel + privacy clause live; [[concepts/reddit-ads-conversion-tracking]])
 - Official Clarity↔GA4 OAuth dashboard link (playback URLs in GA4); campaign tags already on recordings ([[concepts/session-replay-analytics]])
+- Feedback note history / threading / voter-notify; reconstructing deleted submitter accounts; declined-last ordering must move server-side if the board paginates ([[concepts/feedback-roadmap]])
 
 ## Wiki sync
 
@@ -161,6 +170,7 @@ Vault indexes **WIKI.md** and all of **`docs/`** except **`docs/features/`**. Ru
 - [[products/finfluencer-trade]]
 - [[projects/gor_dagster]]
 - [[projects/gor-blog]]
+- [[concepts/feedback-roadmap]]
 - [[concepts/session-replay-analytics]]
 - [[concepts/reddit-ads-conversion-tracking]]
 - [[concepts/google-ads-conversion-tracking]]

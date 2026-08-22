@@ -63,7 +63,7 @@ Everything in one repo: supplier catalogue ingestion, reconciliation with Google
 
 ## Current status
 
-Operational. **Gsheet:** restored to ~40k rows (July 2026); robot write path hardened — no manual `__sync_status` setup needed (created on first post-deploy write). **Permalink backfill:** complete (608k+ pretty cache permalinks). **HUF/EUR:** default rate 350 HUF/EUR (`DEFAULT_HUF_EUR_RATE`); per-site overrides in `SITE_HUF_EUR_RATES` (empty = default). **Category URL lists:** regenerate with `python generate_category_urls.py` (env `rp-3.11`); files at repo root `category_urls_*.csv` (gitignored). Exporter covers the `process.py` shops except **tudobike.pt**.
+Operational. **Gsheet:** restored to ~40k rows (July 2026); robot write path hardened — no manual `__sync_status` setup needed (created on first post-deploy write). **Permalink backfill:** complete (608k+ pretty cache permalinks). **HUF/EUR:** default rate 350 HUF/EUR (`DEFAULT_HUF_EUR_RATE`); per-site overrides in `SITE_HUF_EUR_RATES` (empty = default). **Category URL lists:** regenerate with `python generate_category_urls.py` (env `rp-3.11`); files at repo root `category_urls_*.csv` (gitignored). Includes **tudobike.pt** (`--domain tudobike.pt`).
 
 Before robot execute after any gsheet incident: `scripts/summarize_change_plan.py` then `scripts/verify_gsheet_row_count.py`.
 
