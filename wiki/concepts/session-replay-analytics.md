@@ -4,7 +4,7 @@ title: "Session replay analytics"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-08-18
-updated: 2026-08-18
+updated: 2026-08-22
 tags: [clarity, session-replay, consent, masking, ga4, marketing]
 ---
 
@@ -36,6 +36,7 @@ GA4 and Ads answer “how many.” Clarity answers “what did they actually do.
 - `ft_tier` from `useSubscription()`, omitted until signed-in and resolved.
 - OAuth vs magic-link in the dashboard is event presence (`magic_link_requested`), not a `ft_signup_method` tag.
 - Preview / localhost never load `clarity.ms` (`isProductionAnalyticsHost`).
+- Script **injection** is idle-deferred as of the mobile CWV work (2026-08-22); the gate and command shim stay synchronous so no event is lost ([[concepts/core-web-vitals-mobile]]).
 - Do not star the four new GA4 names as key events or Ads conversions.
 
 ## Related concepts / sources
@@ -45,6 +46,7 @@ GA4 and Ads answer “how many.” Clarity answers “what did they actually do.
 - DPA: `docs/legal/MicrosoftProductandServicesDPA(WW)(English)(September2025)(CR).docx`
 - Google counts: [[concepts/google-ads-conversion-tracking]]
 - Reddit pixel: [[concepts/reddit-ads-conversion-tracking]]
+- Idle injection / LCP: [[concepts/core-web-vitals-mobile]]
 
 ## Related pages
 

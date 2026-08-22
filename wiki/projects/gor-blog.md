@@ -4,7 +4,7 @@ title: "gor-blog"
 product: finfluencer-trade
 project: gor-blog
 created: 2026-04-06
-updated: 2026-08-19
+updated: 2026-08-22
 tags: [blog, mkdocs, content, finfluencer, research, articles, newsletter, convertkit]
 ---
 
@@ -85,6 +85,8 @@ Every blog post in `docs/blog/posts/` must include the CTAs codified in [[concep
 
 ## Current status
 
+**Search Console mobile CWV (2026-08-22):** four of the eight Poor-LCP URLs are MkDocs (`/blog/`, two posts, `/blog/about/`). The Vite SPA fix in [[projects/finfluencer-tracker]] cannot move them; a correct SPA-only fix can still leave the *group* Poor. See [[concepts/core-web-vitals-mobile]].
+
 Live site with active publication. Platform-update post **2026-08-14**: *Cumulative Curves, Head-to-Head Compare, and Every Show We Track* (`https://finfluencers.trade/blog/2026/08/14/cumulative-performance-and-show-leaderboards/`). Kit broadcast `25439881` the same day; `last_newsletter_date` **2026-08-14**. Custom one-off senders live next to `send.py` — wrap-up [`cumulative-compare-launch.md`](file:///Users/andreskull/gor-blog/api/newsletter/cumulative-compare-launch.md). Directory operational — **Investing Unscripted** under Covered (`investing-unscripted`, **2026-07-27**). **Chit Chat Stocks** already has a directory entry (`data-key=chit-chat-stocks`); Covered `_profiles.json` mapping still **deferred** after pipeline onboarding **2026-08-02** ([[projects/gor_dagster]]). Every new pipeline show must revise the directory (playbook Requirement 12 — [[concepts/onboarding-new-podcast-source]]). **Newsletter:** footer form POSTs to **`/api/subscribe`** on gor-blog (Vercel serverless). When the blog is viewed via **`finfluencers.trade/blog/...`**, the landing app (**[[projects/finfluencer-tracker]]**) rewrites **`/api/subscribe`** to **`blog.finfluencers.trade`** so subscriptions work at apex. Registered app users can still be merged into Kit tag **`GOR_NEWSLETTER_SUBS`** via CLI import (see repo `api/newsletter/`). **CTA pattern** (hero + inline + end-of-post dual card + internal links): Cramer study plus the 2026-08-14 platform post. End cards are an equal-width green-border grid (`.ft-cta-endpost`). Raw HTML asset paths in posts must be root-absolute (`/assets/...`). CSS in `docs/stylesheets/extra.css` — see [`WIKI.md`](file:///Users/andreskull/gor-blog/WIKI.md) § *Blog post CTA pattern*. Cramer working paper is public on **SSRN** and **GitHub** (see [[projects/cramer-mad-money-research]]); private `research/cramer/` holds export/spec/admin files only.
 
 ## Related pages
@@ -94,3 +96,4 @@ Live site with active publication. Platform-update post **2026-08-14**: *Cumulat
 - [[projects/cramer-mad-money-research]]
 - [[projects/finfluencer-tracker]]
 - [[concepts/blog-post-cta-pattern]]
+- [[concepts/core-web-vitals-mobile]]

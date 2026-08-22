@@ -5,7 +5,7 @@ product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
 updated: 2026-08-22
-tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap]
+tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance]
 ---
 
 # finfluencer-tracker
@@ -21,6 +21,8 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
 ## Current status (2026-08-22)
+
+**Mobile Core Web Vitals delivery live** — lab LCP under 2.5 s on `/` (2.03 s, was 3.74 s) and most public SPA routes; `/show/:slug` still 2.54 s. Route splitting, self-hosted fonts, immutable `/app-assets` cache, idle third-party injection, fetch-gated profile headers. Search Console Validate Fix submitted **2026-08-22**; field data pending ~**2026-09-19**. Four of the eight CrUX URLs are MkDocs — see [[projects/gor-blog]]. Permanent doc: [core-web-vitals-mobile.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md). Concept: [[concepts/core-web-vitals-mobile]]. Ops: [core-web-vitals.md](file:///Users/andreskull/finfluencer-tracker/docs/ops/core-web-vitals.md).
 
 **Feedback board can decline with a public admin note** — fifth status `declined`, mandatory note (table CHECK), `notify_requested_at` intent marker, vote allowlist on both RLS policies. Orphaned posts (`user_id` NULL) disable “Email the submitter” instead of silently skipping. See [[concepts/feedback-roadmap]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feedback-decline-with-note.md). Living system: [feedback-system.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/feedback-system.md).
 
@@ -78,6 +80,7 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [session-replay-analytics](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/session-replay-analytics.md) | Clarity replay, consent gate, masking, funnel events (**2026-08-18**) |
 | [public-navigation-discoverability](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/public-navigation-discoverability.md) | Marketing Explore nav to Leaderboard / Compare / Shows (**2026-08-17**) |
 | [feedback-decline-with-note](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feedback-decline-with-note.md) | Declined status, admin note, notify intent marker (**2026-08-22**) |
+| [core-web-vitals-mobile](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md) | Mobile LCP/INP delivery: splitting, fonts, cache, idle third-party, fetch-gated headers (**2026-08-22**) |
 | [daily-marks-plan](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/daily-marks-plan.md) | Parked: true daily portfolio marks (future) |
 | [subscription-entitlement-ssot](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/subscription-entitlement-ssot.md) | Profile SSOT, reconcile, RLS close (**2026-07-27**) |
 | [landing-conversion-improvements](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-conversion-improvements.md) | Public funnel, SEO, anon RPC pattern (**2026-07-10**) |
@@ -89,6 +92,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-08-22 | Mobile Core Web Vitals | [core-web-vitals-mobile.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md) |
 | 2026-08-22 | Feedback: declined status with admin note | [feedback-decline-with-note.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feedback-decline-with-note.md) |
 | 2026-08-18 | Session replay & behavioural analytics | [session-replay-analytics.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/session-replay-analytics.md) |
 | 2026-08-17 | Public navigation discoverability | [public-navigation-discoverability.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/public-navigation-discoverability.md) |
@@ -104,6 +108,11 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-08-22 | Pre-LCP JS budget is the decoded sum of scripts completed before LCP on `/`, not the largest chunk | Once routes are lazy there is no single entry file; a largest-chunk budget is gameable |
+| 2026-08-22 | Landing stays eager; Suspense fallbacks reserve space and render nothing visible | A lazy boundary in front of the hero, or a flashing spinner, defeats the LCP work |
+| 2026-08-22 | Third-party deferral injects the `<script>` on idle; gates and shims stay sync | Deferral must not lose, duplicate, or reorder conversions, or weaken consent |
+| 2026-08-22 | Profile headers paint from the slug / first row, not after every related fetch | A skeleton with zero text nodes is an LCP tax; SSR/prefetch is a later architecture change |
+| 2026-08-22 | Lab measurement is the CWV gate; field data is a 28-day confirmation | Search Console silence until ~2026-09-19 is the expected shape of a correct fix |
 | 2026-08-22 | `notify_requested_at` intent marker, not `oldStatus !== newStatus` | A status-only gate can't express "notify with no status change" or "status changed, don't email"; the trigger fires on column mention, the edge function's own value comparison decides whether to send |
 | 2026-08-22 | Vote insert/delete narrowed to `under_review`/`planned` allowlist on **both** policies | Closed a pre-existing gap (API allowed votes on any status; only the UI hid the control) at the same time `declined` was added, rather than patching declined in isolation |
 | 2026-08-22 | Disable “Email the submitter” when `user_id` is null; do not hide it | Most production posts are orphaned (`ON DELETE SET NULL`); a checked box that cannot send trains the admin to distrust the control |
@@ -160,6 +169,9 @@ Shipped MVP scope: [`gor_dagster/docs/MVP_MASTER_PLAN.md`](file:///Users/andresk
 - Reddit Conversions API + Advanced Matching hashed email (pixel + privacy clause live; [[concepts/reddit-ads-conversion-tracking]])
 - Official Clarity↔GA4 OAuth dashboard link (playback URLs in GA4); campaign tags already on recordings ([[concepts/session-replay-analytics]])
 - Feedback note history / threading / voter-notify; reconstructing deleted submitter accounts; declined-last ordering must move server-side if the board paginates ([[concepts/feedback-roadmap]])
+- `/show/:slug` still 0.04 s over 2.5 s lab LCP — would need route-level prefetch / SSR ([[concepts/core-web-vitals-mobile]])
+- Four Search Console CWV URLs are MkDocs — a `gor-blog` follow-up if the CrUX *group* is to go Good
+- Search Console field-data confirmation ~**2026-09-19**; do not resubmit Validate Fix before then
 
 ## Wiki sync
 
@@ -170,6 +182,7 @@ Vault indexes **WIKI.md** and all of **`docs/`** except **`docs/features/`**. Ru
 - [[products/finfluencer-trade]]
 - [[projects/gor_dagster]]
 - [[projects/gor-blog]]
+- [[concepts/core-web-vitals-mobile]]
 - [[concepts/feedback-roadmap]]
 - [[concepts/session-replay-analytics]]
 - [[concepts/reddit-ads-conversion-tracking]]
