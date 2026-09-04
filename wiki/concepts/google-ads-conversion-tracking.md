@@ -114,6 +114,7 @@ Specified in `finfluencer-tracker` → `docs/features/conversion-measurement-pla
 
 - [[products/finfluencer-trade]]
 - [[projects/finfluencer-tracker]]
+- [[concepts/google-ads-creative-assets]] — PMax image/video production (not measurement)
 - [[concepts/reddit-ads-conversion-tracking]] — parallel Reddit pixel; same `maybeTrackSignUp` moment
 - [[concepts/session-replay-analytics]] — Clarity film; four new GA4 events are ordinary only, never Ads conversions
 - [[concepts/subscription-entitlement-ssot]]

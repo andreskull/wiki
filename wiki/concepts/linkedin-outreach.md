@@ -44,6 +44,7 @@ Ops: [linkedin-outreach-intro-agent-runbook.md](file:///Users/andreskull/gor_dag
 - [[concepts/linkedin-enrichment]]
 - [[concepts/signal-source-quote]]
 - [[concepts/cumulative-performance-charts]]
+- [[concepts/google-ads-creative-assets]] — sibling Chromium harness; ads `opsSession` not yet adopted here
 - [[projects/gor_dagster]]
 - [[projects/finfluencer-tracker]]
 - [[products/finfluencer-trade]]

@@ -4,8 +4,8 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-08-22
-tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance]
+updated: 2026-09-04
+tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads]
 ---
 
 # finfluencer-tracker
@@ -20,9 +20,13 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-08-22)
+## Current status (2026-09-04)
+
+**Google Ads PMax creatives live (2026-09-04)** — V1 + V4 uploaded from run `2026-09-04T0804Z`. Playwright harness over the shipped chart encoder (`scripts/render-google-ads-assets.mjs`, `src/lib/ads*.ts`). Banner / outro are additive optional callbacks so outreach and on-site export stay byte-identical. Resolve + GCS archive live in [[projects/gor_dagster]]. See [[concepts/google-ads-creative-assets]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md).
 
 **Mobile Core Web Vitals delivery live** — lab LCP under 2.5 s on `/` (2.03 s, was 3.74 s) and most public SPA routes; `/show/:slug` still 2.54 s. Route splitting, self-hosted fonts, immutable `/app-assets` cache, idle third-party injection, fetch-gated profile headers. Search Console Validate Fix submitted **2026-08-22**; field data pending ~**2026-09-19**. Four of the eight CrUX URLs are MkDocs — see [[projects/gor-blog]]. Permanent doc: [core-web-vitals-mobile.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md). Concept: [[concepts/core-web-vitals-mobile]]. Ops: [core-web-vitals.md](file:///Users/andreskull/finfluencer-tracker/docs/ops/core-web-vitals.md).
+
+**GA4 field-verification instrumentation gap found and closed (2026-09-02).** Web Vitals event parameters were arriving and populated on production traffic but never registered as GA4 custom definitions — unqueryable in Explore/Reports since Aug 31 (a `T0.3`/`T0.5` gap). Registered 10 custom dimensions + the `metric_value` custom metric; linked BigQuery export to GCP `gurus-on-record` (Daily, US multi-region — kept). `T1.0b` measurement window restarted; `T1.1a` (read the evidence) now earliest **~2026-09-05/06**. See [[decisions/ga4-instrumentation-registration-2026-09]], [[concepts/core-web-vitals-mobile]], [[entities/bigquery]], and ops log: [core-web-vitals.md](file:///Users/andreskull/finfluencer-tracker/docs/ops/core-web-vitals.md).
 
 **Feedback board can decline with a public admin note** — fifth status `declined`, mandatory note (table CHECK), `notify_requested_at` intent marker, vote allowlist on both RLS policies. Orphaned posts (`user_id` NULL) disable “Email the submitter” instead of silently skipping. See [[concepts/feedback-roadmap]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feedback-decline-with-note.md). Living system: [feedback-system.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/feedback-system.md).
 
@@ -81,6 +85,7 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [public-navigation-discoverability](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/public-navigation-discoverability.md) | Marketing Explore nav to Leaderboard / Compare / Shows (**2026-08-17**) |
 | [feedback-decline-with-note](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feedback-decline-with-note.md) | Declined status, admin note, notify intent marker (**2026-08-22**) |
 | [core-web-vitals-mobile](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md) | Mobile LCP/INP delivery: splitting, fonts, cache, idle third-party, fetch-gated headers (**2026-08-22**) |
+| [google-ads-creative-assets](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md) | PMax images + video from the shipped encoder; banner / overlay / outro (**2026-09-04**) |
 | [daily-marks-plan](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/daily-marks-plan.md) | Parked: true daily portfolio marks (future) |
 | [subscription-entitlement-ssot](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/subscription-entitlement-ssot.md) | Profile SSOT, reconcile, RLS close (**2026-07-27**) |
 | [landing-conversion-improvements](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-conversion-improvements.md) | Public funnel, SEO, anon RPC pattern (**2026-07-10**) |
@@ -92,6 +97,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-09-04 | Google Ads creative assets | [google-ads-creative-assets.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md) |
 | 2026-08-22 | Mobile Core Web Vitals | [core-web-vitals-mobile.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md) |
 | 2026-08-22 | Feedback: declined status with admin note | [feedback-decline-with-note.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feedback-decline-with-note.md) |
 | 2026-08-18 | Session replay & behavioural analytics | [session-replay-analytics.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/session-replay-analytics.md) |
@@ -108,6 +114,9 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-09-04 | Ads image ratios live in `adsExportLayout.ts`, never in `ExportAspectRatio` | Share menu cannot leak 1.91:1 / 4:5 |
+| 2026-09-04 | Banner / outro are optional encoder callbacks defaulting off | Outreach and on-site export stay byte-identical (per-frame invariance harness) |
+| 2026-09-04 | Ads featured subject ranked on scored picks at `1y`, not alpha | Alpha selected a subject whose drawn line trails the index; the claim is coverage |
 | 2026-08-22 | Pre-LCP JS budget is the decoded sum of scripts completed before LCP on `/`, not the largest chunk | Once routes are lazy there is no single entry file; a largest-chunk budget is gameable |
 | 2026-08-22 | Landing stays eager; Suspense fallbacks reserve space and render nothing visible | A lazy boundary in front of the hero, or a flashing spinner, defeats the LCP work |
 | 2026-08-22 | Third-party deferral injects the `<script>` on idle; gates and shims stay sync | Deferral must not lose, duplicate, or reorder conversions, or weaken consent |
@@ -187,9 +196,12 @@ Vault indexes **WIKI.md** and all of **`docs/`** except **`docs/features/`**. Ru
 - [[concepts/session-replay-analytics]]
 - [[concepts/reddit-ads-conversion-tracking]]
 - [[concepts/google-ads-conversion-tracking]]
+- [[concepts/google-ads-creative-assets]]
 - [[concepts/cumulative-performance-charts]]
 - [[concepts/subscription-entitlement-ssot]]
 - [[concepts/signal-performance]]
 - [[concepts/linkedin-enrichment]]
 - [[concepts/linkedin-outreach]]
 - [[concepts/signal-source-quote]]
+- [[decisions/ga4-instrumentation-registration-2026-09]]
+- [[entities/bigquery]]

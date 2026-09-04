@@ -4,7 +4,7 @@ title: "Cumulative performance charts"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-08-04
-updated: 2026-08-17
+updated: 2026-09-04
 tags: [performance, charts, compare, export, supabase, spy, entitlement]
 ---
 
@@ -28,8 +28,8 @@ Primary shareable performance story for growth/social; gated by the same entitle
 
 ## Which projects use it
 
-- [[projects/finfluencer-tracker]] — UI, RPC consumer, export (shipped **2026-08-04**)
-- [[projects/gor_dagster]] — SPY `benchmark_daily_prices` sync mapping
+- [[projects/finfluencer-tracker]] — UI, RPC consumer, export (shipped **2026-08-04**); Google Ads harness reuses the same encoder with optional banner/outro callbacks ([[concepts/google-ads-creative-assets]])
+- [[projects/gor_dagster]] — SPY `benchmark_daily_prices` sync mapping; ads variant resolve + GCS archive
 
 ## Related concepts / sources
 
@@ -44,4 +44,5 @@ Primary shareable performance story for growth/social; gated by the same entitle
 - [[concepts/signal-performance]]
 - [[concepts/subscription-entitlement-ssot]]
 - [[concepts/linkedin-outreach]] — reuses this chart stack for outreach MP4s (headless render)
+- [[concepts/google-ads-creative-assets]] — same encoder; ads-only layout + banner/outro stay off for export/outreach
 - [[products/finfluencer-trade]]
