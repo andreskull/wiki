@@ -4,7 +4,7 @@ title: "Subscription entitlement SSOT"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-07-27
-updated: 2026-07-27
+updated: 2026-09-06
 tags: [stripe, supabase, rls, billing, spectator, trader, entitlement]
 ---
 
@@ -44,3 +44,4 @@ Dual truth (Stripe Trader in UI + Spectator RLS) left paying users on free-tier 
 - [[products/finfluencer-trade]]
 - [[concepts/actionable-signal]]
 - [[concepts/signal-performance]]
+- [[concepts/finfluencer-ticker-pick-lookup]] — lookup sits inside `TierGate`; definer RPC re-applies `get_user_tier()`

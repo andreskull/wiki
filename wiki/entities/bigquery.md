@@ -4,7 +4,7 @@ title: "BigQuery"
 product: null
 project: null
 created: 2026-04-06
-updated: 2026-05-17
+updated: 2026-09-02
 tags: [bigquery, gcp, data-warehouse, sql]
 ---
 
@@ -19,6 +19,7 @@ Google Cloud's serverless data warehouse. Used across multiple projects.
   - **`dagster_shared`** — Main pipeline warehouse: `Finfluencer`, `FinancialInstrument`, `PotentialPrediction`, `ActionableSignal` (view), `stt_operations`, `stt_speaker_attributions`, batch job tables, facts extraction, and dozens of other tables/views. The `app_bq_resource` in `definitions.py` is pinned to `dagster_shared` (not env-driven) for assets that must always hit that dataset.
   - **`dagster_prices`** — Price and performance warehouse: `PriceHistory`, `TradingCalendar`, `SignalPerformance`, and performance aggregate views. `SignalPerformance` lives here, not in `dagster_shared`.
 - **rattaproff:** Indexing backlog governance — URL action queue with status metadata.
+- **finfluencer.trade / finfluencer-tracker (GA4 export, project `gurus-on-record`):** One-directional GA4 → BigQuery raw-event export, linked 2026-09-02 for Web Vitals field verification ([[concepts/core-web-vitals-mobile]], [[decisions/ga4-instrumentation-registration-2026-09]]). Daily export creates `events_YYYYMMDD` (+ `events_intraday_YYYYMMDD`) in dataset `analytics_485294334`, one row per event, plus `pseudonymous_users_YYYYMMDD`. Data location **US multi-region** (GA4 default, kept — operational/performance telemetry, not user data). Separate from, and does not touch, the `dagster_*` datasets below.
 
 ## Key patterns (gor_dagster)
 
@@ -32,9 +33,13 @@ Google Cloud's serverless data warehouse. Used across multiple projects.
 
 - [[projects/gor_dagster]]
 - [[projects/rattaproff]]
+- [[projects/finfluencer-tracker]] (GA4 export only, separate from the gor_dagster pipeline datasets)
 
 ## Related pages
 
 - [[entities/dagster]]
 - [[entities/gcs]]
 - [[concepts/actionable-signal]]
+- [[concepts/core-web-vitals-mobile]]
+- [[decisions/ga4-instrumentation-registration-2026-09]]
+- [[projects/finfluencer-tracker]]

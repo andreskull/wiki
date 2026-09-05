@@ -4,8 +4,8 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-09-04
-tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads]
+updated: 2026-09-06
+tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup]
 ---
 
 # finfluencer-tracker
@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-09-04)
+## Current status (2026-09-06)
+
+**Finfluencer ticker lookup live (2026-09-05)** — PR #72 (`a38e360`). Server-side `finfluencer_ticker_list` feeds both the ranked lists and a profile lookup (any ticker, not only top-10). Two box-plot charts retired; `mainstream_tickers_snapshot` pipeline and RPCs dropped after the frontend was live. Production and development Supabase ledgers level at 61. See [[concepts/finfluencer-ticker-pick-lookup]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/finfluencer-ticker-pick-lookup.md).
 
 **Google Ads PMax creatives live (2026-09-04)** — V1 + V4 uploaded from run `2026-09-04T0804Z`. Playwright harness over the shipped chart encoder (`scripts/render-google-ads-assets.mjs`, `src/lib/ads*.ts`). Banner / outro are additive optional callbacks so outreach and on-site export stay byte-identical. Resolve + GCS archive live in [[projects/gor_dagster]]. See [[concepts/google-ads-creative-assets]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md).
 
@@ -86,6 +88,7 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [feedback-decline-with-note](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feedback-decline-with-note.md) | Declined status, admin note, notify intent marker (**2026-08-22**) |
 | [core-web-vitals-mobile](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md) | Mobile LCP/INP delivery: splitting, fonts, cache, idle third-party, fetch-gated headers (**2026-08-22**) |
 | [google-ads-creative-assets](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md) | PMax images + video from the shipped encoder; banner / overlay / outro (**2026-09-04**) |
+| [finfluencer-ticker-pick-lookup](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/finfluencer-ticker-pick-lookup.md) | Finfluencer ticker lookup + ranked-list RPC; two box-plot charts retired (**2026-09-05**) |
 | [daily-marks-plan](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/daily-marks-plan.md) | Parked: true daily portfolio marks (future) |
 | [subscription-entitlement-ssot](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/subscription-entitlement-ssot.md) | Profile SSOT, reconcile, RLS close (**2026-07-27**) |
 | [landing-conversion-improvements](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-conversion-improvements.md) | Public funnel, SEO, anon RPC pattern (**2026-07-10**) |
@@ -97,6 +100,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-09-05 | Finfluencer × ticker pick lookup | [finfluencer-ticker-pick-lookup.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/finfluencer-ticker-pick-lookup.md) |
 | 2026-09-04 | Google Ads creative assets | [google-ads-creative-assets.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md) |
 | 2026-08-22 | Mobile Core Web Vitals | [core-web-vitals-mobile.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md) |
 | 2026-08-22 | Feedback: declined status with admin note | [feedback-decline-with-note.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feedback-decline-with-note.md) |
@@ -114,6 +118,11 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-09-05 | Unbounded `signals` aggregates go through a server-side RPC, never a raw PostgREST select | PostgREST caps at 1000 rows with no `ORDER BY`; ranked counts and “no picks” empties were silently wrong |
+| 2026-09-05 | `SECURITY DEFINER` finfluencer RPCs re-apply `get_user_tier()` and grant `authenticated` only | `show_ticker_list`’s anon grant does not transfer — show profiles are unlocked, paid finfluencer picks are not |
+| 2026-09-05 | Lookup stays inside `TierGate`; no guest CTA in the control | Guests are already locked; a CTA under blurred `pointer-events-none` children is unreachable |
+| 2026-09-05 | Retire pipeline-owned app snapshots frontend → pipeline job → DROP | Any other order 404s live profiles or fails a pipeline write |
+| 2026-09-05 | Do not drop indexes whose migration comments name a retired chart | Those indexes serve platform traffic, including `finfluencer_ticker_list` |
 | 2026-09-04 | Ads image ratios live in `adsExportLayout.ts`, never in `ExportAspectRatio` | Share menu cannot leak 1.91:1 / 4:5 |
 | 2026-09-04 | Banner / outro are optional encoder callbacks defaulting off | Outreach and on-site export stay byte-identical (per-frame invariance harness) |
 | 2026-09-04 | Ads featured subject ranked on scored picks at `1y`, not alpha | Alpha selected a subject whose drawn line trails the index; the claim is coverage |
@@ -159,7 +168,11 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 - **`get_cumulative_performance_series(...)`** — security-definer RPC; entitlement mirrors TierGate / `is_free_tier` ([[concepts/cumulative-performance-charts]])
 - **`get_ipo_scoreboard_page(p_ticker)`** RPC — CNBC IPO scoreboard payload
 - **`landing_stats()`** RPC — landing stats bar
-- **`show_summary_stats()` / `show_distinct_ticker_counts()`** — guest `/shows` columns
+- **`finfluencer_ticker_list(...)`** — definer + `get_user_tier()` gate; `authenticated` only; ranked mode and `p_ticker` lookup ([[concepts/finfluencer-ticker-pick-lookup]])
+- **`best_worst_calls` / `instrument_ticker_summary`** — Featured Calls and instrument-header α; latter is INVOKER so RLS still hides paid picks
+- **`signal_performance UNIQUE (signal_id, requested_horizon)`** — implicit unique index replaced `idx_sigperf_signal_horizon`; covering index stays
+- **`show_ticker_list`** — same variant sign filter as the finfluencer RPC (`>= 0` / `<= 0`); still granted to `anon` + `authenticated`
+- **`show_summary_stats()` / `show_distinct_ticker_counts()`** — guest `/shows` columns; keep-list (do not drop with retired chart RPCs)
 - **`feedback_posts`** — statuses include `declined`; `admin_note` + `notify_requested_at`; vote RLS allowlist `under_review`/`planned`; never rewrite `handle_feedback_notification()` ([[concepts/feedback-roadmap]])
 - Promotion: Preview → development Supabase + Stripe test; production Vercel → production Supabase + live Stripe. Edge function `notify-moderators` deploys **twice**.
 
@@ -174,6 +187,7 @@ Shipped MVP scope: [`gor_dagster/docs/MVP_MASTER_PLAN.md`](file:///Users/andresk
 - Email capture / newsletter on landing
 - Embedded Stripe Payment Element migration
 - IPO scoreboard access model changes
+- Show-profile ticker lookup; per-pick history under the summary; `?ticker=` deep link; TopBar ticker search ([[concepts/finfluencer-ticker-pick-lookup]])
 - True daily portfolio marks (parked — [daily-marks-plan.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/daily-marks-plan.md)); show↔show compare; non-S&P benchmarks
 - Reddit Conversions API + Advanced Matching hashed email (pixel + privacy clause live; [[concepts/reddit-ads-conversion-tracking]])
 - Official Clarity↔GA4 OAuth dashboard link (playback URLs in GA4); campaign tags already on recordings ([[concepts/session-replay-analytics]])
@@ -197,6 +211,7 @@ Vault indexes **WIKI.md** and all of **`docs/`** except **`docs/features/`**. Ru
 - [[concepts/reddit-ads-conversion-tracking]]
 - [[concepts/google-ads-conversion-tracking]]
 - [[concepts/google-ads-creative-assets]]
+- [[concepts/finfluencer-ticker-pick-lookup]]
 - [[concepts/cumulative-performance-charts]]
 - [[concepts/subscription-entitlement-ssot]]
 - [[concepts/signal-performance]]

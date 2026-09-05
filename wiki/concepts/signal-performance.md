@@ -4,7 +4,7 @@ title: "Signal performance (truncation & implicit flip)"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-08
-updated: 2026-08-04
+updated: 2026-09-06
 tags: [performance, actionable-signal, bigquery, truncation, finfluencer-trade]
 ---
 
@@ -50,6 +50,7 @@ Implicit closes do **not** apply across tickers (e.g. long AMD does not close lo
 
 - [[concepts/actionable-signal]]
 - [[concepts/cumulative-performance-charts]]
+- [[concepts/finfluencer-ticker-pick-lookup]] — profile mention count + mean α at the active horizon
 - [[projects/gor_dagster]]
 - [[entities/bigquery]]
 - [[wiki/sources/2026-04-07-cramer-mad-money-performance-methodology]] — research note tying methodology to Cramer analysis

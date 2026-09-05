@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-09-04
+updated: 2026-09-06
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, linkedin, gemini, podcast-rss, outreach, source-quote, google-ads]
 ---
 
@@ -309,6 +309,8 @@ BigQuery is the system of record. Supabase mirrors selected tables for the app (
 
 **SPY daily prices for cumulative charts (2026-07-30):** `TABLE_MAPPINGS` syncs BigQuery `PriceHistory` (SPY FIGI) → Supabase `benchmark_daily_prices` for [[projects/finfluencer-tracker]] RPC `get_cumulative_performance_series`. Missing table → `SKIPPED_MISSING_TABLE`. [[concepts/cumulative-performance-charts]]
 
+**Mainstream ticker snapshot retired (2026-09-05):** `sync_mainstream_tickers_to_supabase`, `mainstream_tickers_snapshot_job`, and its schedule are gone. The app dropped `mainstream_tickers_snapshot` and the broken-records / mainstream-vs-rest RPCs after the widget-removal frontend was live. `apply_profile_supabase_migrations.py` must not re-apply `0020` / `0029` / `0039`. [[concepts/finfluencer-ticker-pick-lookup]]
+
 The app does not write to synced analytical tables — signal and performance data flow BigQuery → Supabase.
 
 Docs: [Supabase Schema Spec](file:///Users/andreskull/gor_dagster/docs/architecture/supabase-schema-spec.md), [Supabase Sync Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/supabase-sync-architecture.md)
@@ -532,6 +534,7 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 - [[concepts/linkedin-enrichment]]
 - [[concepts/linkedin-outreach]]
 - [[concepts/google-ads-creative-assets]]
+- [[concepts/finfluencer-ticker-pick-lookup]]
 - [[concepts/signal-source-quote]]
 - [[entities/dagster]]
 - [[entities/bigquery]]

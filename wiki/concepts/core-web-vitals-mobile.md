@@ -4,8 +4,8 @@ title: "Mobile Core Web Vitals"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-08-22
-updated: 2026-08-22
-tags: [lcp, inp, performance, vercel, vite, search-console]
+updated: 2026-09-02
+tags: [lcp, inp, performance, vercel, vite, search-console, ga4, bigquery, analytics]
 ---
 
 # Mobile Core Web Vitals
@@ -40,10 +40,30 @@ Production lab (slow4g, Pixel 5, cold) after PR #68 + PR #70: `/` **2.03 s** (wa
 - Never `vercel deploy` a branch. Verify a preview by `deploymentId` and commit SHA, not by a Ready badge.
 - Do not resubmit Search Console Validate Fix before ~2026-09-19. Silence is the expected shape of a correct fix.
 
+## Field verification instrumentation (GA4 + BigQuery)
+
+Field confirmation (`T1.1a` — read Search Console + GA4 + Clarity evidence) depends on GA4
+correctly segmenting the `web_vitals` event by `browser_engine`, `device_class`, `route_pattern`,
+etc. — central to the Blink-vs-WebKit hypotheses this feature's field read is built on.
+
+**2026-09-02: found the instrumentation shipped (T0.3/T0.5) but was never wired to GA4's UI.**
+Event parameters arrived and were populated on every production `web_vitals` event, visible in
+Realtime/DebugView — but none were registered as GA4 custom dimensions/metrics, so Explore and
+Reports read them all as `(not set)`. Registration is forward-only; the Aug 31 → Sep 2 window was
+unsegmentable and had to be discarded — a `T0.3`/`T0.5` gap, not an instrumentation bug.
+
+Remediated same day: 10 event-scoped custom dimensions + 1 custom metric (`metric_value`,
+Standard unit — mixes ms and the unitless CLS score, filter by `metric_name` before aggregating)
+registered in GA4; BigQuery export linked to GCP `gurus-on-record` (Daily, event + user data, US
+multi-region — kept, not user data). See [[decisions/ga4-instrumentation-registration-2026-09]]
+and [[entities/bigquery]]. Segmentable-data clock restarted 2026-09-02; **`T1.1a` earliest real
+start ~2026-09-05/06** (was ~2026-09-03).
+
 ## Related concepts / sources
 
 - Permanent doc: [core-web-vitals-mobile.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md)
 - Ops log: [core-web-vitals.md](file:///Users/andreskull/finfluencer-tracker/docs/ops/core-web-vitals.md)
+- BigQuery export destination: [[entities/bigquery]]
 - Clarity idle injection: [[concepts/session-replay-analytics]]
 - Reddit / GA4 gates unchanged: [[concepts/reddit-ads-conversion-tracking]], [[concepts/google-ads-conversion-tracking]]
 

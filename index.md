@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-09-04
+updated: 2026-09-06
 ---
 
 # Wiki Index
@@ -33,7 +33,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 |------|---------|--------|
 | [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **Google Ads PMax creatives** wrapped **2026-09-04** (V1 + V4 live); **The Intrinsic Value Podcast** **2026-08-22**; **source quotes** + **LinkedIn outreach** **2026-08-11**; Gemini 3.5 Flash-Lite SI/FE **2026-07-27** |
 | [[wiki/projects/gor-blog]] | finfluencer.trade | Active — platform-update post + Kit send **2026-08-14**; directory Covered + Investing Unscripted **2026-07-27**; CTA pattern; apex `/api/subscribe`; `api/newsletter/` |
-| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **Google Ads PMax creatives** **2026-09-04**; **GA4 instrumentation gap fixed + BigQuery export** **2026-09-02**; **mobile CWV** **2026-08-22**; **feedback Declined + admin note** **2026-08-22**; **Clarity session replay** **2026-08-18**; **Explore nav** **2026-08-17**; **Reddit Ads pixel** **2026-08-17**; **cumulative performance charts** **2026-08-04**; **subscription entitlement SSOT** **2026-07-27** |
+| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **finfluencer ticker lookup** **2026-09-05**; **Google Ads PMax creatives** **2026-09-04**; **GA4 instrumentation gap fixed + BigQuery export** **2026-09-02**; **mobile CWV** **2026-08-22**; **feedback Declined + admin note** **2026-08-22**; **Clarity session replay** **2026-08-18**; **Explore nav** **2026-08-17**; **Reddit Ads pixel** **2026-08-17**; **cumulative performance charts** **2026-08-04**; **subscription entitlement SSOT** **2026-07-27** |
 | [[wiki/projects/rattaproff]] | rattaproff | Operational — category URL export from Woo slugs **2026-08-14**; gsheet sync safety **2026-07-13**; permalink backfill + gsheet restore (Jun 2026); 20 storefronts |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Active |
 | [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | Public kit + SSRN 6643379 — CSVs, scripts, paper |
@@ -69,6 +69,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/concepts/signal-source-quote]] | gor_dagster: `raw_source_quote` from proof_segments; blank beats approximate; backfill + FE forward fix (2026-08-11) |
 | [[wiki/concepts/linkedin-outreach]] | gor_dagster + tracker: Notion Accepted drafts + optional chart MP4; human LinkedIn send only (2026-08-11) |
 | [[wiki/concepts/google-ads-creative-assets]] | gor_dagster + tracker: monthly PMax images + video from the shipped chart encoder; coverage ranking; write-once GCS (2026-09-04) |
+| [[wiki/concepts/finfluencer-ticker-pick-lookup]] | finfluencer-tracker: profile ticker lookup + ranked lists share `finfluencer_ticker_list`; PostgREST 1000-row cap; two box-plot charts retired (2026-09-05) |
 | [[wiki/concepts/subscription-entitlement-ssot]] | finfluencer-tracker: profile tier = app entitlement; Stripe billing-only; reconcile + RLS close (2026-07-27) |
 | [[wiki/concepts/cumulative-performance-charts]] | finfluencer-tracker: cumulative % profile + `/compare` + watermarked export; SPY sync; waypoint-shaped path (2026-08-04) |
 | [[wiki/concepts/botastico-ssl-certificates]] | botastico: GCP LB managed certs, auto-renew, renewal-failure monitoring (2026-07-15) |
