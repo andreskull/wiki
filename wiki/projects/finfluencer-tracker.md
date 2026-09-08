@@ -4,7 +4,7 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-09-06
+updated: 2026-09-08
 tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup]
 ---
 
@@ -20,15 +20,17 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-09-06)
+## Current status (2026-09-08)
+
+**Field Core Web Vitals wrapped (2026-09-08)** — first-party `web_vitals` + `DATA_READY` in BigQuery; **field decides done, lab decides whether a change helped**. `/` LCP met ≤ 2.5 s; `/` teaser DATA_READY missed (~4 s vs 2.0 s — `landing_stats`); lab TTFB 61 ms was an edge HIT (field 701 ms). Freeze lifted. See [[concepts/core-web-vitals-field]], [[decisions/field-authoritative-cwv-2026-09]], [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-field.md).
 
 **Finfluencer ticker lookup live (2026-09-05)** — PR #72 (`a38e360`). Server-side `finfluencer_ticker_list` feeds both the ranked lists and a profile lookup (any ticker, not only top-10). Two box-plot charts retired; `mainstream_tickers_snapshot` pipeline and RPCs dropped after the frontend was live. Production and development Supabase ledgers level at 61. See [[concepts/finfluencer-ticker-pick-lookup]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/finfluencer-ticker-pick-lookup.md).
 
 **Google Ads PMax creatives live (2026-09-04)** — V1 + V4 uploaded from run `2026-09-04T0804Z`. Playwright harness over the shipped chart encoder (`scripts/render-google-ads-assets.mjs`, `src/lib/ads*.ts`). Banner / outro are additive optional callbacks so outreach and on-site export stay byte-identical. Resolve + GCS archive live in [[projects/gor_dagster]]. See [[concepts/google-ads-creative-assets]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md).
 
-**Mobile Core Web Vitals delivery live** — lab LCP under 2.5 s on `/` (2.03 s, was 3.74 s) and most public SPA routes; `/show/:slug` still 2.54 s. Route splitting, self-hosted fonts, immutable `/app-assets` cache, idle third-party injection, fetch-gated profile headers. Search Console Validate Fix submitted **2026-08-22**; field data pending ~**2026-09-19**. Four of the eight CrUX URLs are MkDocs — see [[projects/gor-blog]]. Permanent doc: [core-web-vitals-mobile.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md). Concept: [[concepts/core-web-vitals-mobile]]. Ops: [core-web-vitals.md](file:///Users/andreskull/finfluencer-tracker/docs/ops/core-web-vitals.md).
+**Mobile Core Web Vitals delivery live** — lab LCP under 2.5 s on `/` (2.03 s, was 3.74 s) and most public SPA routes; `/show/:slug` still 2.54 s. Route splitting, self-hosted fonts, immutable `/app-assets` cache, idle third-party injection, fetch-gated profile headers. Lab-vs-field rule **amended 2026-09-08** (field is the done gate). Four of the CrUX URLs are MkDocs — see [[projects/gor-blog]]. Permanent doc: [core-web-vitals-mobile.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md). Concept: [[concepts/core-web-vitals-mobile]]. Ops: [core-web-vitals.md](file:///Users/andreskull/finfluencer-tracker/docs/ops/core-web-vitals.md).
 
-**GA4 field-verification instrumentation gap found and closed (2026-09-02).** Web Vitals event parameters were arriving and populated on production traffic but never registered as GA4 custom definitions — unqueryable in Explore/Reports since Aug 31 (a `T0.3`/`T0.5` gap). Registered 10 custom dimensions + the `metric_value` custom metric; linked BigQuery export to GCP `gurus-on-record` (Daily, US multi-region — kept). `T1.0b` measurement window restarted; `T1.1a` (read the evidence) now earliest **~2026-09-05/06**. See [[decisions/ga4-instrumentation-registration-2026-09]], [[concepts/core-web-vitals-mobile]], [[entities/bigquery]], and ops log: [core-web-vitals.md](file:///Users/andreskull/finfluencer-tracker/docs/ops/core-web-vitals.md).
+**GA4 custom dimensions + BigQuery export (2026-09-02).** Web Vitals parameters arrived populated but were unregistered — Explore read `(not set)`. Registered 10 dimensions + `metric_value`; export to `gurus-on-record`. See [[decisions/ga4-instrumentation-registration-2026-09]], [[concepts/core-web-vitals-field]], [[entities/bigquery]].
 
 **Feedback board can decline with a public admin note** — fifth status `declined`, mandatory note (table CHECK), `notify_requested_at` intent marker, vote allowlist on both RLS policies. Orphaned posts (`user_id` NULL) disable “Email the submitter” instead of silently skipping. See [[concepts/feedback-roadmap]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feedback-decline-with-note.md). Living system: [feedback-system.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/feedback-system.md).
 
@@ -86,7 +88,8 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [session-replay-analytics](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/session-replay-analytics.md) | Clarity replay, consent gate, masking, funnel events (**2026-08-18**) |
 | [public-navigation-discoverability](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/public-navigation-discoverability.md) | Marketing Explore nav to Leaderboard / Compare / Shows (**2026-08-17**) |
 | [feedback-decline-with-note](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feedback-decline-with-note.md) | Declined status, admin note, notify intent marker (**2026-08-22**) |
-| [core-web-vitals-mobile](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md) | Mobile LCP/INP delivery: splitting, fonts, cache, idle third-party, fetch-gated headers (**2026-08-22**) |
+| [core-web-vitals-mobile](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md) | Mobile LCP/INP delivery: splitting, fonts, cache, idle third-party (**2026-08-22**; lab-vs-field amended **2026-09-08**) |
+| [core-web-vitals-field](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-field.md) | First-party field RUM, DATA_READY, field-decides-done (**2026-09-08**) |
 | [google-ads-creative-assets](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md) | PMax images + video from the shipped encoder; banner / overlay / outro (**2026-09-04**) |
 | [finfluencer-ticker-pick-lookup](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/finfluencer-ticker-pick-lookup.md) | Finfluencer ticker lookup + ranked-list RPC; two box-plot charts retired (**2026-09-05**) |
 | [daily-marks-plan](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/daily-marks-plan.md) | Parked: true daily portfolio marks (future) |
@@ -100,6 +103,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-09-08 | Field Core Web Vitals and data-ready | [core-web-vitals-field.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-field.md) |
 | 2026-09-05 | Finfluencer × ticker pick lookup | [finfluencer-ticker-pick-lookup.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/finfluencer-ticker-pick-lookup.md) |
 | 2026-09-04 | Google Ads creative assets | [google-ads-creative-assets.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md) |
 | 2026-08-22 | Mobile Core Web Vitals | [core-web-vitals-mobile.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md) |
@@ -130,7 +134,9 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 | 2026-08-22 | Landing stays eager; Suspense fallbacks reserve space and render nothing visible | A lazy boundary in front of the hero, or a flashing spinner, defeats the LCP work |
 | 2026-08-22 | Third-party deferral injects the `<script>` on idle; gates and shims stay sync | Deferral must not lose, duplicate, or reorder conversions, or weaken consent |
 | 2026-08-22 | Profile headers paint from the slug / first row, not after every related fetch | A skeleton with zero text nodes is an LCP tax; SSR/prefetch is a later architecture change |
-| 2026-08-22 | Lab measurement is the CWV gate; field data is a 28-day confirmation | Search Console silence until ~2026-09-19 is the expected shape of a correct fix |
+| 2026-09-08 | Field decides CWV done; lab decides whether a change helped | First-party p75 is the done gate; lab `slow4g` TTFB can be an edge HIT |
+| 2026-09-08 | Time-to-populated-rows is `DATA_READY`, not a Core Web Vital | LCP/CLS can be “good” on a skeleton; `/` teaser ≤ 2.0 s, `/leaderboard` ≤ 1.5 s |
+| 2026-08-22 | Lab measurement is the CWV gate; field data is a 28-day confirmation | **Amended 2026-09-08** — field is the done gate. CrUX silence is still expected; it is not a pass. |
 | 2026-08-22 | `notify_requested_at` intent marker, not `oldStatus !== newStatus` | A status-only gate can't express "notify with no status change" or "status changed, don't email"; the trigger fires on column mention, the edge function's own value comparison decides whether to send |
 | 2026-08-22 | Vote insert/delete narrowed to `under_review`/`planned` allowlist on **both** policies | Closed a pre-existing gap (API allowed votes on any status; only the UI hid the control) at the same time `declined` was added, rather than patching declined in isolation |
 | 2026-08-22 | Disable “Email the submitter” when `user_id` is null; do not hide it | Most production posts are orphaned (`ON DELETE SET NULL`); a checked box that cannot send trains the admin to distrust the control |
@@ -205,7 +211,9 @@ Vault indexes **WIKI.md** and all of **`docs/`** except **`docs/features/`**. Ru
 - [[products/finfluencer-trade]]
 - [[projects/gor_dagster]]
 - [[projects/gor-blog]]
+- [[concepts/core-web-vitals-field]]
 - [[concepts/core-web-vitals-mobile]]
+- [[decisions/field-authoritative-cwv-2026-09]]
 - [[concepts/feedback-roadmap]]
 - [[concepts/session-replay-analytics]]
 - [[concepts/reddit-ads-conversion-tracking]]

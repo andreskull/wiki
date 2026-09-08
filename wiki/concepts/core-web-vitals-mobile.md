@@ -4,7 +4,7 @@ title: "Mobile Core Web Vitals"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-08-22
-updated: 2026-09-02
+updated: 2026-09-08
 tags: [lcp, inp, performance, vercel, vite, search-console, ga4, bigquery, analytics]
 ---
 
@@ -16,7 +16,7 @@ Delivery and loading changes that brought mobile Largest Contentful Paint on the
 
 The 8-URL Search Console group was mixed origin: four Vite SPA URLs (`/`, `/show/:slug`, `/leaderboard`, `/privacy`) and four MkDocs `/blog*` URLs proxied via `vercel.json`. This work can only move the SPA half. Blog delivery is a [[projects/gor-blog]] question.
 
-**Lab is the gate.** Field data is a 28-day rolling window. Validate Fix was submitted **2026-08-22**; nothing is expected to move until roughly **2026-09-19**.
+**Amended 2026-09-08:** lab is no longer the done gate. **Field decides done; lab decides whether a change helped** — [[concepts/core-web-vitals-field]], [[decisions/field-authoritative-cwv-2026-09]]. CrUX / Search Console remains a blended group on a ~28-day cycle. The > 4 s LCP bucket passed **2026-08-26**. Do not click Validate Fix on LCP > 2.5 s.
 
 ## Relevance
 
@@ -38,30 +38,21 @@ Production lab (slow4g, Pixel 5, cold) after PR #68 + PR #70: `/` **2.03 s** (wa
 - Third-party deferral injects the `<script>` on idle; consent gates and command shims stay synchronous ([[concepts/session-replay-analytics]], [[concepts/reddit-ads-conversion-tracking]], [[concepts/google-ads-conversion-tracking]]).
 - A skeleton with zero text nodes is an LCP tax. Profile headers paint from the slug / first row; SSR/prefetch is a later architecture change.
 - Never `vercel deploy` a branch. Verify a preview by `deploymentId` and commit SHA, not by a Ready badge.
-- Do not resubmit Search Console Validate Fix before ~2026-09-19. Silence is the expected shape of a correct fix.
+- Do not resubmit Search Console Validate Fix on LCP > 2.5 s. First-party field p75 is the done gate ([[concepts/core-web-vitals-field]]).
 
 ## Field verification instrumentation (GA4 + BigQuery)
 
-Field confirmation (`T1.1a` — read Search Console + GA4 + Clarity evidence) depends on GA4
-correctly segmenting the `web_vitals` event by `browser_engine`, `device_class`, `route_pattern`,
-etc. — central to the Blink-vs-WebKit hypotheses this feature's field read is built on.
-
-**2026-09-02: found the instrumentation shipped (T0.3/T0.5) but was never wired to GA4's UI.**
-Event parameters arrived and were populated on every production `web_vitals` event, visible in
-Realtime/DebugView — but none were registered as GA4 custom dimensions/metrics, so Explore and
-Reports read them all as `(not set)`. Registration is forward-only; the Aug 31 → Sep 2 window was
-unsegmentable and had to be discarded — a `T0.3`/`T0.5` gap, not an instrumentation bug.
-
-Remediated same day: 10 event-scoped custom dimensions + 1 custom metric (`metric_value`,
-Standard unit — mixes ms and the unitless CLS score, filter by `metric_name` before aggregating)
-registered in GA4; BigQuery export linked to GCP `gurus-on-record` (Daily, event + user data, US
-multi-region — kept, not user data). See [[decisions/ga4-instrumentation-registration-2026-09]]
-and [[entities/bigquery]]. Segmentable-data clock restarted 2026-09-02; **`T1.1a` earliest real
-start ~2026-09-05/06** (was ~2026-09-03).
+Field confirmation depends on GA4 segmenting `web_vitals` by `browser_engine`, `device_class`,
+`route_pattern`. **2026-09-02:** parameters arrived populated but were never registered as GA4
+custom definitions — Explore read `(not set)`. Registration is forward-only; the Aug 31 → Sep 2
+window was discarded. Remediated the same day (10 dimensions + `metric_value`; BigQuery export
+to `gurus-on-record`). See [[decisions/ga4-instrumentation-registration-2026-09]] and
+[[entities/bigquery]]. The field wrapup is [[concepts/core-web-vitals-field]].
 
 ## Related concepts / sources
 
 - Permanent doc: [core-web-vitals-mobile.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md)
+- Field follow-up: [[concepts/core-web-vitals-field]]
 - Ops log: [core-web-vitals.md](file:///Users/andreskull/finfluencer-tracker/docs/ops/core-web-vitals.md)
 - BigQuery export destination: [[entities/bigquery]]
 - Clarity idle injection: [[concepts/session-replay-analytics]]
@@ -69,6 +60,8 @@ start ~2026-09-05/06** (was ~2026-09-03).
 
 ## Related pages
 
+- [[concepts/core-web-vitals-field]]
+- [[decisions/field-authoritative-cwv-2026-09]]
 - [[projects/finfluencer-tracker]]
 - [[projects/gor-blog]]
 - [[products/finfluencer-trade]]
