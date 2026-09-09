@@ -4,7 +4,7 @@ title: "Session replay analytics"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-08-18
-updated: 2026-08-22
+updated: 2026-09-09
 tags: [clarity, session-replay, consent, masking, ga4, marketing]
 ---
 
@@ -17,7 +17,7 @@ Microsoft Clarity on `https://finfluencers.trade` so paid-traffic drop-off can b
 - **Consent** — analytics category, same shape as [[concepts/reddit-ads-conversion-tracking]] / GA4: production host, env id, stored choice wins, EEA fail-closed. No third banner toggle. Withdrawal uses `consentV2` + `consent(false)` with **no page reload**.
 - **Masking** — Balanced mode; inputs always masked; Settings page-root `data-clarity-mask`; empty unmask allowlist. Emails, plan, dates, amounts never upload.
 - **Credentials** — no init while `#access_token=` / `?code=` is in the URL. Error-only hashes (`otp_expired`) **are** recorded.
-- **Counts vs film** — four funnel events also go to GA4 (`signup_method_click`, `magic_link_requested`, `auth_callback_error`, `onboarding_view`). **Not** key events, **never** Google Ads conversions. `sign_up` stays the bidding signal ([[concepts/google-ads-conversion-tracking]]).
+- **Counts vs film** — funnel events also go to GA4 (`signup_method_click`, `magic_link_requested`, `auth_callback_error`, `onboarding_view`, `onboarding_skipped`). **Not** key events, **never** Google Ads conversions. `sign_up` stays the bidding signal ([[concepts/google-ads-conversion-tracking]]). After the 2026-08-31 onboarding detour, `/onboarding` is the first post-callback route — Clarity can miss `onboarding_view` there (credential skip + idle-deferred init). Count in GA4 ([[concepts/post-signup-onboarding]]).
 
 Vendor boundary is only `src/lib/clarityReplay.ts`. Env: `VITE_CLARITY_PROJECT_ID` on Vercel **Production only**. Project Finfluencers.Trade (`y4a1uxw9z3`). Retention **30 days** (9 months if favorited).
 
@@ -47,6 +47,7 @@ GA4 and Ads answer “how many.” Clarity answers “what did they actually do.
 - Google counts: [[concepts/google-ads-conversion-tracking]]
 - Reddit pixel: [[concepts/reddit-ads-conversion-tracking]]
 - Idle injection / LCP: [[concepts/core-web-vitals-mobile]]
+- Onboarding detour + GA4-not-Clarity rule: [[concepts/post-signup-onboarding]]
 
 ## Related pages
 
@@ -54,3 +55,4 @@ GA4 and Ads answer “how many.” Clarity answers “what did they actually do.
 - [[products/finfluencer-trade]]
 - [[concepts/google-ads-conversion-tracking]]
 - [[concepts/reddit-ads-conversion-tracking]]
+- [[concepts/post-signup-onboarding]]

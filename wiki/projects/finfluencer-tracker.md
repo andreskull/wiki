@@ -4,8 +4,8 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-09-08
-tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup]
+updated: 2026-09-09
+tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding]
 ---
 
 # finfluencer-tracker
@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-09-08)
+## Current status (2026-09-09)
+
+**Post-signup onboarding live (deployed 2026-08-31, wrapped 2026-09-09)** — auth-callback detour for fresh signups; Skip measured; 24-hour route gate removed. First clean window 1–8 Sep: 29 `sign_up`, 30 `onboarding_view`, 6 completed, 17 skipped. Counts in GA4, not Clarity. See [[concepts/post-signup-onboarding]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/post-signup-onboarding.md).
 
 **Field Core Web Vitals wrapped (2026-09-08)** — first-party `web_vitals` + `DATA_READY` in BigQuery; **field decides done, lab decides whether a change helped**. `/` LCP met ≤ 2.5 s; `/` teaser DATA_READY missed (~4 s vs 2.0 s — `landing_stats`); lab TTFB 61 ms was an edge HIT (field 701 ms). Freeze lifted. See [[concepts/core-web-vitals-field]], [[decisions/field-authoritative-cwv-2026-09]], [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-field.md).
 
@@ -92,6 +94,7 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [core-web-vitals-field](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-field.md) | First-party field RUM, DATA_READY, field-decides-done (**2026-09-08**) |
 | [google-ads-creative-assets](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md) | PMax images + video from the shipped encoder; banner / overlay / outro (**2026-09-04**) |
 | [finfluencer-ticker-pick-lookup](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/finfluencer-ticker-pick-lookup.md) | Finfluencer ticker lookup + ranked-list RPC; two box-plot charts retired (**2026-09-05**) |
+| [post-signup-onboarding](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/post-signup-onboarding.md) | Auth-callback onboarding detour; skippable wizard; pending dest (**2026-09-09**) |
 | [daily-marks-plan](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/daily-marks-plan.md) | Parked: true daily portfolio marks (future) |
 | [subscription-entitlement-ssot](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/subscription-entitlement-ssot.md) | Profile SSOT, reconcile, RLS close (**2026-07-27**) |
 | [landing-conversion-improvements](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-conversion-improvements.md) | Public funnel, SEO, anon RPC pattern (**2026-07-10**) |
@@ -103,6 +106,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-09-09 | Post-signup onboarding | [post-signup-onboarding.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/post-signup-onboarding.md) |
 | 2026-09-08 | Field Core Web Vitals and data-ready | [core-web-vitals-field.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-field.md) |
 | 2026-09-05 | Finfluencer × ticker pick lookup | [finfluencer-ticker-pick-lookup.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/finfluencer-ticker-pick-lookup.md) |
 | 2026-09-04 | Google Ads creative assets | [google-ads-creative-assets.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md) |
@@ -122,6 +126,9 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-08-28 | Onboarding has one trigger: the auth callback. The 24-hour `ProtectedRoute` gate is gone | Two triggers cannot both refuse a returning same-day sign-in and refuse to re-trap a skip |
+| 2026-08-28 | Funnel counts for `sign_up` → onboarding live in GA4, not Clarity | Clarity skips credential URLs and idle-defers first init |
+| 2026-08-29 | Magic-link `emailRedirectTo` carries `?redirect=`; OAuth does not | A mail client opens a new tab where `sessionStorage` is empty |
 | 2026-09-05 | Unbounded `signals` aggregates go through a server-side RPC, never a raw PostgREST select | PostgREST caps at 1000 rows with no `ORDER BY`; ranked counts and “no picks” empties were silently wrong |
 | 2026-09-05 | `SECURITY DEFINER` finfluencer RPCs re-apply `get_user_tier()` and grant `authenticated` only | `show_ticker_list`’s anon grant does not transfer — show profiles are unlocked, paid finfluencer picks are not |
 | 2026-09-05 | Lookup stays inside `TierGate`; no guest CTA in the control | Guests are already locked; a CTA under blurred `pointer-events-none` children is unreachable |
@@ -189,7 +196,8 @@ Shipped MVP scope: [`gor_dagster/docs/MVP_MASTER_PLAN.md`](file:///Users/andresk
 ## Deferred / out of scope
 
 - Terminal product SKU / Terminal downward-reconcile product map
-- Magic-link / OTP deliverability (separate initiative)
+- Revisit skippable onboarding vs 50% completion target (1–8 Sep 2026: skip 17 / complete 6 / `sign_up` 29) — [[concepts/post-signup-onboarding]]
+- Magic-link / OTP deliverability (Gmail Spam on a young domain; `rua=` DMARC still open; not an app defect)
 - Email capture / newsletter on landing
 - Embedded Stripe Payment Element migration
 - IPO scoreboard access model changes
@@ -211,6 +219,7 @@ Vault indexes **WIKI.md** and all of **`docs/`** except **`docs/features/`**. Ru
 - [[products/finfluencer-trade]]
 - [[projects/gor_dagster]]
 - [[projects/gor-blog]]
+- [[concepts/post-signup-onboarding]]
 - [[concepts/core-web-vitals-field]]
 - [[concepts/core-web-vitals-mobile]]
 - [[decisions/field-authoritative-cwv-2026-09]]
