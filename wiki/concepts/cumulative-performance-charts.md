@@ -4,7 +4,7 @@ title: "Cumulative performance charts"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-08-04
-updated: 2026-09-04
+updated: 2026-09-16
 tags: [performance, charts, compare, export, supabase, spy, entitlement]
 ---
 
@@ -18,7 +18,7 @@ Buffett-vs-Wood style **cumulative % return** surfaces on finfluencers.trade:
 - **`/compare`** — two finfluencers head-to-head; S&P optional (default off)
 - **Export** — watermarked PNG / JPEG / MP4 (shared canvas frame; silent AAC + end-hold + AAC tail-pad)
 
-**Single number truth:** Supabase RPC `get_cumulative_performance_series` + TS reference (`methodology_key = eq_weight_chainlinked_waypoint_shaped_v3`). Holding period (`?horizon=`) selects which book; lookback (`?lookback=`) is viewport only.
+**Single number truth:** Supabase RPC `get_cumulative_performance_series` + TS reference (`methodology_key = eq_weight_chainlinked_waypoint_shaped_v3`). Holding period (`?horizon=`) selects which book; lookback (`?lookback=`) is viewport only. Product start window is **6 months** unless a named `?horizon=` or a signed-in Settings pin applies ([[concepts/user-default-holding-period]]).
 
 Intra-window path is **waypoint-anchored, SPY-shaped** (not linear) — residual ~9.5pp vs true daily marks. Do **not** derive drawdown/vol/Sharpe from this curve. Idle days earn S&P (benchmark when flat), not cash. Parked true-marks plan: [daily-marks-plan.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/daily-marks-plan.md).
 
@@ -45,4 +45,5 @@ Primary shareable performance story for growth/social; gated by the same entitle
 - [[concepts/subscription-entitlement-ssot]]
 - [[concepts/linkedin-outreach]] — reuses this chart stack for outreach MP4s (headless render)
 - [[concepts/google-ads-creative-assets]] — same encoder; ads-only layout + banner/outro stay off for export/outreach
+- [[concepts/user-default-holding-period]] — Settings pin vs named `?horizon=` vs system 6m
 - [[products/finfluencer-trade]]

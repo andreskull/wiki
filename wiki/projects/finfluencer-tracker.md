@@ -4,8 +4,8 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-09-09
-tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding]
+updated: 2026-09-16
+tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period]
 ---
 
 # finfluencer-tracker
@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-09-09)
+## Current status (2026-09-16)
+
+**User-default holding period live (wrapped 2026-09-16)** — system start is 6 months on every product view; signed-in users pin in Settings; named `?horizon=` still wins; URL omit uses the system default, not the save. Column `user_profiles.default_holding_period` on both ledgers. See [[concepts/user-default-holding-period]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/user-default-holding-period.md).
 
 **Post-signup onboarding live (deployed 2026-08-31, wrapped 2026-09-09)** — auth-callback detour for fresh signups; Skip measured; 24-hour route gate removed. First clean window 1–8 Sep: 29 `sign_up`, 30 `onboarding_view`, 6 completed, 17 skipped. Counts in GA4, not Clarity. See [[concepts/post-signup-onboarding]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/post-signup-onboarding.md).
 
@@ -95,6 +97,7 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [google-ads-creative-assets](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md) | PMax images + video from the shipped encoder; banner / overlay / outro (**2026-09-04**) |
 | [finfluencer-ticker-pick-lookup](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/finfluencer-ticker-pick-lookup.md) | Finfluencer ticker lookup + ranked-list RPC; two box-plot charts retired (**2026-09-05**) |
 | [post-signup-onboarding](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/post-signup-onboarding.md) | Auth-callback onboarding detour; skippable wizard; pending dest (**2026-09-09**) |
+| [user-default-holding-period](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/user-default-holding-period.md) | System start 6 months; Settings pin; URL omit uses system default (**2026-09-16**) |
 | [daily-marks-plan](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/daily-marks-plan.md) | Parked: true daily portfolio marks (future) |
 | [subscription-entitlement-ssot](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/subscription-entitlement-ssot.md) | Profile SSOT, reconcile, RLS close (**2026-07-27**) |
 | [landing-conversion-improvements](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-conversion-improvements.md) | Public funnel, SEO, anon RPC pattern (**2026-07-10**) |
@@ -106,6 +109,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-09-16 | User-default holding period | [user-default-holding-period.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/user-default-holding-period.md) |
 | 2026-09-09 | Post-signup onboarding | [post-signup-onboarding.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/post-signup-onboarding.md) |
 | 2026-09-08 | Field Core Web Vitals and data-ready | [core-web-vitals-field.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-field.md) |
 | 2026-09-05 | Finfluencer × ticker pick lookup | [finfluencer-ticker-pick-lookup.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/finfluencer-ticker-pick-lookup.md) |
@@ -126,6 +130,9 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-09-16 | System holding-period start is `DEFAULT_HORIZON = '6m'` on every product view | Unifies the old 1m/1y split; Settings is the only writer |
+| 2026-09-16 | URL omit uses the **system** default, not the signed-in save | A guest opening a copied clean URL gets 6m, not someone else’s pin |
+| 2026-09-16 | `user_profiles.default_holding_period` is nullable preference GRANT, not a `'6m'` insert default | Unset follows a future system-default change; explicit `'6m'` is a pin |
 | 2026-08-28 | Onboarding has one trigger: the auth callback. The 24-hour `ProtectedRoute` gate is gone | Two triggers cannot both refuse a returning same-day sign-in and refuse to re-trap a skip |
 | 2026-08-28 | Funnel counts for `sign_up` → onboarding live in GA4, not Clarity | Clarity skips credential URLs and idle-defers first init |
 | 2026-08-29 | Magic-link `emailRedirectTo` carries `?redirect=`; OAuth does not | A mail client opens a new tab where `sessionStorage` is empty |
@@ -176,6 +183,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 ## Supabase notes (app layer)
 
 - **Entitlement:** `user_profiles.subscription_tier` (+ status, `stripe_customer_id`, `cancel_at_period_end`, `subscription_reconciled_at`); writers are service-role edge functions only (H9); `get_user_tier()` drives RLS / masked views
+- **Holding-period preference:** `user_profiles.default_holding_period` (nullable text, CHECK `1w|1m|3m|6m|1y`); `authenticated` UPDATE on that column only; `NULL` = follow system 6 months ([[concepts/user-default-holding-period]])
 - **`finfluencer_combined_performance_public`** + **`leaderboard`** — security-definer masked views; base table not readable by anon
 - **`benchmark_daily_prices`** — SPY daily adj_close (synced from BigQuery `PriceHistory`)
 - **`get_cumulative_performance_series(...)`** — security-definer RPC; entitlement mirrors TierGate / `is_free_tier` ([[concepts/cumulative-performance-charts]])
@@ -219,6 +227,7 @@ Vault indexes **WIKI.md** and all of **`docs/`** except **`docs/features/`**. Ru
 - [[products/finfluencer-trade]]
 - [[projects/gor_dagster]]
 - [[projects/gor-blog]]
+- [[concepts/user-default-holding-period]]
 - [[concepts/post-signup-onboarding]]
 - [[concepts/core-web-vitals-field]]
 - [[concepts/core-web-vitals-mobile]]

@@ -189,3 +189,6 @@ Append-only. Grep recent entries: `grep "^## \[" log.md | tail -10`
 
 ## [2026-09-09] wrapup | finfluencer-tracker | Post-signup onboarding
 ## [2026-09-09] sync | finfluencer-tracker — Post-signup onboarding wrapup: auth-callback detour; 24-hour route gate removed; skippable wizard; pending dest survives magic-link new tab; funnel counts in GA4 not Clarity. Deployed 2026-08-31 (PR #71); first clean window 1–8 Sep 29/30/6/17. New [[concepts/post-signup-onboarding]]; updated [[projects/finfluencer-tracker]], [[products/finfluencer-trade]], [[concepts/session-replay-analytics]], [[overview]], [[index]]. Permanent doc `docs/architecture/features/post-signup-onboarding.md`; `docs/features/post-signup-onboarding/` removed.
+
+## [2026-09-16] wrapup | finfluencer-tracker | User-default holding period
+## [2026-09-16] sync | finfluencer-tracker — Holding-period wrapup: system start 6 months; Settings pin; named `?horizon=` wins; URL omit uses system default. New [[concepts/user-default-holding-period]]; updated [[projects/finfluencer-tracker]], [[products/finfluencer-trade]], [[concepts/cumulative-performance-charts]], [[concepts/signal-performance]], [[overview]], [[index]]. Permanent doc `docs/architecture/features/user-default-holding-period.md`; `docs/features/user-default-holding-period/` removed.
