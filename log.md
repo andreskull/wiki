@@ -192,3 +192,20 @@ Append-only. Grep recent entries: `grep "^## \[" log.md | tail -10`
 
 ## [2026-09-16] wrapup | finfluencer-tracker | User-default holding period
 ## [2026-09-16] sync | finfluencer-tracker — Holding-period wrapup: system start 6 months; Settings pin; named `?horizon=` wins; URL omit uses system default. New [[concepts/user-default-holding-period]]; updated [[projects/finfluencer-tracker]], [[products/finfluencer-trade]], [[concepts/cumulative-performance-charts]], [[concepts/signal-performance]], [[overview]], [[index]]. Permanent doc `docs/architecture/features/user-default-holding-period.md`; `docs/features/user-default-holding-period/` removed.
+
+## [2026-09-18] query-filed | Finfluencers.trade GTM / growth hub
+
+Created living GTM SSOT [[wiki/synthesis/gtm-growth]]. Pointed [[wiki/products/finfluencer-trade]] planning table at the hub; marked [`gor-blog/growth_plan.md`](file:///Users/andreskull/gor-blog/growth_plan.md) archive/reference. Updated [[wiki/index]].
+
+## [2026-09-18] sync | finfluencer-trade GTM — removed stale growth_plan.md
+
+Deleted `gor-blog/growth_plan.md` (stale; not archived). Living SSOT remains [[wiki/synthesis/gtm-growth]] — activities and priorities only (no timeline plans). Updated product + project pages, `gor-blog/WIKI.md`, and Cramer promotion pointers.
+
+## [2026-09-18] sync | finfluencer-trade GTM — absorbed July marketing checklist
+
+Merged still-open items from `gor-blog/finfluencers-marketing-next-steps-2026-07.md` into [[wiki/synthesis/gtm-growth]] (audiences, nurture, Meta Pixel, lead magnet, LinkedIn posts, X/Reddit reply loops, low-ticket SKU). Deleted the July checklist file. Priorities remain activities-only (no timelines).
+
+## [2026-09-20] wrapup | gor_dagster | Sector-relative alpha
+
+Wrapped `sector-relative-alpha/`. Permanent architecture record at `gor_dagster/docs/architecture/features/sector-relative-alpha.md`. Dual-benchmark model live across 11 GICS sectors + BTC + SPY: Vanguard benchmark registry, BigQuery vectorized compute, Supabase `get_sector_leaderboard` RPC, `/leaderboard/sectors` tracker view, profile `SectorCompositionWidget`, 3 gor-blog research posts, social launch, and Google Ads updates complete. `docs/features/sector-relative-alpha/` removed. Updated `WIKI.md` and [[projects/gor_dagster]].
+

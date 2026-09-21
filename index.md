@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-09-16
+updated: 2026-09-18
 ---
 
 # Wiki Index
@@ -21,7 +21,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Description |
 |------|-------------|
-| [[wiki/products/finfluencer-trade]] | Financial influencer accountability platform — planning hub (growth + MVP docs on product page) |
+| [[wiki/products/finfluencer-trade]] | Financial influencer accountability platform — planning hub; GTM living page [[wiki/synthesis/gtm-growth]] |
 | [[wiki/products/rattaproff]] | WooCommerce multi-store automation — 20 storefronts; HUF→EUR pricing [[wiki/concepts/huf-eur-pipeline-pricing]]; gsheet sync safety [[wiki/concepts/gsheet-ground-truth-sync]]; category URL export (Woo slugs, 2026-08-14) |
 | [[wiki/products/botastico]] | Partially indexed — [[projects/botastico]] SSL/monitoring (2026-07-15); [[projects/botastico-api]] (2026-05-18); other repos pending |
 
@@ -109,6 +109,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Description |
 |------|-------------|
+| [[wiki/synthesis/gtm-growth]] | Living GTM / growth hub for finfluencers.trade — live channels, open priorities, doc map (2026-09-18) |
 | [[wiki/synthesis/lint-finfluencer-trade-2026-04-06]] | Wiki lint — finfluencer.trade product scope (2026-04-06) |
 | [[wiki/synthesis/lint-gor-blog-2026-04-06]] | Wiki lint — gor-blog project (2026-04-06) |
 | [[wiki/synthesis/lint-finfluencer-tracker-2026-04-06]] | Wiki lint — finfluencer-tracker project (2026-04-06) |

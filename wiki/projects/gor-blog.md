@@ -77,13 +77,15 @@ New articles about finfluencers or the platform are written directly as posts in
 
 ## Growth and product strategy
 
-**[`growth_plan.md`](file:///Users/andreskull/gor-blog/growth_plan.md)** (repo root) — Finfluencers.trade growth plan, competitive notes, and pre-launch actions. Central index: [[products/finfluencer-trade]] § Planning and strategy. The *Cramer Paper Promotion Plan* phased checklist lives there; the **live cross-channel campaign log** (permalinks, metrics, variants) is [`research/cramer/promotion/cramer-study-launch-campaign.md`](file:///Users/andreskull/gor-blog/research/cramer/promotion/cramer-study-launch-campaign.md) *(supersedes the old `linkedin_promotion_plan.md` path)*.
+**[[synthesis/gtm-growth]]** — living GTM / growth hub (priorities and live channels). Product planning index: [[products/finfluencer-trade]] § Planning and strategy. The **live cross-channel Cramer campaign log** (permalinks, metrics, variants) is [`research/cramer/promotion/cramer-study-launch-campaign.md`](file:///Users/andreskull/gor-blog/research/cramer/promotion/cramer-study-launch-campaign.md) *(supersedes the old `linkedin_promotion_plan.md` path)*.
 
 ## Required elements on every blog post
 
 Every blog post in `docs/blog/posts/` must include the CTAs codified in [[concepts/blog-post-cta-pattern]] before publishing — above-the-fold module, inline mid-article module, expanded end-of-post block (newsletter + product CTA), and internal product links throughout the body. The pattern was established 2026-05-05 after the Cramer launch revealed 92% article-to-product abandonment uniform across acquisition channels (GA4 Funnel exploration, May 4 2026). See `research/cramer/promotion/cramer-study-launch-campaign.md` § *Day 1 learnings + plan revision* for the source data.
 
 ## Current status
+
+**Sector Alpha research series published (2026-09-15 / 2026-09-16)**: Three research and methodology articles shipped: *Introducing Sector Alpha & Sector Leaderboards* (2026-09-15), *Do Financial Shows Pick Winning Stocks or Winning Sectors?* (2026-09-15, auditing 37,000+ public recommendations), and *Why 6 Months is Our Starting Holding Period* (2026-09-16). Embedded high-res visual assets and companion newsletter draft `emails/newsletters/2026-09-sector-alpha-launch.md`.
 
 **Search Console mobile CWV (2026-08-22):** four of the eight Poor-LCP URLs are MkDocs (`/blog/`, two posts, `/blog/about/`). The Vite SPA fix in [[projects/finfluencer-tracker]] cannot move them; a correct SPA-only fix can still leave the *group* Poor. See [[concepts/core-web-vitals-mobile]].
 

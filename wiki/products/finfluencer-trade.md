@@ -4,7 +4,7 @@ title: "finfluencer.trade"
 product: finfluencer-trade
 project: null
 created: 2026-04-06
-updated: 2026-09-16
+updated: 2026-09-18
 tags: [finfluencer, finance, pipeline, dagster, blog, tracking, linkedin, stripe, entitlement, charts, clarity, session-replay, feedback, lcp, ticker, lookup, onboarding, holding-period]
 ---
 
@@ -77,7 +77,7 @@ Use these when you need **growth**, **app MVP scope**, or **post-MVP product bac
 
 | What | Where |
 |---|---|
-| Growth / GTM / pre-launch plan | [`gor-blog/growth_plan.md`](file:///Users/andreskull/gor-blog/growth_plan.md) (repo root, not under `docs/`) |
+| **GTM / growth (living hub)** | [[synthesis/gtm-growth]] — current priorities, live channels, doc map |
 | Shipped **finfluencer-tracker** MVP (achievement spec) | [`gor_dagster/docs/MVP_MASTER_PLAN.md`](file:///Users/andreskull/gor_dagster/docs/MVP_MASTER_PLAN.md) |
 | Deferred product work after MVP | [`gor_dagster/docs/INCR_01_MASTER_PLAN.md`](file:///Users/andreskull/gor_dagster/docs/INCR_01_MASTER_PLAN.md) |
 | App runbook (access, Stripe, E2E, blog URL) | [`gor_dagster/docs/operations/finfluencers-app-runbook.md`](file:///Users/andreskull/gor_dagster/docs/operations/finfluencers-app-runbook.md) |
@@ -86,6 +86,7 @@ Use these when you need **growth**, **app MVP scope**, or **post-MVP product bac
 
 ## Related pages
 
+- [[synthesis/gtm-growth]] — living GTM / growth hub
 - [[projects/gor_dagster]]
 - [[projects/gor-blog]]
 - [[projects/cramer-mad-money-research]]

@@ -4,8 +4,8 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-09-16
-tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period]
+updated: 2026-09-20
+tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard]
 ---
 
 # finfluencer-tracker
@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-09-16)
+## Current status (2026-09-20)
+
+**Sector-relative alpha & sector leaderboards live (wrapped 2026-09-20)**: Interactive `/leaderboard/sectors` across 11 GICS sectors + BTC + SPY; profile `SectorCompositionWidget` with Stock Selection Skill + Sector Allocation Skill = Alpha in Sector; Portfolio Alpha Impact in percentage points (`pp`); Supabase `get_sector_leaderboard` RPC; Methodology sector breakdown. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/sector-relative-alpha.md).
 
 **User-default holding period live (wrapped 2026-09-16)** — system start is 6 months on every product view; signed-in users pin in Settings; named `?horizon=` still wins; URL omit uses the system default, not the save. Column `user_profiles.default_holding_period` on both ledgers. See [[concepts/user-default-holding-period]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/user-default-holding-period.md).
 
@@ -199,7 +201,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 ## MVP and planning docs (cross-repo)
 
-Shipped MVP scope: [`gor_dagster/docs/MVP_MASTER_PLAN.md`](file:///Users/andreskull/gor_dagster/docs/MVP_MASTER_PLAN.md). Post-MVP backlog: [`INCR_01_MASTER_PLAN.md`](file:///Users/andreskull/gor_dagster/docs/INCR_01_MASTER_PLAN.md). Operations: [`finfluencers-app-runbook.md`](file:///Users/andreskull/gor_dagster/docs/operations/finfluencers-app-runbook.md). Growth: [`gor-blog/growth_plan.md`](file:///Users/andreskull/gor-blog/growth_plan.md). Full table: [[products/finfluencer-trade]] § Planning and strategy.
+Shipped MVP scope: [`gor_dagster/docs/MVP_MASTER_PLAN.md`](file:///Users/andreskull/gor_dagster/docs/MVP_MASTER_PLAN.md). Post-MVP backlog: [`INCR_01_MASTER_PLAN.md`](file:///Users/andreskull/gor_dagster/docs/INCR_01_MASTER_PLAN.md). Operations: [`finfluencers-app-runbook.md`](file:///Users/andreskull/gor_dagster/docs/operations/finfluencers-app-runbook.md). Growth: [[synthesis/gtm-growth]]. Full table: [[products/finfluencer-trade]] § Planning and strategy.
 
 ## Deferred / out of scope
 

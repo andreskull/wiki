@@ -81,7 +81,7 @@ something by hand.
 | Repo | Change |
 |---|---|
 | `gor_dagster` | `Affiliation` gate in the outreach scripts; runbook `linkedin-outreach-intro-agent-runbook.md`; new `docs/operations/conference-outreach-playbook.md` |
-| `gor-blog` | `growth_plan.md` — *Who cannot be an early design partner*; new risk-mitigation entry on misreading structural silence |
+| `gor-blog` | [[synthesis/gtm-growth]] (formerly `[[synthesis/gtm-growth]] (removed 2026-09-18)`, removed 2026-09-18) — *Who cannot be an early design partner*; new risk-mitigation entry on misreading structural silence |
 | `finfluencer-tracker` | None. `Terms.tsx` §5 already disclaims registered advisor / broker-dealer status, consistent with this decision |
 
 ## Related pages

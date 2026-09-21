@@ -28,7 +28,7 @@ The data engine. Everything from RSS feed polling through to `ActionableSignal` 
 | [INCR_01_MASTER_PLAN.md](file:///Users/andreskull/gor_dagster/docs/INCR_01_MASTER_PLAN.md) | Deferred / follow-on product work after MVP |
 | [finfluencers-app-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/finfluencers-app-runbook.md) | App operations, access rules, E2E, cutover checks |
 
-Growth and GTM live in [`gor-blog/growth_plan.md`](file:///Users/andreskull/gor-blog/growth_plan.md). **Do not** use `docs/features/<feature>/` as the long-term home for planning — those folders are temporary until `/wrapup`; see **Active features in progress** below. Hub page: [[products/finfluencer-trade]] § Planning and strategy.
+Growth and GTM live in [[synthesis/gtm-growth]]. **Do not** use `docs/features/<feature>/` as the long-term home for planning — those folders are temporary until `/wrapup`; see **Active features in progress** below. Hub page: [[products/finfluencer-trade]] § Planning and strategy.
 
 ---
 
@@ -429,6 +429,7 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 | 2026-08-11 | LinkedIn outreach performance content (chart video + unpublished best-pick; manual LinkedIn send) | [linkedin-outreach-performance-content.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/linkedin-outreach-performance-content.md) |
 | 2026-08-22 | The Intrinsic Value Podcast RSS onboarding (Pattern 7 PPLLC; 784/784 downloaded; directory Covered) | [intrinsic-value-podcast-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/intrinsic-value-podcast-ingestion.md) |
 | 2026-09-04 | Google Ads creative assets (PMax images + video; V1/V4 live; write-once GCS) | [google-ads-creative-assets.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/google-ads-creative-assets.md) |
+| 2026-09-20 | Sector-relative alpha (Vanguard ETFs/BTC, BQ performance, Supabase RPC, live leaderboards & widgets) | [sector-relative-alpha.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/sector-relative-alpha.md) |
 | 2026-05-15 | Pytest `not expensive` green track (permanent reference; suite alignment) | [pytest-not-expensive-green.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/pytest-not-expensive-green.md) |
 | 2026-05-14 | ContentItem deduplication, ingest guard, BQ apply pipeline | [contentitem-dedupe-and-cleanup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/contentitem-dedupe-and-cleanup.md) — runbook [contentitem-dedupe-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/contentitem-dedupe-runbook.md) |
 | 2026-05-14 | Compound and Friends (Pippa) RSS onboarding + SI allowlist extension | [compound-and-friends-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/compound-and-friends-ingestion.md) |
@@ -450,6 +451,8 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 | Social share previews | `social-share-previews/` |
 | Post-cutoff IPO resolution | `post-cutoff-ipo-resolution/` — Inc 1–8 backfill gate ✅ (2026-06-28); frozen DATA_REFRESH curation ongoing |
 | Data-driven sector ETF registry | `data-driven-sector-etf-registry/` |
+
+**Wrapped 2026-09-20:** `sector-relative-alpha/` → [sector-relative-alpha.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/sector-relative-alpha.md) (Second benchmark leg across 11 GICS sectors + BTC + SPY; Vanguard ETFs; BigQuery vectorized compute; Supabase get_sector_leaderboard RPC; /leaderboard/sectors live in tracker; profile SectorCompositionWidget; 3 gor-blog research posts; LinkedIn & social launch complete)
 
 **Wrapped 2026-09-04:** `google-ads-creative-assets/` → [google-ads-creative-assets.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/google-ads-creative-assets.md) (PMax V1 + V4 live; run `2026-09-04T0804Z`; [[concepts/google-ads-creative-assets]]; Google policy review + ad-strength check still open)
 
