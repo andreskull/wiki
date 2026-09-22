@@ -209,3 +209,15 @@ Merged still-open items from `gor-blog/finfluencers-marketing-next-steps-2026-07
 
 Wrapped `sector-relative-alpha/`. Permanent architecture record at `gor_dagster/docs/architecture/features/sector-relative-alpha.md`. Dual-benchmark model live across 11 GICS sectors + BTC + SPY: Vanguard benchmark registry, BigQuery vectorized compute, Supabase `get_sector_leaderboard` RPC, `/leaderboard/sectors` tracker view, profile `SectorCompositionWidget`, 3 gor-blog research posts, social launch, and Google Ads updates complete. `docs/features/sector-relative-alpha/` removed. Updated `WIKI.md` and [[projects/gor_dagster]].
 
+## [2026-09-21] sync | gor_dagster — Hedge Fund Tips with Tom Hayes
+
+Named Hedge Fund Tips with Tom Hayes as a live `podcast_rss` source (`e707e222-d1e4-401b-bea3-4b489d835c27`, `external_id` `12172a20`). Catalogue count 12 → 13. Catalog finished **359/359** downloaded the same day, newest-first, 0 duplicate groups. Updated `WIKI.md`, [[projects/gor_dagster]], [[index]].
+
+## [2026-09-22] wrapup | gor_dagster | Hedge Fund Tips with Tom Hayes
+
+Wrapped `hedge-fund-tips-ingestion/`. Permanent record at `gor_dagster/docs/architecture/features/hedge-fund-tips-ingestion.md`. Thirteenth `podcast_rss` source. Catalog held with a null URL until proof episode `APO2815113219` passed ElevenLabs, speaker identification, and facts extraction. **359/359** downloaded. Directory card waits for a live `/show/` page. Feature folder removed.
+
+## [2026-09-22] sync | gor_dagster — Hedge Fund Tips with Tom Hayes wrap-up
+
+Moved the show from active features to the completed list. Recorded the long-episode catalog hold on [[projects/gor_dagster]] and [[concepts/onboarding-new-podcast-source]]. Updated [[overview]] and [[index]].
+

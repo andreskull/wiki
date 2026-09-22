@@ -2,12 +2,12 @@
 type: overview
 title: "Wiki Overview"
 created: 2026-04-06
-updated: 2026-09-16
+updated: 2026-09-22
 ---
 
 # Wiki Overview
 
-Three products, one methodology, one wiki. Updated: 2026-09-16.
+Three products, one methodology, one wiki. Updated: 2026-09-22.
 
 ## Products
 
@@ -23,7 +23,7 @@ Three products, one methodology, one wiki. Updated: 2026-09-16.
 
 ## Active development
 
-`gor_dagster` has in-progress feature folders under `docs/features/` (batch-integration, post-cutoff IPO resolution, etc.). **finfluencer-tracker user-default holding period** wrapped **2026-09-16** (system start 6 months; Settings pin). **finfluencer-tracker post-signup onboarding** wrapped **2026-09-09** (auth-callback detour; skippable). **finfluencer-tracker field CWV** wrapped **2026-09-08** (field decides done; `/` teaser DATA_READY still ~4 s). **finfluencer-tracker ticker lookup** wrapped **2026-09-05** (`finfluencer_ticker_list`; two box-plot charts retired). **Google Ads PMax creatives** wrapped **2026-09-04** (V1 + V4 live). **The Intrinsic Value Podcast** RSS onboarding wrapped **2026-08-22**. **finfluencer-tracker mobile Core Web Vitals** wrapped **2026-08-22**. **finfluencer-tracker feedback decline with admin note** wrapped **2026-08-22**. **finfluencer-tracker session replay (Clarity)** wrapped **2026-08-18**. **Signal source-quote restoration** + **LinkedIn outreach** wrapped **2026-08-11**. **finfluencer-tracker marketing Explore nav** wrapped **2026-08-17**. **finfluencer-tracker Reddit pixel** wrapped **2026-08-17**. **finfluencer-tracker cumulative performance charts** wrapped **2026-08-04**. **gor-blog platform-update blog + Kit send** wrapped **2026-08-14**. Temporary feature docs are not indexed until `/wrapup`.
+`gor_dagster` has in-progress feature folders under `docs/features/` (batch-integration, post-cutoff IPO resolution, etc.). **Hedge Fund Tips with Tom Hayes** RSS onboarding wrapped **2026-09-22** (359/359 downloaded; directory waits for a live show page). **finfluencer-tracker user-default holding period** wrapped **2026-09-16** (system start 6 months; Settings pin). **finfluencer-tracker post-signup onboarding** wrapped **2026-09-09** (auth-callback detour; skippable). **finfluencer-tracker field CWV** wrapped **2026-09-08** (field decides done; `/` teaser DATA_READY still ~4 s). **finfluencer-tracker ticker lookup** wrapped **2026-09-05** (`finfluencer_ticker_list`; two box-plot charts retired). **Google Ads PMax creatives** wrapped **2026-09-04** (V1 + V4 live). **The Intrinsic Value Podcast** RSS onboarding wrapped **2026-08-22**. **finfluencer-tracker mobile Core Web Vitals** wrapped **2026-08-22**. **finfluencer-tracker feedback decline with admin note** wrapped **2026-08-22**. **finfluencer-tracker session replay (Clarity)** wrapped **2026-08-18**. **Signal source-quote restoration** + **LinkedIn outreach** wrapped **2026-08-11**. **finfluencer-tracker marketing Explore nav** wrapped **2026-08-17**. **finfluencer-tracker Reddit pixel** wrapped **2026-08-17**. **finfluencer-tracker cumulative performance charts** wrapped **2026-08-04**. **gor-blog platform-update blog + Kit send** wrapped **2026-08-14**. Temporary feature docs are not indexed until `/wrapup`.
 
 ## Key concepts to know
 

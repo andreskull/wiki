@@ -4,7 +4,7 @@ title: "Onboarding a new podcast source"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-05-13
-updated: 2026-08-22
+updated: 2026-09-22
 tags: [rss, dagster, content-source, pipeline, si-sensor, gor_dagster, gor-blog]
 ---
 
@@ -45,6 +45,8 @@ Pipeline PRs plus directory + wrap-up: **Preflight script** → **Regex + valida
 **Ops tips (2026-08-19):** Do **not** add a playbook Requirement for idempotency / safe re-runs (former Requirement 9). Proven across prior shows. Directory revision is Requirement 12.
 
 **Ops tips (2026-08-22 / The Intrinsic Value Podcast):** Megaphone `PPLLC{digits}.mp3` is **Pattern 7** (not ARML Pattern 6). Trim iTunes network suffixes on `ContentSource.name` **before** the first `mat_shows` sync — slugs freeze after insert. Example: [intrinsic-value-podcast-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/intrinsic-value-podcast-ingestion.md) (12th `podcast_rss` source; 784/784 downloaded; Covered `the-intrinsic-value-podcast`).
+
+**Ops tips (2026-09-22 / Hedge Fund Tips with Tom Hayes):** For a multi-hour show, set `ContentSource.url` NULL after `add_new_rss_source_job` until one proof episode passes ElevenLabs STT, SI, and FE, then restore the feed URL. ElevenLabs waits are signed URL 14400s, POST 3600s, poll 7200s; do not change credit pacing. A merged monologue keeps the first `source_utterance_end`; the real tail is `merge_metadata.merged_utterances[].utterance_end`. An FE window can finish after the last prediction. Add the directory card only after `/show/{slug}` returns 200. Example: [hedge-fund-tips-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hedge-fund-tips-ingestion.md) (13th `podcast_rss` source; Patterns 4+5; 359/359 downloaded; directory deferred).
 
 ## Which projects use this
 
