@@ -221,3 +221,11 @@ Wrapped `hedge-fund-tips-ingestion/`. Permanent record at `gor_dagster/docs/arch
 
 Moved the show from active features to the completed list. Recorded the long-episode catalog hold on [[projects/gor_dagster]] and [[concepts/onboarding-new-podcast-source]]. Updated [[overview]] and [[index]].
 
+## [2026-09-24] wrapup | finfluencer-tracker | Sector leaderboard wide-screen name filter
+
+Wrapped `sector-leaderboard-wide-name-filter/`. Permanent record at `finfluencer-tracker/docs/architecture/features/sector-leaderboard-wide-name-filter.md`. The name column header on `/leaderboard/sectors` shows the `?q=` filter at every width. The top bar still opens `/leaderboard`. Feature folder removed.
+
+## [2026-09-24] sync | finfluencer-tracker — sector leaderboard wide-screen name filter
+
+Recorded the header filter and the decision to leave `NameFilterInput` shared (phone-only on `/leaderboard` and `/shows`) on [[projects/finfluencer-tracker]], [[overview]], and [[index]].
+
