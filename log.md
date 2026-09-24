@@ -229,3 +229,11 @@ Wrapped `sector-leaderboard-wide-name-filter/`. Permanent record at `finfluencer
 
 Recorded the header filter and the decision to leave `NameFilterInput` shared (phone-only on `/leaderboard` and `/shows`) on [[projects/finfluencer-tracker]], [[overview]], and [[index]].
 
+## [2026-09-24] sync | gor-blog — Cramer v1 conservation
+
+Closed the May 2026 Cramer promotion as a frozen record. Catalog: `gor-blog/research/cramer/CONSERVATION.md`. Pointed [[projects/gor-blog]], [[synthesis/gtm-growth]], and `gor-blog/WIKI.md` at it. v2 re-analysis not started.
+
+## [2026-09-24] sync | gor_dagster — Pipeline dashboard users screen
+
+Recorded the local Users page on [[projects/gor_dagster]]: production test-user ids in a gitignored JSON file, onboarding columns from `user_onboarding_preferences`, daily signup bars with a 1Y/6M/3M/1M window. Updated [[overview]] and [[index]]. Permanent doc `docs/architecture/features/pipeline-dashboard-users.md`. Temp `docs/features/pipeline-dashboard-users/` removed. No new concept page.
+

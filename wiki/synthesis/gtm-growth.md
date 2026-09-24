@@ -4,7 +4,7 @@ title: "Finfluencers.trade GTM / growth hub"
 product: finfluencer-trade
 project: null
 created: 2026-09-18
-updated: 2026-09-18
+updated: 2026-09-24
 tags: [gtm, growth, marketing, ads, outreach, newsletter]
 ---
 
@@ -64,7 +64,7 @@ TikTok (and most Shorts feeds) skew younger, entertainment-first, short attentio
 | Microsoft Clarity | Live — [[concepts/session-replay-analytics]] |
 | Kit / ConvertKit newsletter | Live; signup/newsletter list grows over time; guide in `gor-blog` |
 | Blog CTA pattern | Live — [[concepts/blog-post-cta-pattern]] |
-| Cramer research TOFU | Shipped (blog/SSRN/GitHub); campaign log under `gor-blog/research/cramer/promotion/` |
+| Cramer research TOFU | v1 shipped (blog/SSRN/GitHub). Promotion frozen 2026-09-24 — [`CONSERVATION.md`](file:///Users/andreskull/gor-blog/research/cramer/CONSERVATION.md) |
 | LinkedIn outreach pipeline | Notion Follow→Connect→Intro→Respond; AI drafts; human send — [[concepts/linkedin-outreach]] |
 | Public funnel / Explore nav | Leaderboard / Compare / Shows; Spectator→Trader mask |
 | Post-signup onboarding | Skippable — [[concepts/post-signup-onboarding]] |
@@ -115,7 +115,7 @@ Not part of the numbered GTM queue. Overheard scores digests → RESEARCH+ENGAGE
 | **This hub** | `wiki/synthesis/gtm-growth.md` | Current GTM SSOT |
 | Kit guide | [`gor-blog/convertkit-newsletter-guide.md`](file:///Users/andreskull/gor-blog/convertkit-newsletter-guide.md) | How to send |
 | SpaceX / CNBC meme pack | [`gor-blog/spacexbets-meme-campaign-2026-07.md`](file:///Users/andreskull/gor-blog/spacexbets-meme-campaign-2026-07.md) | One-off campaign |
-| Cramer launch campaign log | [`gor-blog/research/cramer/promotion/cramer-study-launch-campaign.md`](file:///Users/andreskull/gor-blog/research/cramer/promotion/cramer-study-launch-campaign.md) | Shipped campaign record |
+| Cramer v1 conservation | [`gor-blog/research/cramer/CONSERVATION.md`](file:///Users/andreskull/gor-blog/research/cramer/CONSERVATION.md) | What to keep before a re-analysis. Campaign log is frozen |
 | PMax creative brief + assets | [`finfluencer-tracker/marketing/`](file:///Users/andreskull/finfluencer-tracker/marketing/) | Execution assets |
 | Reddit ads notes | [`finfluencer-tracker/reddit-ads-call-brief-2026-08-17.md`](file:///Users/andreskull/finfluencer-tracker/reddit-ads-call-brief-2026-08-17.md) | Channel setup notes |
 | LinkedIn outreach state | [`gor-blog/.linkedin-outreach-state.json`](file:///Users/andreskull/gor-blog/.linkedin-outreach-state.json) | Recent run snapshot |

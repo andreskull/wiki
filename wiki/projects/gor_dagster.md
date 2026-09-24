@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-09-22
+updated: 2026-09-24
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, linkedin, gemini, podcast-rss, outreach, source-quote, google-ads]
 ---
 
@@ -317,9 +317,11 @@ Docs: [Supabase Schema Spec](file:///Users/andreskull/gor_dagster/docs/architect
 
 ### Pipeline monitoring dashboard
 
-A Dash/Plotly **pipeline dashboard** (`pipeline_dashboard/`) with real-time metrics. Sections: STT/SI/FE process monitoring, recursive SI monitoring, **Model Quality Comparison** (SI/FE proxies by `llm_config_id` + model family — **2026-07-27**), LinkedIn/instrument curation, costs, errors. Family map: `pipeline_dashboard/config_registry.py` `config_id_to_family`.
+A Dash/Plotly **pipeline dashboard** (`pipeline_dashboard/`) with real-time metrics. Sections: STT/SI/FE process monitoring, recursive SI monitoring, **Model Quality Comparison** (SI/FE proxies by `llm_config_id` + model family — **2026-07-27**), LinkedIn/instrument curation, costs, errors, and a local **Users** page (`/users`). Family map: `pipeline_dashboard/config_registry.py` `config_id_to_family`.
 
-Docs: [Pipeline Dashboard Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/pipeline-dashboard-architecture.md), [gemini-35-flash-lite-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md)
+**Users page (2026-09-24):** Lists Finfluencer Tracker auth users for production and development. Production test accounts are a checkbox stored in gitignored `pipeline_dashboard/local_state/production_test_user_ids.json` (this machine only, not Supabase). Marked users stay in the table and drop out of the production count and chart. Table is last-sign-in order, 20 per page, email filter. Onboarding columns come from `user_onboarding_preferences` (`motivation`, `followed_shows`). Production chart: cumulative spectator/trader lines plus daily new-signup bars; window 1Y (default), 6M, 3M, 1M. Permanent doc: [pipeline-dashboard-users.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/pipeline-dashboard-users.md).
+
+Docs: [Pipeline Dashboard Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/pipeline-dashboard-architecture.md), [pipeline-dashboard-users.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/pipeline-dashboard-users.md), [gemini-35-flash-lite-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md)
 
 ---
 
@@ -432,6 +434,7 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 | 2026-09-04 | Google Ads creative assets (PMax images + video; V1/V4 live; write-once GCS) | [google-ads-creative-assets.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/google-ads-creative-assets.md) |
 | 2026-09-20 | Sector-relative alpha (Vanguard ETFs/BTC, BQ performance, Supabase RPC, live leaderboards & widgets) | [sector-relative-alpha.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/sector-relative-alpha.md) |
 | 2026-09-22 | Hedge Fund Tips with Tom Hayes RSS onboarding (Anchor Patterns 4+5; 359/359 downloaded; long-episode proof; directory deferred) | [hedge-fund-tips-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hedge-fund-tips-ingestion.md) |
+| 2026-09-24 | Pipeline dashboard users screen (test-user exclusion, paging, onboarding columns, signup bars) | [pipeline-dashboard-users.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/pipeline-dashboard-users.md) |
 | 2026-05-15 | Pytest `not expensive` green track (permanent reference; suite alignment) | [pytest-not-expensive-green.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/pytest-not-expensive-green.md) |
 | 2026-05-14 | ContentItem deduplication, ingest guard, BQ apply pipeline | [contentitem-dedupe-and-cleanup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/contentitem-dedupe-and-cleanup.md) — runbook [contentitem-dedupe-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/contentitem-dedupe-runbook.md) |
 | 2026-05-14 | Compound and Friends (Pippa) RSS onboarding + SI allowlist extension | [compound-and-friends-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/compound-and-friends-ingestion.md) |

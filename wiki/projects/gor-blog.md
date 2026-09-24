@@ -4,7 +4,7 @@ title: "gor-blog"
 product: finfluencer-trade
 project: gor-blog
 created: 2026-04-06
-updated: 2026-08-22
+updated: 2026-09-24
 tags: [blog, mkdocs, content, finfluencer, research, articles, newsletter, convertkit]
 ---
 
@@ -77,7 +77,7 @@ New articles about finfluencers or the platform are written directly as posts in
 
 ## Growth and product strategy
 
-**[[synthesis/gtm-growth]]** — living GTM / growth hub (priorities and live channels). Product planning index: [[products/finfluencer-trade]] § Planning and strategy. The **live cross-channel Cramer campaign log** (permalinks, metrics, variants) is [`research/cramer/promotion/cramer-study-launch-campaign.md`](file:///Users/andreskull/gor-blog/research/cramer/promotion/cramer-study-launch-campaign.md) *(supersedes the old `linkedin_promotion_plan.md` path)*.
+**[[synthesis/gtm-growth]]** — living GTM / growth hub (priorities and live channels). Product planning index: [[products/finfluencer-trade]] § Planning and strategy. **Cramer v1 is closed.** Catalog: [`research/cramer/CONSERVATION.md`](file:///Users/andreskull/gor-blog/research/cramer/CONSERVATION.md). The May 2026 campaign log ([`cramer-study-launch-campaign.md`](file:///Users/andreskull/gor-blog/research/cramer/promotion/cramer-study-launch-campaign.md)) is a frozen record.
 
 ## Required elements on every blog post
 
