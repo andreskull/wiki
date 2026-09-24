@@ -4,7 +4,7 @@ title: "finfluencer.trade"
 product: finfluencer-trade
 project: null
 created: 2026-04-06
-updated: 2026-09-18
+updated: 2026-09-24
 tags: [finfluencer, finance, pipeline, dagster, blog, tracking, linkedin, stripe, entitlement, charts, clarity, session-replay, feedback, lcp, ticker, lookup, onboarding, holding-period]
 ---
 
@@ -27,9 +27,9 @@ The platform follows financial influencers (podcasters, YouTubers, analysts) and
 | Repo | Role |
 |---|---|
 | [[projects/gor_dagster]] | Data pipeline — ingestion, transcription, speaker attribution, facts extraction, signal generation. The core backend. |
-| [[projects/gor-blog]] | Public MkDocs site — blog, directory, articles; private **`research/cramer/`** for Cramer internal export scripts and specs (public data kit: [[projects/cramer-mad-money-research]]) |
+| [[projects/gor-blog]] | Public MkDocs site — blog, directory, articles; private **`research/cramer/`** (v1 closed 2026-09-24; catalog [`CONSERVATION.md`](file:///Users/andreskull/gor-blog/research/cramer/CONSERVATION.md)) |
 | [[projects/finfluencer-tracker]] | App + landing on Vercel — auth, billing, leaderboards, **user-default holding period** (**2026-09-16** [[concepts/user-default-holding-period]]); **post-signup onboarding** (**2026-08-31** / wrap **2026-09-09** [[concepts/post-signup-onboarding]]); **finfluencer ticker lookup** (**2026-09-05** [[concepts/finfluencer-ticker-pick-lookup]]); cumulative charts / `/compare` / export (**2026-08-04** [[concepts/cumulative-performance-charts]]); marketing **Explore** nav to Leaderboard / Compare / Shows (**2026-08-17**); Reddit pixel `SignUp` (**2026-08-17** [[concepts/reddit-ads-conversion-tracking]]); **Clarity session replay** (**2026-08-18** [[concepts/session-replay-analytics]]); `/feedback` **Declined + admin note** (**2026-08-22** [[concepts/feedback-roadmap]]); **mobile CWV** lab LCP under 2.5 s (**2026-08-22** [[concepts/core-web-vitals-mobile]]); **field CWV + DATA_READY** (**2026-09-08** [[concepts/core-web-vitals-field]]); entitlement SSOT **2026-07-27** ([[concepts/subscription-entitlement-ssot]]) |
-| [[projects/cramer-mad-money-research]] | Public reproducibility + working paper (SSRN 6643379) — Cramer / *Mad Money* 2018–2024 |
+| [[projects/cramer-mad-money-research]] | Public v1 kit + working paper (SSRN 6643379) — Cramer / *Mad Money* 2018–2024, frozen 2026-09-24 |
 
 ## Architecture summary
 

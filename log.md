@@ -233,7 +233,15 @@ Recorded the header filter and the decision to leave `NameFilterInput` shared (p
 
 Closed the May 2026 Cramer promotion as a frozen record. Catalog: `gor-blog/research/cramer/CONSERVATION.md`. Pointed [[projects/gor-blog]], [[synthesis/gtm-growth]], and `gor-blog/WIKI.md` at it. v2 re-analysis not started.
 
+## [2026-09-24] sync | gor-blog — Cramer v1 cleanup
+
+Deleted `gor-blog/features/cramer-linkedin-promotion/`. Findings inventory, owned-assets checklist, and campaign log labeled frozen. Catalog remains `research/cramer/CONSERVATION.md`.
+
 ## [2026-09-24] sync | gor_dagster — Pipeline dashboard users screen
 
 Recorded the local Users page on [[projects/gor_dagster]]: production test-user ids in a gitignored JSON file, onboarding columns from `user_onboarding_preferences`, daily signup bars with a 1Y/6M/3M/1M window. Updated [[overview]] and [[index]]. Permanent doc `docs/architecture/features/pipeline-dashboard-users.md`. Temp `docs/features/pipeline-dashboard-users/` removed. No new concept page.
+
+## [2026-09-24] sync | gor-blog + cramer-mad-money-research — Cramer v1 closed
+
+Recorded the conservation catalog (`gor-blog/research/cramer/CONSERVATION.md`) on [[projects/gor-blog]], [[projects/cramer-mad-money-research]], [[products/finfluencer-trade]], [[sources/2026-04-07-cramer-mad-money-performance-methodology]], [[concepts/blog-post-cta-pattern]], [[synthesis/gtm-growth]], [[overview]], and [[index]]. v1 blog, SSRN 6643379, and the public kit stay published. Promotion files are frozen. `features/cramer-linkedin-promotion/` is deleted. A data-quality re-run is not started; tag the public repo before replacing `data/`.
 

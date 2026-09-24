@@ -4,7 +4,7 @@ title: "Cramer / Mad Money — performance & methodology (internal research)"
 product: finfluencer-trade
 project: gor-blog
 created: 2026-04-07
-updated: 2026-04-27
+updated: 2026-09-24
 tags: [cramer, mad-money, finfluencer, methodology, academic, inverse-cramer, ssrn]
 ---
 
@@ -37,6 +37,7 @@ Long-form synthesis tying academic event studies (e.g. Engelberg et al.), AAP / 
 
 ## Contradictions / open points
 
+- **v1 is closed (2026-09-24).** The public paper and SSRN 6643379 are the claim authority. Private catalog: [`CONSERVATION.md`](file:///Users/andreskull/gor-blog/research/cramer/CONSERVATION.md). Do not treat `research/cramer/promotion/` as a live campaign.
 - The **vault** copy in `raw/papers` may still read like an early research memo; the **cited** working paper is the repo Markdown/PDF and **SSRN** PDF (April 2026).
 - Some placeholders or draft markers may remain in the archived raw file — the public paper is the authority for claims and counts.
 - Images in the original may be external references — figures in the public repo are canonical for the paper.

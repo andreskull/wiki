@@ -4,7 +4,7 @@ title: "cramer-mad-money-research"
 product: finfluencer-trade
 project: cramer-mad-money-research
 created: 2026-04-16
-updated: 2026-04-27
+updated: 2026-09-24
 tags: [cramer, mad-money, research, reproducibility, csv, finfluencer, public-data, ssrn, working-paper]
 ---
 
@@ -32,11 +32,13 @@ Ships the **published dataset and analysis code** so third parties can verify me
 - **Data:** CSV, Parquet; no database access required to reproduce analysis from the bundled snapshots
 - **Hosting:** Public GitHub; PDF built with `pandoc` + `xelatex` via `scripts/build_pdf.py` (optional)
 
-## Current status (2026-04-25)
+## Current status
 
-- **SSRN** abstract approved; PDF revised on SSRN to match the repo build (SSRN line on title page, Data Availability).
+**v1 frozen (2026-09-24).** This repo is the published 2018–2024 kit. Do not replace `data/`, the paper, or the figures in place. Tag the repo (for example `v1-2018-2024`) before a later export. A data-quality re-run is not started. Catalog: [`gor-blog/research/cramer/CONSERVATION.md`](file:///Users/andreskull/gor-blog/research/cramer/CONSERVATION.md). A new version is a new post and an SSRN revision or a new abstract, with this URL and abstract id still cited.
+
+- **SSRN** abstract approved (April 2026); PDF revised on SSRN to match the repo build (SSRN line on title page, Data Availability).
 - **ORCID** — author added the work; optional Scholar profile claim remains.
-- **Private** pipeline exports and spec drafts: [[projects/gor-blog]] `research/cramer/`.
+- **Private** pipeline exports and the conservation catalog: [[projects/gor-blog]] `research/cramer/`.
 
 ## Repo path
 
@@ -47,7 +49,7 @@ Ships the **published dataset and analysis code** so third parties can verify me
 | Repo | Role |
 |------|------|
 | [[projects/gor_dagster]] | BigQuery view `CramerResearchSnapshot_2018_2024`, deploy script `scripts/deploy_cramer_research_snapshot.py` |
-| [[projects/gor-blog]] | MkDocs site; **private** `research/cramer/` — BigQuery export scripts, `SPEC_*.md`, `SSRN_submission.md` (no archived extras folder; see git history) |
+| [[projects/gor-blog]] | MkDocs site; **private** `research/cramer/` — export scripts, specs, SSRN admin, frozen promotion archive, [`CONSERVATION.md`](file:///Users/andreskull/gor-blog/research/cramer/CONSERVATION.md) |
 | This repo | Static CSV/Parquet + **analysis-only** scripts + paper (Markdown + PDF) — no warehouse credentials |
 
 ## Wiki integration

@@ -32,11 +32,11 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | Page | Product | Status |
 |------|---------|--------|
 | [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **pipeline dashboard users screen** wrapped **2026-09-24** (local test-user marks; onboarding columns); **Hedge Fund Tips with Tom Hayes** wrapped **2026-09-22** (359/359 downloaded; directory deferred); **Google Ads PMax creatives** wrapped **2026-09-04** (V1 + V4 live); **The Intrinsic Value Podcast** **2026-08-22**; **source quotes** + **LinkedIn outreach** **2026-08-11**; Gemini 3.5 Flash-Lite SI/FE **2026-07-27** |
-| [[wiki/projects/gor-blog]] | finfluencer.trade | Active — platform-update post + Kit send **2026-08-14**; directory Covered + Investing Unscripted **2026-07-27**; CTA pattern; apex `/api/subscribe`; `api/newsletter/` |
+| [[wiki/projects/gor-blog]] | finfluencer.trade | Active — **Cramer v1 closed** **2026-09-24** (catalog `research/cramer/CONSERVATION.md`); platform-update post + Kit send **2026-08-14**; CTA pattern; apex `/api/subscribe` |
 | [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **sector name filter at every width** **2026-09-24**; **user-default holding period** **2026-09-16**; **post-signup onboarding** **2026-09-09**; **field CWV + DATA_READY** **2026-09-08**; **finfluencer ticker lookup** **2026-09-05**; **Google Ads PMax creatives** **2026-09-04**; **GA4 instrumentation gap fixed + BigQuery export** **2026-09-02**; **mobile CWV** **2026-08-22**; **feedback Declined + admin note** **2026-08-22**; **Clarity session replay** **2026-08-18**; **Explore nav** **2026-08-17**; **Reddit Ads pixel** **2026-08-17**; **cumulative performance charts** **2026-08-04**; **subscription entitlement SSOT** **2026-07-27** |
 | [[wiki/projects/rattaproff]] | rattaproff | Operational — category URL export from Woo slugs **2026-08-14**; gsheet sync safety **2026-07-13**; permalink backfill + gsheet restore (Jun 2026); 20 storefronts |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Active |
-| [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | Public kit + SSRN 6643379 — CSVs, scripts, paper |
+| [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | v1 frozen **2026-09-24** — public kit + SSRN 6643379; do not overwrite `data/` |
 | [[wiki/projects/botastico-api]] | botastico | Active — chat image attachments **2026-05-18** ([feature doc](file:///Users/andreskull/botastico-api/docs/architecture/features/botastico-chat-image-attachments.md)); Cloud Run Flask; `slack_chat_logs` Pub/Sub consumer |
 | [[wiki/projects/botastico]] | botastico | Active — GCP LB SSL certs + monitoring **2026-07-15** (July widget outage); `chatapps`/`assets` auto-renew; [[concepts/botastico-ssl-certificates]] |
 
@@ -109,7 +109,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Description |
 |------|-------------|
-| [[wiki/synthesis/gtm-growth]] | Living GTM / growth hub for finfluencers.trade — live channels, open priorities, doc map (2026-09-18) |
+| [[wiki/synthesis/gtm-growth]] | Living GTM / growth hub for finfluencers.trade — live channels, open priorities, doc map (Cramer v1 frozen 2026-09-24) |
 | [[wiki/synthesis/lint-finfluencer-trade-2026-04-06]] | Wiki lint — finfluencer.trade product scope (2026-04-06) |
 | [[wiki/synthesis/lint-gor-blog-2026-04-06]] | Wiki lint — gor-blog project (2026-04-06) |
 | [[wiki/synthesis/lint-finfluencer-tracker-2026-04-06]] | Wiki lint — finfluencer-tracker project (2026-04-06) |

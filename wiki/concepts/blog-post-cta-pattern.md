@@ -4,7 +4,7 @@ title: "Blog post CTA pattern"
 product: finfluencer-trade
 project: gor-blog
 created: 2026-05-05
-updated: 2026-08-14
+updated: 2026-09-24
 tags: [blog, cta, conversion, funnel, growth, mkdocs]
 ---
 
@@ -24,7 +24,7 @@ The Cramer post launch on 2026-05-04 produced 25 article landings. Funnel explor
 | https://www.linkedin.com/ | 2 | 0 | 0% |
 | https://www.facebook.com/ | 1 | 0 | 0% |
 
-The 92% abandonment was uniform across channels. Even Reddit — the strongest acquisition channel — had 0 of 13 desktop visitors progress. No amount of channel tuning solves this; the article itself needs clear next-step CTAs. Source: `gor-blog/research/cramer/promotion/cramer-study-launch-campaign.md` § *Day 1 learnings + plan revision*.
+The 92% abandonment was uniform across channels. Even Reddit — the strongest acquisition channel — had 0 of 13 desktop visitors progress. No amount of channel tuning solves this; the article itself needs clear next-step CTAs. Source: `gor-blog/research/cramer/promotion/cramer-study-launch-campaign.md` § *Day 1 learnings + plan revision* (frozen v1 record; catalog [`CONSERVATION.md`](file:///Users/andreskull/gor-blog/research/cramer/CONSERVATION.md)).
 
 ## Required elements (every new post)
 
