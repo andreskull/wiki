@@ -245,3 +245,11 @@ Recorded the local Users page on [[projects/gor_dagster]]: production test-user 
 
 Recorded the conservation catalog (`gor-blog/research/cramer/CONSERVATION.md`) on [[projects/gor-blog]], [[projects/cramer-mad-money-research]], [[products/finfluencer-trade]], [[sources/2026-04-07-cramer-mad-money-performance-methodology]], [[concepts/blog-post-cta-pattern]], [[synthesis/gtm-growth]], [[overview]], and [[index]]. v1 blog, SSRN 6643379, and the public kit stay published. Promotion files are frozen. `features/cramer-linkedin-promotion/` is deleted. A data-quality re-run is not started; tag the public repo before replacing `data/`.
 
+## [2026-09-25] wrapup | finfluencer-tracker | UI accessibility and test reliability
+
+Wrapped `ui-accessibility-and-test-reliability/`. Permanent record at `finfluencer-tracker/docs/architecture/features/ui-accessibility-and-test-reliability.md`. Button fill `#1f812d`; alpha `#51ad57` / `#e36b65`. `text-primary` uses the alpha green. Contrast is enforced. Feature folder removed. Promoted to production the same day.
+
+## [2026-09-25] sync | finfluencer-tracker — performance palette
+
+Recorded the two colour tokens and the waived local-matrix gate on [[projects/finfluencer-tracker]], [[products/finfluencer-trade]], [[overview]], and [[index]]. No new concept page.
+

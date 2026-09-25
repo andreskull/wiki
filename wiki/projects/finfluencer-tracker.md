@@ -4,7 +4,7 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-09-24
+updated: 2026-09-25
 tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard]
 ---
 
@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-09-24)
+## Current status (2026-09-25)
+
+**Performance palette live (wrapped and promoted 2026-09-25)**: Button and badge fill is `#1f812d` (`--primary`). Positive and negative alpha — text, chart fills, Long/Short badges — are `#51ad57` and `#e36b65` (`--positive`, `--negative`). `text-primary` uses the lighter green. `--destructive` stays error chrome. `color-contrast` is enforced; HowItWorks step numerals are the only exemption (`data-contrast-exempt`). Leaderboard names wrap to two lines; the profile name uses `break-words`. A full local Playwright matrix is not a release gate. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ui-accessibility-and-test-reliability.md).
 
 **Sector leaderboard name filter at every width (wrapped 2026-09-24)**: On `/leaderboard/sectors` the name column header shows the `?q=` filter from the `md` breakpoint up, for finfluencers and shows. It filters rows already loaded. The desktop top bar still opens `/leaderboard`. Visibility is a class on the sector page, not a change to the shared `NameFilterInput`, so `/leaderboard` and `/shows` still hide their filter on a wide screen. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/sector-leaderboard-wide-name-filter.md).
 
@@ -103,6 +105,7 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [post-signup-onboarding](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/post-signup-onboarding.md) | Auth-callback onboarding detour; skippable wizard; pending dest (**2026-09-09**) |
 | [user-default-holding-period](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/user-default-holding-period.md) | System start 6 months; Settings pin; URL omit uses system default (**2026-09-16**) |
 | [sector-leaderboard-wide-name-filter](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/sector-leaderboard-wide-name-filter.md) | Name filter in the sector table header at every width; top bar still opens `/leaderboard` (**2026-09-24**) |
+| [ui-accessibility-and-test-reliability](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ui-accessibility-and-test-reliability.md) | Button fill vs alpha colours; contrast enforced; phone name wrap (**2026-09-25**) |
 | [daily-marks-plan](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/daily-marks-plan.md) | Parked: true daily portfolio marks (future) |
 | [subscription-entitlement-ssot](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/subscription-entitlement-ssot.md) | Profile SSOT, reconcile, RLS close (**2026-07-27**) |
 | [landing-conversion-improvements](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-conversion-improvements.md) | Public funnel, SEO, anon RPC pattern (**2026-07-10**) |
@@ -114,6 +117,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-09-25 | UI accessibility and test reliability | [ui-accessibility-and-test-reliability.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ui-accessibility-and-test-reliability.md) |
 | 2026-09-24 | Sector leaderboard wide-screen name filter | [sector-leaderboard-wide-name-filter.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/sector-leaderboard-wide-name-filter.md) |
 | 2026-09-16 | User-default holding period | [user-default-holding-period.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/user-default-holding-period.md) |
 | 2026-09-09 | Post-signup onboarding | [post-signup-onboarding.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/post-signup-onboarding.md) |
@@ -136,6 +140,9 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-09-25 | Button fill and alpha colours are separate tokens; `text-primary` uses `--positive` | `#1f812d` clears white on a button (4.67:1) and fails as small text. Alpha uses `#51ad57` / `#e36b65`. |
+| 2026-09-25 | `color-contrast` stays on; HowItWorks numerals are the only exemption | They are a watermark: `text-border`, `aria-hidden`, `data-contrast-exempt`. |
+| 2026-09-25 | A full local Playwright matrix is not a release gate | Every browser at once against one server fails a different handful of waits each pass. CI uses one worker. |
 | 2026-09-24 | Sector name filter visibility is a class on the sector page, not a change to `NameFilterInput` | `/leaderboard` and `/shows` keep a phone-only filter. The top bar still opens `/leaderboard`. |
 | 2026-09-16 | System holding-period start is `DEFAULT_HORIZON = '6m'` on every product view | Unifies the old 1m/1y split; Settings is the only writer |
 | 2026-09-16 | URL omit uses the **system** default, not the signed-in save | A guest opening a copied clean URL gets 6m, not someone else’s pin |

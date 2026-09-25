@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-09-22
+updated: 2026-09-25
 ---
 
 # Wiki Index
@@ -33,7 +33,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 |------|---------|--------|
 | [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **pipeline dashboard users screen** wrapped **2026-09-24** (local test-user marks; onboarding columns); **Hedge Fund Tips with Tom Hayes** wrapped **2026-09-22** (359/359 downloaded; directory deferred); **Google Ads PMax creatives** wrapped **2026-09-04** (V1 + V4 live); **The Intrinsic Value Podcast** **2026-08-22**; **source quotes** + **LinkedIn outreach** **2026-08-11**; Gemini 3.5 Flash-Lite SI/FE **2026-07-27** |
 | [[wiki/projects/gor-blog]] | finfluencer.trade | Active — **Cramer v1 closed** **2026-09-24** (catalog `research/cramer/CONSERVATION.md`); platform-update post + Kit send **2026-08-14**; CTA pattern; apex `/api/subscribe` |
-| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **sector name filter at every width** **2026-09-24**; **user-default holding period** **2026-09-16**; **post-signup onboarding** **2026-09-09**; **field CWV + DATA_READY** **2026-09-08**; **finfluencer ticker lookup** **2026-09-05**; **Google Ads PMax creatives** **2026-09-04**; **GA4 instrumentation gap fixed + BigQuery export** **2026-09-02**; **mobile CWV** **2026-08-22**; **feedback Declined + admin note** **2026-08-22**; **Clarity session replay** **2026-08-18**; **Explore nav** **2026-08-17**; **Reddit Ads pixel** **2026-08-17**; **cumulative performance charts** **2026-08-04**; **subscription entitlement SSOT** **2026-07-27** |
+| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **performance palette** **2026-09-25**; **sector name filter at every width** **2026-09-24**; **user-default holding period** **2026-09-16**; **post-signup onboarding** **2026-09-09**; **field CWV + DATA_READY** **2026-09-08**; **finfluencer ticker lookup** **2026-09-05**; **Google Ads PMax creatives** **2026-09-04**; **GA4 instrumentation gap fixed + BigQuery export** **2026-09-02**; **mobile CWV** **2026-08-22**; **feedback Declined + admin note** **2026-08-22**; **Clarity session replay** **2026-08-18**; **Explore nav** **2026-08-17**; **Reddit Ads pixel** **2026-08-17**; **cumulative performance charts** **2026-08-04**; **subscription entitlement SSOT** **2026-07-27** |
 | [[wiki/projects/rattaproff]] | rattaproff | Operational — category URL export from Woo slugs **2026-08-14**; gsheet sync safety **2026-07-13**; permalink backfill + gsheet restore (Jun 2026); 20 storefronts |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Active |
 | [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | v1 frozen **2026-09-24** — public kit + SSRN 6643379; do not overwrite `data/` |
