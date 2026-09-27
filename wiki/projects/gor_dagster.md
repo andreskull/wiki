@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-09-24
+updated: 2026-09-27
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, linkedin, gemini, podcast-rss, outreach, source-quote, google-ads]
 ---
 
@@ -402,7 +402,7 @@ Key rule: all Python code must be written to `.py` files before execution — ne
 | ContentItem load-job idempotency | RSS batch dedupe + `content_item_insert_already_present` guard prevents duplicate physical rows on load-job retry (2026-06-30). Extends [contentitem-dedupe-and-cleanup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/contentitem-dedupe-and-cleanup.md) |
 | CNBC IPO scoreboard (SPCX v1) | BQ snapshot mats → Supabase RPC `get_ipo_scoreboard_page`; since-call perf SQL; public `/cnbc-ipo`; **kept picks only** in UI; social + blog deferred. [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md) |
 | LinkedIn enrichment (trust-tiered) | Discovery never auto-writes profiles; trusted-only Supabase sync; published audit 100% trusted-or-none; no third-party LinkedIn API (2026-07-23). [[concepts/linkedin-enrichment]] |
-| Google Ads creatives (manual PMax) | Resolve in Python, render in tracker Chromium, write-once GCS. Rank featured subject on **scored picks at `1y`**, not alpha. No Dagster schedule, no Google Ads API. Live run **`2026-09-04T0804Z`** (V1 + V4). [[concepts/google-ads-creative-assets]] |
+| Google Ads creatives (manual PMax) | Resolve in Python, render in tracker Chromium, write-once GCS. Rank featured subject on scored picks, not alpha. Subject period moved from `1y` to `6m` on **2026-09-27** (`HOLDING_PERIOD` in `build_google_ads_variants.py` — working tree only at wrapup). Live run **`2026-09-04T0804Z`** (V1 + V4) was still `1y`. No Dagster schedule, no Google Ads API. [[concepts/google-ads-creative-assets]] |
 
 ---
 

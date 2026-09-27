@@ -261,3 +261,11 @@ Wrapped `ads-improvements/`. Permanent record at `finfluencer-tracker/docs/archi
 
 Recorded Search RSA stills vs PMax overlay carve-out on [[projects/finfluencer-tracker]], [[concepts/google-ads-creative-assets]], [[products/finfluencer-trade]], [[synthesis/gtm-growth]], [[overview]], and [[index]]. No new concept page.
 
+## [2026-09-27] wrapup | finfluencer-tracker | investor positioning
+
+Wrapped `investor-positioning-landing-ads/`. Permanent record at `finfluencer-tracker/docs/architecture/features/investor-positioning-landing-ads.md`. Homepage and ads at a 1-week to 1-year hold; teasers and the ads subject at 6 months. Feature folder removed. Ops checklist stays at `docs/ops/investor-positioning-ads-checklist.md`. `gor_dagster` `HOLDING_PERIOD = "6m"` was still uncommitted at wrapup.
+
+## [2026-09-27] sync | finfluencer-tracker
+
+Recorded investor positioning on [[projects/finfluencer-tracker]], [[concepts/google-ads-creative-assets]], [[projects/gor_dagster]], [[products/finfluencer-trade]], [[synthesis/gtm-growth]], [[overview]], and [[index]]. No new concept page.
+
