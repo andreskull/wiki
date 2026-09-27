@@ -4,7 +4,7 @@ title: "Finfluencers.trade GTM / growth hub"
 product: finfluencer-trade
 project: null
 created: 2026-09-18
-updated: 2026-09-24
+updated: 2026-09-27
 tags: [gtm, growth, marketing, ads, outreach, newsletter]
 ---
 
@@ -57,7 +57,7 @@ TikTok (and most Shorts feeds) skew younger, entertainment-first, short attentio
 
 | Channel / surface | Notes / wiki |
 |---|---|
-| Google Ads Search + PMax | Conversions wired; PMax creatives V1+V4 live — [[concepts/google-ads-conversion-tracking]], [[concepts/google-ads-creative-assets]] |
+| Google Ads Search + PMax | Conversions wired; PMax creatives V1+V4 live; Search RSA studio stills Eligible **2026-09-27** (one square still Pending) — [[concepts/google-ads-conversion-tracking]], [[concepts/google-ads-creative-assets]] |
 | Reddit Ads | Conversions live; Traffic Max paused — [[concepts/reddit-ads-conversion-tracking]] |
 | PeerPush | Campaign existed; **renewed / currently active** |
 | F5Bot mention monitoring | Alerts by email (Reddit primary). Apps Script triage/drafts in `gor-blog/_internal/f5bot-automation/` — **built, unsatisfactory → rebuild** |

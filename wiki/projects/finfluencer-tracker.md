@@ -4,7 +4,7 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-09-25
+updated: 2026-09-27
 tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard]
 ---
 
@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-09-25)
+## Current status (2026-09-27)
+
+**Search RSA image assets wrapped (2026-09-27)**: Studio-show stills on Search — Finfluencer Leaderboard (`24038241586`) → Assets → Images. Five Eligible, women square (`search-panel-women-1200x1200`) still Pending — Under review, zero Disapproved. DoD met. Durable copies in `docs/ops/google-ads-search-images/`. PMax harness JPEGs stay off Search (overlay carve-out is PMax-only). No tracker code. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ads-improvements.md).
 
 **Performance palette live (wrapped and promoted 2026-09-25)**: Button and badge fill is `#1f812d` (`--primary`). Positive and negative alpha — text, chart fills, Long/Short badges — are `#51ad57` and `#e36b65` (`--positive`, `--negative`). `text-primary` uses the lighter green. `--destructive` stays error chrome. `color-contrast` is enforced; HowItWorks step numerals are the only exemption (`data-contrast-exempt`). Leaderboard names wrap to two lines; the profile name uses `break-words`. A full local Playwright matrix is not a release gate. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ui-accessibility-and-test-reliability.md).
 
@@ -101,6 +103,8 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [core-web-vitals-mobile](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md) | Mobile LCP/INP delivery: splitting, fonts, cache, idle third-party (**2026-08-22**; lab-vs-field amended **2026-09-08**) |
 | [core-web-vitals-field](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-field.md) | First-party field RUM, DATA_READY, field-decides-done (**2026-09-08**) |
 | [google-ads-creative-assets](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md) | PMax images + video from the shipped encoder; banner / overlay / outro (**2026-09-04**) |
+| [ads-improvements](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ads-improvements.md) | Search RSA studio stills; overlay carve-out is PMax-only; stills in `docs/ops/google-ads-search-images/` (**2026-09-27**) |
+| [customer-list-ad-audiences](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/customer-list-ad-audiences.md) | Registered-user Customer Match; Monday CSV refresh; Reddit parked (**2026-09-22**) |
 | [finfluencer-ticker-pick-lookup](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/finfluencer-ticker-pick-lookup.md) | Finfluencer ticker lookup + ranked-list RPC; two box-plot charts retired (**2026-09-05**) |
 | [post-signup-onboarding](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/post-signup-onboarding.md) | Auth-callback onboarding detour; skippable wizard; pending dest (**2026-09-09**) |
 | [user-default-holding-period](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/user-default-holding-period.md) | System start 6 months; Settings pin; URL omit uses system default (**2026-09-16**) |
@@ -117,6 +121,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-09-27 | Ads improvements (Search RSA image assets) | [ads-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ads-improvements.md) |
 | 2026-09-25 | UI accessibility and test reliability | [ui-accessibility-and-test-reliability.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ui-accessibility-and-test-reliability.md) |
 | 2026-09-24 | Sector leaderboard wide-screen name filter | [sector-leaderboard-wide-name-filter.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/sector-leaderboard-wide-name-filter.md) |
 | 2026-09-16 | User-default holding period | [user-default-holding-period.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/user-default-holding-period.md) |
@@ -140,6 +145,8 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-09-27 | Search RSA images are not PMax harness JPEGs | Google's overlay carve-out is PMax-only. Chart chrome and in-pixel UI text fail Search as "Text or graphic overlays". |
+| 2026-09-27 | No chrome-stripped Search exporter; no harness change for Search stills | That would be a new encoder contract. Search assets are studio photographs in `docs/ops/google-ads-search-images/`. |
 | 2026-09-25 | Button fill and alpha colours are separate tokens; `text-primary` uses `--positive` | `#1f812d` clears white on a button (4.67:1) and fails as small text. Alpha uses `#51ad57` / `#e36b65`. |
 | 2026-09-25 | `color-contrast` stays on; HowItWorks numerals are the only exemption | They are a watermark: `text-border`, `aria-hidden`, `data-contrast-exempt`. |
 | 2026-09-25 | A full local Playwright matrix is not a release gate | Every browser at once against one server fails a different handful of waits each pass. CI uses one worker. |
@@ -225,6 +232,7 @@ Shipped MVP scope: [`gor_dagster/docs/MVP_MASTER_PLAN.md`](file:///Users/andresk
 - IPO scoreboard access model changes
 - Show-profile ticker lookup; per-pick history under the summary; `?ticker=` deep link; TopBar ticker search ([[concepts/finfluencer-ticker-pick-lookup]])
 - True daily portfolio marks (parked — [daily-marks-plan.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/daily-marks-plan.md)); show↔show compare; non-S&P benchmarks
+- Search RSA women square still Pending at wrapup (2026-09-27); glance on the next `ads-performance-morning-review` A9 pass — do not replace unless Disapproved ([ads-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ads-improvements.md))
 - Reddit Conversions API + Advanced Matching hashed email (pixel + privacy clause live; [[concepts/reddit-ads-conversion-tracking]])
 - Official Clarity↔GA4 OAuth dashboard link (playback URLs in GA4); campaign tags already on recordings ([[concepts/session-replay-analytics]])
 - Feedback note history / threading / voter-notify; reconstructing deleted submitter accounts; declined-last ordering must move server-side if the board paginates ([[concepts/feedback-roadmap]])
@@ -251,6 +259,7 @@ Vault indexes **WIKI.md** and all of **`docs/`** except **`docs/features/`**. Ru
 - [[concepts/reddit-ads-conversion-tracking]]
 - [[concepts/google-ads-conversion-tracking]]
 - [[concepts/google-ads-creative-assets]]
+- [ads-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ads-improvements.md)
 - [[concepts/finfluencer-ticker-pick-lookup]]
 - [[concepts/cumulative-performance-charts]]
 - [[concepts/subscription-entitlement-ssot]]

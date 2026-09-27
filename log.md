@@ -253,3 +253,11 @@ Wrapped `ui-accessibility-and-test-reliability/`. Permanent record at `finfluenc
 
 Recorded the two colour tokens and the waived local-matrix gate on [[projects/finfluencer-tracker]], [[products/finfluencer-trade]], [[overview]], and [[index]]. No new concept page.
 
+## [2026-09-27] wrapup | finfluencer-tracker | ads-improvements
+
+Wrapped `ads-improvements/`. Permanent record at `finfluencer-tracker/docs/architecture/features/ads-improvements.md`. Search RSA studio stills (five Eligible, one Pending). Durable JPEGs in `docs/ops/google-ads-search-images/`. Feature folder removed. No app code.
+
+## [2026-09-27] sync | finfluencer-tracker
+
+Recorded Search RSA stills vs PMax overlay carve-out on [[projects/finfluencer-tracker]], [[concepts/google-ads-creative-assets]], [[products/finfluencer-trade]], [[synthesis/gtm-growth]], [[overview]], and [[index]]. No new concept page.
+

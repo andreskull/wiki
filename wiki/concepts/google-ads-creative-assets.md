@@ -4,7 +4,7 @@ title: "Google Ads creative assets"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-27
 tags: [google-ads, pmax, creatives, charts, gcs, marketing]
 ---
 
@@ -22,12 +22,12 @@ This is **creative production**, not conversion measurement. Measurement lives i
 
 ## Relevance
 
-Closes the PMax video/image gap so Google stops auto-generating video from leftover assets. Search RSA image assets stay out of scope (overlay policy excepts only PMax).
+Closes the PMax video/image gap so Google stops auto-generating video from leftover assets. Search RSA is a **separate asset class**: Google's overlay carve-out is PMax-only. Chart chrome and in-pixel UI text fail Search as "Text or graphic overlays". Live Search stills (wrapped **2026-09-27**) are studio photographs in `finfluencer-tracker/docs/ops/google-ads-search-images/` — not harness JPEGs, not a chrome-stripped exporter. See [ads-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ads-improvements.md).
 
 ## Which projects use it
 
 - [[projects/gor_dagster]] — resolve (`build_google_ads_variants.py`), write-once archive (`archive_google_ads_run.py`), runbook
-- [[projects/finfluencer-tracker]] — Playwright harness, cards, banners, additive encoder options; reuses [[concepts/cumulative-performance-charts]]
+- [[projects/finfluencer-tracker]] — Playwright harness, cards, banners, additive encoder options; reuses [[concepts/cumulative-performance-charts]]. Search RSA stills are ops files only (no harness).
 
 ## Key rules
 
@@ -40,13 +40,14 @@ Closes the PMax video/image gap so Google stops auto-generating video from lefto
 
 Ops: [google-ads-asset-refresh.md](file:///Users/andreskull/gor_dagster/docs/runbooks/google-ads-asset-refresh.md)
 
-Permanent docs: [gor_dagster](file:///Users/andreskull/gor_dagster/docs/architecture/features/google-ads-creative-assets.md), [finfluencer-tracker](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md)
+Permanent docs: [gor_dagster](file:///Users/andreskull/gor_dagster/docs/architecture/features/google-ads-creative-assets.md), [finfluencer-tracker PMax](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md), [finfluencer-tracker Search RSA](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ads-improvements.md)
 
 ## Related pages
 
 - [[concepts/cumulative-performance-charts]]
 - [[concepts/linkedin-outreach]] — sibling harness; outreach renderer has not yet adopted the captcha-safe ops session
 - [[concepts/google-ads-conversion-tracking]] — measurement, not creatives
+- [ads-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ads-improvements.md) — Search RSA stills (not this PMax encoder)
 - [[entities/gcs]]
 - [[projects/gor_dagster]]
 - [[projects/finfluencer-tracker]]
