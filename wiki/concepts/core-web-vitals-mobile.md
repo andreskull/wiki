@@ -4,7 +4,7 @@ title: "Mobile Core Web Vitals"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-08-22
-updated: 2026-09-08
+updated: 2026-09-28
 tags: [lcp, inp, performance, vercel, vite, search-console, ga4, bigquery, analytics]
 ---
 
@@ -39,6 +39,9 @@ Production lab (slow4g, Pixel 5, cold) after PR #68 + PR #70: `/` **2.03 s** (wa
 - A skeleton with zero text nodes is an LCP tax. Profile headers paint from the slug / first row; SSR/prefetch is a later architecture change.
 - Never `vercel deploy` a branch. Verify a preview by `deploymentId` and commit SHA, not by a Ready badge.
 - Do not resubmit Search Console Validate Fix on LCP > 2.5 s. First-party field p75 is the done gate ([[concepts/core-web-vitals-field]]).
+- `supabase-js` constructs realtime and storage inside `createClient`. The app aliases those packages to `src/lib/supabaseStubs/` (**2026-09-28**, on `development`, not yet production). Delete the two alias lines in `vite.config.ts` and `vitest.config.ts` to restore the real clients. Do not hand-build a client.
+- The inline bootstrap modulepreloads landing chunks only when the path is `/`. A bare `import.meta.env` inlines the whole Vercel env object into `ad-shared`.
+- Select and the Radix overlay stack stay in `app-core`. The profile body still loads with the first card. That leftover cut is at least 93 KB. Record: [profile-leaderboard-script-split.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/profile-leaderboard-script-split.md).
 
 ## Field verification instrumentation (GA4 + BigQuery)
 
@@ -52,6 +55,7 @@ to `gurus-on-record`). See [[decisions/ga4-instrumentation-registration-2026-09]
 ## Related concepts / sources
 
 - Permanent doc: [core-web-vitals-mobile.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md)
+- Script-split follow-up: [profile-leaderboard-script-split.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/profile-leaderboard-script-split.md)
 - Field follow-up: [[concepts/core-web-vitals-field]]
 - Ops log: [core-web-vitals.md](file:///Users/andreskull/finfluencer-tracker/docs/ops/core-web-vitals.md)
 - BigQuery export destination: [[entities/bigquery]]

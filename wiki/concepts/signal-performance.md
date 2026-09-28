@@ -4,7 +4,7 @@ title: "Signal performance (truncation & implicit flip)"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-08
-updated: 2026-09-16
+updated: 2026-09-28
 tags: [performance, actionable-signal, bigquery, truncation, finfluencer-trade]
 ---
 
@@ -19,6 +19,7 @@ How finfluencer **calls** ([[concepts/actionable-signal]]) are turned into measu
 - **S&P 500 benchmark**: SPY at Bloomberg FIGI **`BBG000BDTBL9`** (`gor_dagster/configs/benchmark_figi.py`); single FI row drives daily price sync and benchmark SQL.
 - **Completed horizon**: A row in `dagster_prices.SignalPerformance` (BigQuery) only if the horizon’s evaluation end falls **before** any boundary that ends the position.
 - **Truncation**: If a boundary occurs first, the horizon is **discarded** (not stored). No partial metrics.
+- **Delisted former ticker owners** (BioTelemetry under `BEAT`, and the other historical identities from ticker-tenancy cleanup) stay performance-NULL. Identity was corrected without licensed historical prices. [[concepts/post-cutoff-ipo-resolution]]
 
 ## Boundaries (what ends a position)
 
@@ -49,6 +50,7 @@ Implicit closes do **not** apply across tickers (e.g. long AMD does not close lo
 ## Related pages
 
 - [[concepts/actionable-signal]]
+- [[concepts/post-cutoff-ipo-resolution]]
 - [[concepts/cumulative-performance-charts]]
 - [[concepts/finfluencer-ticker-pick-lookup]] — profile mention count + mean α at the active horizon
 - [[concepts/user-default-holding-period]] — which horizon a product view opens on (6m system start; Settings pin)

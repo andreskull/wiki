@@ -22,6 +22,10 @@ Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in pro
 
 ## Current status (2026-09-28)
 
+**Profile and leaderboard script split wrapped (2026-09-28)**: The show profile reports data-ready on the real header row, and a production trace named data as the late leg. Desktop `/leaderboard` does not have enough samples to name a cause. Supabase realtime and storage stand-ins are on `development` (`e66103c`), not production (`20bb0b3`). The profile body still loads with the first card; the 591,608 byte target was not met. See [[concepts/core-web-vitals-mobile]], [[concepts/core-web-vitals-field]], and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/profile-leaderboard-script-split.md).
+
+**Social share previews wrapped (2026-09-28)**: Crawlers on `/`, `/leaderboard`, `/shows`, `/show/:slug`, `/finfluencer/:slug`, and `/cnbc-ipo` receive HTML from `api/og-meta.ts`. Profiles and the IPO scoreboard use a generated PNG from `api/og-image.tsx`. The other routes use `public/og-image.png`. Record: [social-share-previews.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/social-share-previews.md).
+
 **Onboarding questionnaire v2 live (promoted 2026-09-25, wrapped 2026-09-28)**: `/onboarding` asks one research question per screen — channel, follows, optional names, holding period. Skip still writes nothing. The holding answer does not change the chart pin. Four nullable columns on `user_onboarding_preferences` (migration `20260924180000`, both ledgers). GA4 dimensions for `channel`, `follows`, and `holding_period`; `name_count` is a custom metric; `step` stays Tour Step. The pipeline dashboard Users page shows the answers. See [[concepts/post-signup-onboarding]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-questionnaire-v2.md).
 
 **Investor positioning wrapped (2026-09-27)**: Homepage hero and teasers speak to 1-week to 1-year holds. Cards fill at `DEFAULT_HORIZON` (`6m`). Ads subject period is `6m`; a miss fails as `no_6m_coverage` and does not fall back. Account edits are a UI checklist (`docs/ops/investor-positioning-ads-checklist.md`) — no ads API, no new campaign. Shipped on `development` as `18bda64`. `gor_dagster` `HOLDING_PERIOD = "6m"` was still an uncommitted working-tree edit at wrapup. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/investor-positioning-landing-ads.md).
@@ -106,6 +110,7 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [feedback-decline-with-note](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feedback-decline-with-note.md) | Declined status, admin note, notify intent marker (**2026-08-22**) |
 | [core-web-vitals-mobile](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md) | Mobile LCP/INP delivery: splitting, fonts, cache, idle third-party (**2026-08-22**; lab-vs-field amended **2026-09-08**) |
 | [core-web-vitals-field](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-field.md) | First-party field RUM, DATA_READY, field-decides-done (**2026-09-08**) |
+| [profile-leaderboard-script-split](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/profile-leaderboard-script-split.md) | Show data-ready, profile script inventory, Supabase stand-ins; body split not shipped (**2026-09-28**) |
 | [google-ads-creative-assets](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md) | PMax images + video from the shipped encoder; banner / overlay / outro (**2026-09-04**) |
 | [ads-improvements](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ads-improvements.md) | Search RSA studio stills; overlay carve-out is PMax-only; stills in `docs/ops/google-ads-search-images/` (**2026-09-27**) |
 | [investor-positioning-landing-ads](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/investor-positioning-landing-ads.md) | Homepage hold-period promise; 6-month teasers; ads checklist, no ads API (**2026-09-27**) |
@@ -127,7 +132,9 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-09-28 | Profile and leaderboard script split | [profile-leaderboard-script-split.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/profile-leaderboard-script-split.md) |
 | 2026-09-28 | Onboarding questionnaire v2 | [onboarding-questionnaire-v2.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-questionnaire-v2.md) |
+| 2026-09-28 | Finfluencer, show, and ticker profile pages (show/leaderboard/panelist/ticker pages, M1–M14; FR-1.11 cancelled before build) | Cross-repo: [finfluencer-and-show-profiles.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/finfluencer-and-show-profiles.md) |
 | 2026-09-27 | Ads improvements (Search RSA image assets) | [ads-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ads-improvements.md) |
 | 2026-09-27 | Investor positioning — landing and ads | [investor-positioning-landing-ads.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/investor-positioning-landing-ads.md) |
 | 2026-09-25 | UI accessibility and test reliability | [ui-accessibility-and-test-reliability.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ui-accessibility-and-test-reliability.md) |
@@ -153,6 +160,11 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-09-28 | Show data-ready is the real header row, from one `isDataReadyRoute` list | A guest cannot read below `TierGate`. A second route list in `BottomNav` prefetched before that header |
+| 2026-09-28 | Unused Supabase realtime and storage are build aliases | `supabase-js` constructs both inside `createClient`, so tree-shaking cannot drop them. Deleting the two alias lines restores the real clients |
+| 2026-09-28 | Show profile is data late; desktop `/leaderboard` is not enough samples | No show body split and no leaderboard page change. A shell `shows` request, and a desktop field read that drops 40 ms no-geography samples, are later features |
+| 2026-09-28 | The profile body split and the lazy toaster were not shipped | The body (at least 93 KB) was the cut to the 591,608 byte target. The toaster is 13 KB. Select and the Radix overlay stack stay in `app-core` |
+| 2026-09-28 | The inline bootstrap preloads landing chunks only on `/` | They were on every non-ad path. A bare `import.meta.env` must not be read: Vite inlines the whole env object into `ad-shared` |
 | 2026-09-28 | Onboarding research holding period is not the chart pin | Screen D writes `holding_period_preference`. It does not read or write `user_profiles.default_holding_period`. |
 | 2026-09-28 | Onboarding `step` reuses the Tour Step GA4 dimension | One custom dimension per parameter name. Filter reports by event name. `name_count` is a custom metric. |
 | 2026-09-27 | Search RSA images are not PMax harness JPEGs | Google's overlay carve-out is PMax-only. Chart chrome and in-pixel UI text fail Search as "Text or graphic overlays". |
@@ -250,6 +262,9 @@ Shipped MVP scope: [`gor_dagster/docs/MVP_MASTER_PLAN.md`](file:///Users/andresk
 - Reddit Conversions API + Advanced Matching hashed email (pixel + privacy clause live; [[concepts/reddit-ads-conversion-tracking]])
 - Official Clarity↔GA4 OAuth dashboard link (playback URLs in GA4); campaign tags already on recordings ([[concepts/session-replay-analytics]])
 - Feedback note history / threading / voter-notify; reconstructing deleted submitter accounts; declined-last ordering must move server-side if the board paginates ([[concepts/feedback-roadmap]])
+- Profile body still downloads before the first card (at least 93 KB). The 591,608 byte target was not met. Stand-ins are on `development`, not production ([profile-leaderboard-script-split.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/profile-leaderboard-script-split.md))
+- Show profile is data late. A shell `shows` request is a later feature. No hard `DATA_READY` baseline yet
+- Desktop `/leaderboard` needs a field read that excludes 40 ms no-geography samples before any page change
 - `/show/:slug` still 0.04 s over 2.5 s lab LCP — would need route-level prefetch / SSR ([[concepts/core-web-vitals-mobile]])
 - Four Search Console CWV URLs are MkDocs — a `gor-blog` follow-up if the CrUX *group* is to go Good
 - Search Console field-data confirmation ~**2026-09-19**; do not resubmit Validate Fix before then

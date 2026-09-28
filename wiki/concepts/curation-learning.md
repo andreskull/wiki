@@ -4,7 +4,7 @@ title: "Curation learning (instrument resolver)"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-09-28
 tags: [instrument-resolution, curation, bigquery, dagster]
 ---
 
@@ -51,6 +51,7 @@ aliases and reopened 219 PP rows. Gap-fix scripts for wrong_link rows without
 ## Related concepts
 
 - [[concepts/resolution-pipeline-efficiency]] — JW matcher, re-attempt, alias-on-resolve baseline
+- [[concepts/post-cutoff-ipo-resolution]] — first-tradable gate and ticker tenancy under this cascade; Layer 2 name-only remains a residual
 - [[concepts/actionable-signal]] — instrument must be `resolution_status='resolved'`
 
 ## Sources

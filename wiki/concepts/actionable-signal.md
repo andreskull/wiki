@@ -4,7 +4,7 @@ title: "ActionableSignal"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-07-27
+updated: 2026-09-28
 tags: [actionable-signal, prediction, facts-extraction, bigquery, view]
 ---
 
@@ -29,6 +29,7 @@ The final, deduplicated output of the finfluencer.trade pipeline — a structure
 - **No created_at cutoff** — the speaker gate applies to all signals, historical and new.
 - Signals reappear automatically after proof segments are fully resolved.
 - Preferring a new FE config in `fe_priority` does **not** invalidate prior artefacts — source-priority / historical PP rows remain.
+- A mention before the instrument's first EOD bar does not become a signal (`PRE_LISTING`). A reused ticker attributes to the owner on the episode date ([[concepts/post-cutoff-ipo-resolution]]). Clearing `financial_instrument_id` on `PotentialPrediction` removes the bad signal from this view.
 
 ## Pipeline position
 
@@ -49,4 +50,5 @@ Facts Extraction (Stage 5) → `PotentialPrediction` → `ActionableSignal` VIEW
 - [[concepts/speaker-attribution]]
 - [[concepts/llm-config-registry]]
 - [[concepts/resolution-pipeline-efficiency]]
+- [[concepts/post-cutoff-ipo-resolution]]
 - [[entities/bigquery]]

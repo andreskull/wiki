@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-09-27
+updated: 2026-09-28
 ---
 
 # Wiki Index
@@ -31,9 +31,9 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Product | Status |
 |------|---------|--------|
-| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **pipeline dashboard users screen** wrapped **2026-09-24** (local test-user marks; onboarding columns); **Hedge Fund Tips with Tom Hayes** wrapped **2026-09-22** (359/359 downloaded; directory deferred); **Google Ads PMax creatives** wrapped **2026-09-04** (V1 + V4 live); **The Intrinsic Value Podcast** **2026-08-22**; **source quotes** + **LinkedIn outreach** **2026-08-11**; Gemini 3.5 Flash-Lite SI/FE **2026-07-27** |
+| [[wiki/projects/gor_dagster]] | finfluencer.trade | Active — **post-cutoff IPO resolution** wrapped **2026-09-28** ([[concepts/post-cutoff-ipo-resolution]]); **social share previews** wrapped **2026-09-28**; **finfluencer, show & ticker profile pages** wrapped **2026-09-28** (FR-1.11 top/bottom decile capture cancelled before build); **pipeline dashboard users screen** wrapped **2026-09-24** (local test-user marks; onboarding columns); **Hedge Fund Tips with Tom Hayes** wrapped **2026-09-22** (359/359 downloaded; directory deferred); **Google Ads PMax creatives** wrapped **2026-09-04** (V1 + V4 live); **The Intrinsic Value Podcast** **2026-08-22**; **source quotes** + **LinkedIn outreach** **2026-08-11**; Gemini 3.5 Flash-Lite SI/FE **2026-07-27** |
 | [[wiki/projects/gor-blog]] | finfluencer.trade | Active — **Cramer v1 closed** **2026-09-24** (catalog `research/cramer/CONSERVATION.md`); platform-update post + Kit send **2026-08-14**; CTA pattern; apex `/api/subscribe` |
-| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **onboarding questionnaire v2** **2026-09-28**; **feedback e2e on demand** **2026-09-28**; **investor positioning** **2026-09-27**; **Search RSA stills** **2026-09-27**; **performance palette** **2026-09-25**; **sector name filter at every width** **2026-09-24**; **user-default holding period** **2026-09-16**; **post-signup onboarding** **2026-09-09**; **field CWV + DATA_READY** **2026-09-08**; **finfluencer ticker lookup** **2026-09-05**; **Google Ads PMax creatives** **2026-09-04**; **GA4 instrumentation gap fixed + BigQuery export** **2026-09-02**; **mobile CWV** **2026-08-22**; **feedback Declined + admin note** **2026-08-22**; **Clarity session replay** **2026-08-18**; **Explore nav** **2026-08-17**; **Reddit Ads pixel** **2026-08-17**; **cumulative performance charts** **2026-08-04**; **subscription entitlement SSOT** **2026-07-27** |
+| [[wiki/projects/finfluencer-tracker]] | finfluencer.trade | Active — **profile script split** **2026-09-28** (show data-ready; stand-ins on `development`; body split not shipped); **onboarding questionnaire v2** **2026-09-28**; **feedback e2e on demand** **2026-09-28**; **investor positioning** **2026-09-27**; **Search RSA stills** **2026-09-27**; **performance palette** **2026-09-25**; **sector name filter at every width** **2026-09-24**; **user-default holding period** **2026-09-16**; **post-signup onboarding** **2026-09-09**; **field CWV + DATA_READY** **2026-09-08**; **finfluencer ticker lookup** **2026-09-05**; **Google Ads PMax creatives** **2026-09-04**; **GA4 instrumentation gap fixed + BigQuery export** **2026-09-02**; **mobile CWV** **2026-08-22**; **feedback Declined + admin note** **2026-08-22**; **Clarity session replay** **2026-08-18**; **Explore nav** **2026-08-17**; **Reddit Ads pixel** **2026-08-17**; **cumulative performance charts** **2026-08-04**; **subscription entitlement SSOT** **2026-07-27** |
 | [[wiki/projects/rattaproff]] | rattaproff | Operational — category URL export from Woo slugs **2026-08-14**; gsheet sync safety **2026-07-13**; permalink backfill + gsheet restore (Jun 2026); 20 storefronts |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Active |
 | [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | v1 frozen **2026-09-24** — public kit + SSRN 6643379; do not overwrite `data/` |
@@ -65,6 +65,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/concepts/proof-segment-speaker-resolution]] | Proof-segment quote speakers → Finfluencer; ActionableSignal gate; display_name at sync (2026-07-01) |
 | [[wiki/concepts/resolution-pipeline-efficiency]] | gor_dagster: JW matcher, re-attempt union, backlog sweeps, alias-on-resolve |
 | [[wiki/concepts/curation-learning]] | gor_dagster: fund-noise similarity, unique-ticker bar 0.85, Stage 0.75 promotion (2026-07-07) |
+| [[wiki/concepts/post-cutoff-ipo-resolution]] | gor_dagster: optional ticker, first EOD bar gate, `v_ticker_tenancy` for reused symbols (2026-09-28) |
 | [[wiki/concepts/linkedin-enrichment]] | gor_dagster + tracker: trust-tiered LinkedIn URLs; trusted-only Supabase sync; no third-party API (2026-07-23) |
 | [[wiki/concepts/signal-source-quote]] | gor_dagster: `raw_source_quote` from proof_segments; blank beats approximate; backfill + FE forward fix (2026-08-11) |
 | [[wiki/concepts/linkedin-outreach]] | gor_dagster + tracker: Notion Accepted drafts + optional chart MP4; human LinkedIn send only (2026-08-11) |
@@ -79,8 +80,8 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/concepts/post-signup-onboarding]] | finfluencer-tracker: auth-callback onboarding detour; one research question per screen (2026-09-28); skippable; funnel counts in GA4 not Clarity (2026-09-09) |
 | [[wiki/concepts/user-default-holding-period]] | finfluencer-tracker: system start 6 months; Settings pin; named `?horizon=` wins; URL omit uses system default (2026-09-16) |
 | [[wiki/concepts/feedback-roadmap]] | finfluencer-tracker native `/feedback` board — Declined + public admin note; `notify_requested_at` intent marker; vote allowlist; never rewrite `handle_feedback_notification()`; board smoke is on demand (`npm run test:e2e:feedback`) because fixture inserts spend Resend credits (2026-08-22; e2e opt-in 2026-09-28) |
-| [[wiki/concepts/core-web-vitals-field]] | finfluencer-tracker first-party field RUM + DATA_READY; field decides done; `/` teaser still ~4 s (2026-09-08) |
-| [[wiki/concepts/core-web-vitals-mobile]] | finfluencer-tracker SPA delivery — lab LCP under 2.5 s on `/`; Search Console group half MkDocs (2026-08-22; lab-as-gate amended 2026-09-08) |
+| [[wiki/concepts/core-web-vitals-field]] | finfluencer-tracker first-party field RUM + DATA_READY; field decides done; show surface added 2026-09-28; `/` teaser still ~4 s (2026-09-08) |
+| [[wiki/concepts/core-web-vitals-mobile]] | finfluencer-tracker SPA delivery — lab LCP under 2.5 s on `/`; Supabase realtime/storage stand-ins on `development` (2026-09-28); Search Console group half MkDocs (2026-08-22; lab-as-gate amended 2026-09-08) |
 
 ---
 

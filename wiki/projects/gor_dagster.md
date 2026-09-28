@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-09-27
+updated: 2026-09-28
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, linkedin, gemini, podcast-rss, outreach, source-quote, google-ads]
 ---
 
@@ -117,6 +117,8 @@ FE model selection: production **`fe-gem35fl-recursive`** (@**1800s** windows; p
 
 `PotentialPrediction` is the raw store. It holds everything including duplicates (from running with different FE configs). `ActionableSignal` is a VIEW over it with deduplication logic.
 
+Ticker is optional (**2026-09-28** wrap of post-cutoff IPO resolution). The model emits the spoken name even when it believes the company is private. `mention_type` (`single_name | sector_theme | crypto | index`) and `ticker_source` (`spoken | inferred`) classify the mention. An inferred ticker is a non-binding hint (name bar 0.95, no alias write).
+
 Key assets: `facts_extraction`, `individual_quote_creation`
 
 Docs: [Facts Extraction Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/facts-extraction-architecture.md)
@@ -133,6 +135,7 @@ Docs: [Facts Extraction Architecture](file:///Users/andreskull/gor_dagster/docs/
 - Layers 1/2: internal JW fuzzy match (`compute_instrument_name_similarity`); **unique-ticker bar 0.85** when ticker maps to exactly one FI (not inferred)
 - Layer 1.5: historical ticker lookup
 - Layer 3: OpenFIGI batch lookup
+- **First-tradable gate + ticker tenancy (wrapped 2026-09-28):** every accept path checks `first_tradable_date` against the episode date (`PRE_LISTING`). When a ticker has more than one owner, `v_ticker_tenancy` picks the owner whose interval contains that date. A NULL date on a shared ticker means earliest owner and must not be filled from the live `{TICKER}.US` series. Name-only mentions go through EODHD search. Permanent doc: [post-cutoff-ipo-resolution.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/post-cutoff-ipo-resolution.md). Wiki: [[concepts/post-cutoff-ipo-resolution]].
 
 **Curation learning (2026-07-07):** P3 fund-noise second pass in name similarity (always on). P1+P2 flag-gated in production via `potential_prediction_resolution_sensor`. Poison-alias cleanup manifest + gap-fix scripts applied in prod BQ. Permanent doc: [curation-learning.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/curation-learning.md). Wiki: [[concepts/curation-learning]].
 
@@ -206,8 +209,10 @@ Production uses **three** datasets for the core pipeline. Default `bigquery_reso
 | `LinkedInCoverage` | **VIEW** — coverage KPIs by segment (signal-bearing / long-tail) |
 | `ContentItemContributor` | Links an episode to a Finfluencer (host, guest, author) — schema may exist; LinkedIn show names use PP→ContentItem→ContentSource |
 | `IndividualQuote` | One utterance from the hydrated transcript, attributed to a speaker |
-| `FinancialInstrument` | Canonical stock/instrument (FIGI, ticker, exchange, sector) |
-| `PotentialPrediction` | Raw LLM extraction — all hypotheses including duplicates across FE configs |
+| `FinancialInstrument` | Canonical stock/instrument (FIGI, ticker, exchange, sector). `first_tradable_date` is the cached first EOD bar; NULL on a reused ticker means earliest owner |
+| `PotentialPrediction` | Raw LLM extraction — all hypotheses including duplicates across FE configs. `ticker` may be empty; `mention_type` and `ticker_source` record what was spoken vs inferred |
+| `v_ticker_tenancy` | **VIEW** — per-ticker ownership intervals from `first_tradable_date` |
+| `v_ticker_reuse_audit` | **VIEW** — contaminated resolutions and poisoned aliases (read-only) |
 | `ActionableSignal` | **VIEW** over `PotentialPrediction` — deduped, gated, production-ready |
 | `PredictionContext` | Audio/video clip context for a signal |
 | `PendingSpeakerResolution` | Speaker names that need human review to map to a Finfluencer |
@@ -386,6 +391,7 @@ Key rule: all Python code must be written to `.py` files before execution — ne
 | BigQuery bytes + PotentialPrediction guardrail | Partition predicates on hot reads; **`require_partition_filter`** on production `PotentialPrediction`; local lint `check_no_select_star.py`; checklist [bigquery-cost-checklist.md](file:///Users/andreskull/gor_dagster/docs/operations/bigquery-cost-checklist.md); program summary [bigquery-cost-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bigquery-cost-optimization.md). |
 | Resolution re-attempt + JW matcher | Frozen PIR/PSR re-enter only when `reattempt_eligible=TRUE`. JW instrument matcher; speaker fuzzy **0.935**; org-conflict override off. Alias on every auto-resolve. [[concepts/resolution-pipeline-efficiency]] |
 | Curation learning (P1/P2/P3) | Fund-noise similarity always on; unique-ticker bar **0.85**; Stage **0.75** promotion (≥2 manual curations). Sensor flags on **2026-07-07**. [[concepts/curation-learning]] |
+| Post-cutoff IPO + ticker tenancy | FE emits a spoken name without a required ticker. Tradability is the first EOD bar, captured reactively. A reused symbol resolves to the owner on the episode date via `v_ticker_tenancy`. Delisted former owners stay performance-NULL. Wrapped **2026-09-28**. [[concepts/post-cutoff-ipo-resolution]] |
 | Transcript hydration canonical utils + FR-6 | Hot path in `transcript_hydration_utils.py`; O(U log W + W) index; `MEMBERSHIP_TOL=0.01`; asset re-exports only. Golden speaker accuracy unchanged (scorer bypasses hydration artifact). [hydration-performance-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hydration-performance-optimization.md) |
 | SPY single benchmark FIGI | SPY/US canonical FIGI **`BBG000BDTBL9`**; FI UUID unchanged; dashboard FIGI-first + ticker/exchange fallback; daily `spy_single_identity` asset check; performance exit uses as-of price join. [spy-canonical-figi-consolidation.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/spy-canonical-figi-consolidation.md) |
 | Podcast RSS SI discovery | `si_sensor` queries all active `podcast_rss` ContentSources via `get_podcast_rss_content_source_ids()` — no per-onboarding allowlist (2026-07-01). [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hidden-gems-ingestion.md) |
@@ -403,6 +409,8 @@ Key rule: all Python code must be written to `.py` files before execution — ne
 | CNBC IPO scoreboard (SPCX v1) | BQ snapshot mats → Supabase RPC `get_ipo_scoreboard_page`; since-call perf SQL; public `/cnbc-ipo`; **kept picks only** in UI; social + blog deferred. [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md) |
 | LinkedIn enrichment (trust-tiered) | Discovery never auto-writes profiles; trusted-only Supabase sync; published audit 100% trusted-or-none; no third-party LinkedIn API (2026-07-23). [[concepts/linkedin-enrichment]] |
 | Google Ads creatives (manual PMax) | Resolve in Python, render in tracker Chromium, write-once GCS. Rank featured subject on scored picks, not alpha. Subject period moved from `1y` to `6m` on **2026-09-27** (`HOLDING_PERIOD` in `build_google_ads_variants.py` — working tree only at wrapup). Live run **`2026-09-04T0804Z`** (V1 + V4) was still `1y`. No Dagster schedule, no Google Ads API. [[concepts/google-ads-creative-assets]] |
+| Profile pages: show open, ticker masked | Show profiles and the show leaderboard are open to **everyone** including paid panelists' show-scoped performance — the paywall lives on the finfluencer's own profile, not a show's view of that panelist; show-scoped reads use `SECURITY DEFINER` RPCs so tier-RLS on `signals` can't make a paid panelist vanish. Ticker pages are login-gated as a whole; within them, a paid finfluencer's per-finfluencer alpha and pick cards are masked for free users via per-row `CASE WHEN f.is_free_tier OR get_user_tier() IN (...)`. **2026-05-25**. [finfluencer-and-show-profiles.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/finfluencer-and-show-profiles.md) |
+| Widget added ≠ widget shipped | A render gate should be checked against a random baseline (exact binomial, not eyeballed) before trusting "clearly away from random" copy; a metric resting on ~10% of a person's data points is noise next to a full-sample average (hit rate, alpha, Sharpe) that already answers the same question. FR-1.11 (top/bottom decile capture, "Needle finder"/"Value trap") cancelled **2026-09-28** on both grounds before T-M15.1 was built. [finfluencer-and-show-profiles.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/finfluencer-and-show-profiles.md) |
 
 ---
 
@@ -435,6 +443,9 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 | 2026-09-20 | Sector-relative alpha (Vanguard ETFs/BTC, BQ performance, Supabase RPC, live leaderboards & widgets) | [sector-relative-alpha.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/sector-relative-alpha.md) |
 | 2026-09-22 | Hedge Fund Tips with Tom Hayes RSS onboarding (Anchor Patterns 4+5; 359/359 downloaded; long-episode proof; directory deferred) | [hedge-fund-tips-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hedge-fund-tips-ingestion.md) |
 | 2026-09-24 | Pipeline dashboard users screen (test-user exclusion, paging, onboarding columns, signup bars) | [pipeline-dashboard-users.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/pipeline-dashboard-users.md) |
+| 2026-09-28 | Post-cutoff IPO resolution — optional ticker, first-tradable gate, `v_ticker_tenancy`; SpaceX recovered; BEAT split; returns for delisted former owners left NULL | [post-cutoff-ipo-resolution.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/post-cutoff-ipo-resolution.md) |
+| 2026-09-28 | Social share previews (crawler unfurls for home, leaderboard, shows, profiles, CNBC IPO scoreboard) | [social-share-previews.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/social-share-previews.md) |
+| 2026-09-28 | Finfluencer, show, and ticker profile pages (show pages + leaderboard open to everyone; ticker pages tier-masked; FR-1.11 top/bottom decile capture cancelled before build) | [finfluencer-and-show-profiles.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/finfluencer-and-show-profiles.md) |
 | 2026-05-15 | Pytest `not expensive` green track (permanent reference; suite alignment) | [pytest-not-expensive-green.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/pytest-not-expensive-green.md) |
 | 2026-05-14 | ContentItem deduplication, ingest guard, BQ apply pipeline | [contentitem-dedupe-and-cleanup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/contentitem-dedupe-and-cleanup.md) — runbook [contentitem-dedupe-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/contentitem-dedupe-runbook.md) |
 | 2026-05-14 | Compound and Friends (Pippa) RSS onboarding + SI allowlist extension | [compound-and-friends-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/compound-and-friends-ingestion.md) |
@@ -452,10 +463,13 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 | Feature | Folder / notes |
 |---|---|
 | Batch LLM integration | `batch-integration/` — Phase 1 done (`LLMBatchProcessor`); Phase 5 = recursive SI wave batch (migrated from recursive-llm-extraction wrapup) |
-| Finfluencer and show profiles | `finfluencer-and-show-profiles/` |
-| Social share previews | `social-share-previews/` |
-| Post-cutoff IPO resolution | `post-cutoff-ipo-resolution/` — Inc 1–8 backfill gate ✅ (2026-06-28); frozen DATA_REFRESH curation ongoing |
-| Data-driven sector ETF registry | `data-driven-sector-etf-registry/` |
+| Data-driven sector ETF registry | `data-driven-sector-etf-registry/` — registry tables exist; activation still off |
+
+**Wrapped 2026-09-28:** `post-cutoff-ipo-resolution/` → [post-cutoff-ipo-resolution.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/post-cutoff-ipo-resolution.md) (optional ticker; reactive `first_tradable_date`; `v_ticker_tenancy`; SpaceX and notable IPOs recovered; 32 historical identities; BEAT 2017 → BioTelemetry. Sector-ETF / crypto activation stayed in `data-driven-sector-etf-registry/`)
+
+**Wrapped 2026-09-28:** `social-share-previews/` → [social-share-previews.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/social-share-previews.md) (crawler unfurls on finfluencer-tracker; generated PNGs for profiles and `/cnbc-ipo`; static `og-image.png` for home, leaderboard, and shows)
+
+**Wrapped 2026-09-28:** `finfluencer-and-show-profiles/` → [finfluencer-and-show-profiles.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/finfluencer-and-show-profiles.md) (finfluencer-tracker profile/show/ticker pages, M1–M14; show profiles + show leaderboard deliberately open to everyone, paywall stays on the finfluencer's own profile; ticker pages tier-mask paid finfluencers' per-finfluencer data via `SECURITY DEFINER` RPCs; **FR-1.11 top/bottom decile capture cancelled before build** — UX review found its render gate fired for a random picker most of the time and that hit rate + alpha + Sharpe already answered the question)
 
 **Wrapped 2026-09-22:** `hedge-fund-tips-ingestion/` → [hedge-fund-tips-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hedge-fund-tips-ingestion.md) (13th `podcast_rss` source; Anchor `12172a20`; 359/359 downloaded; proof `APO2815113219` through FE; directory waits for a live `/show/` page; STT/SI/FE of the rest still draining)
 
@@ -518,6 +532,7 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 | Signal source-quote backfill (periodic top-up) | [[concepts/signal-source-quote]]; [signal-source-quote-backfill.md](file:///Users/andreskull/gor_dagster/docs/operations/signal-source-quote-backfill.md); `scripts/backfill_signal_source_quotes.py` |
 | Gemini 3.5 Flash-Lite promote / rollback | [gemini-35-flash-lite-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md); decision [promotion_decision.md](file:///Users/andreskull/gor_dagster/docs/analytics/gemini-35-flash-lite-migration/promotion_decision.md); [rollback_checklist.md](file:///Users/andreskull/gor_dagster/docs/analytics/gemini-35-flash-lite-migration/rollback_checklist.md) |
 | SPY benchmark identity verification | [spy-figi-consolidation-runbook.md](file:///Users/andreskull/gor_dagster/docs/operations/spy-figi-consolidation-runbook.md), `scripts/verify_spy_single_identity.py` |
+| Instrument resolution rollout (partial) | [inc3-instrument-resolution-rollout.md](file:///Users/andreskull/gor_dagster/docs/operations/inc3-instrument-resolution-rollout.md) — stops at the 2026-06-19 inferred-ticker flag; tenancy is in [[concepts/post-cutoff-ipo-resolution]] |
 | Schema management | [Schema Management](file:///Users/andreskull/gor_dagster/docs/operations/schema-management.md) |
 | Configuration reference | [Configuration Reference](file:///Users/andreskull/gor_dagster/docs/operations/configuration-reference.md) |
 | Price ingestion | [Price Ingestion Guide](file:///Users/andreskull/gor_dagster/docs/operations/price-ingestion-guide.md) |
@@ -541,6 +556,8 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 - [[concepts/llm-config-registry]]
 - [[concepts/onboarding-new-podcast-source]]
 - [[concepts/resolution-pipeline-efficiency]]
+- [[concepts/curation-learning]]
+- [[concepts/post-cutoff-ipo-resolution]]
 - [[concepts/linkedin-enrichment]]
 - [[concepts/linkedin-outreach]]
 - [[concepts/google-ads-creative-assets]]

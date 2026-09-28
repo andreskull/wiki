@@ -281,3 +281,21 @@ Permanent record at `finfluencer-tracker/docs/architecture/features/onboarding-q
 
 Recorded the questionnaire on [[projects/finfluencer-tracker]], [[concepts/post-signup-onboarding]], [[products/finfluencer-trade]], [[overview]], and [[index]]. No new concept page.
 
+## [2026-09-28] wrapup | gor_dagster | Social share previews
+
+Permanent record at `gor_dagster/docs/architecture/features/social-share-previews.md`. Crawler unfurls already live in finfluencer-tracker. Temp `docs/features/social-share-previews/` removed. N2 in `INCR_01_MASTER_PLAN.md` marked shipped.
+
+## [2026-09-28] wrapup | gor_dagster | Finfluencer, show, and ticker profile pages
+## [2026-09-28] sync | gor_dagster + finfluencer-tracker — finfluencer/show/ticker profile pages wrapped; FR-1.11 cancelled
+
+## [2026-09-28] wrapup | gor_dagster | Post-cutoff IPO resolution
+
+Permanent record at `gor_dagster/docs/architecture/features/post-cutoff-ipo-resolution.md`. Optional ticker, reactive first-tradable date, `v_ticker_tenancy`. Temp `docs/features/post-cutoff-ipo-resolution/` removed. Sector-ETF and crypto activation stayed in `data-driven-sector-etf-registry/`.
+
+## [2026-09-28] sync | gor_dagster
+
+Recorded post-cutoff IPO resolution on [[projects/gor_dagster]] (Stage 5–6, data model, decisions, completed features; removed from active). New concept [[concepts/post-cutoff-ipo-resolution]]. Updated [[concepts/actionable-signal]], [[concepts/signal-performance]], [[concepts/curation-learning]], [[overview]], [[index]].
+
+## [2026-09-28] sync | finfluencer-tracker
+
+Recorded the profile and leaderboard script split on [[projects/finfluencer-tracker]], [[concepts/core-web-vitals-mobile]], [[concepts/core-web-vitals-field]], [[products/finfluencer-trade]], [[overview]], and [[index]]. Show profile reports data-ready and is data late. Supabase stand-ins are on `development`. The profile body split was not shipped. No new concept page.
