@@ -273,3 +273,11 @@ Recorded investor positioning on [[projects/finfluencer-tracker]], [[concepts/go
 
 `e2e/feedback-smoke.spec.ts` is out of `npm run test:e2e`. Fixture inserts email moderators through Resend; a multi-browser run was spending the daily quota. On demand: `npm run test:e2e:feedback` (Chromium, once). Updated [[projects/finfluencer-tracker]], [[concepts/feedback-roadmap]], [[products/finfluencer-trade]], [[overview]], [[index]], and repo `WIKI.md`. Living detail in `docs/architecture/feedback-system.md` §6.
 
+## [2026-09-28] wrapup | finfluencer-tracker | Onboarding questionnaire v2
+
+Permanent record at `finfluencer-tracker/docs/architecture/features/onboarding-questionnaire-v2.md`. One research question per screen; four nullable columns; promoted 2026-09-25. Feature folder removed.
+
+## [2026-09-28] sync | finfluencer-tracker
+
+Recorded the questionnaire on [[projects/finfluencer-tracker]], [[concepts/post-signup-onboarding]], [[products/finfluencer-trade]], [[overview]], and [[index]]. No new concept page.
+

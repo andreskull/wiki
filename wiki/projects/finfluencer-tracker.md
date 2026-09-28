@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-09-27)
+## Current status (2026-09-28)
+
+**Onboarding questionnaire v2 live (promoted 2026-09-25, wrapped 2026-09-28)**: `/onboarding` asks one research question per screen — channel, follows, optional names, holding period. Skip still writes nothing. The holding answer does not change the chart pin. Four nullable columns on `user_onboarding_preferences` (migration `20260924180000`, both ledgers). GA4 dimensions for `channel`, `follows`, and `holding_period`; `name_count` is a custom metric; `step` stays Tour Step. The pipeline dashboard Users page shows the answers. See [[concepts/post-signup-onboarding]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-questionnaire-v2.md).
 
 **Investor positioning wrapped (2026-09-27)**: Homepage hero and teasers speak to 1-week to 1-year holds. Cards fill at `DEFAULT_HORIZON` (`6m`). Ads subject period is `6m`; a miss fails as `no_6m_coverage` and does not fall back. Account edits are a UI checklist (`docs/ops/investor-positioning-ads-checklist.md`) — no ads API, no new campaign. Shipped on `development` as `18bda64`. `gor_dagster` `HOLDING_PERIOD = "6m"` was still an uncommitted working-tree edit at wrapup. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/investor-positioning-landing-ads.md).
 
@@ -110,6 +112,7 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [customer-list-ad-audiences](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/customer-list-ad-audiences.md) | Registered-user Customer Match; Monday CSV refresh; Reddit parked (**2026-09-22**) |
 | [finfluencer-ticker-pick-lookup](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/finfluencer-ticker-pick-lookup.md) | Finfluencer ticker lookup + ranked-list RPC; two box-plot charts retired (**2026-09-05**) |
 | [post-signup-onboarding](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/post-signup-onboarding.md) | Auth-callback onboarding detour; skippable wizard; pending dest (**2026-09-09**) |
+| [onboarding-questionnaire-v2](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-questionnaire-v2.md) | One research question per screen; channel, follows, names, holding period (**2026-09-28**) |
 | [user-default-holding-period](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/user-default-holding-period.md) | System start 6 months; Settings pin; URL omit uses system default (**2026-09-16**) |
 | [sector-leaderboard-wide-name-filter](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/sector-leaderboard-wide-name-filter.md) | Name filter in the sector table header at every width; top bar still opens `/leaderboard` (**2026-09-24**) |
 | [ui-accessibility-and-test-reliability](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ui-accessibility-and-test-reliability.md) | Button fill vs alpha colours; contrast enforced; phone name wrap (**2026-09-25**) |
@@ -124,6 +127,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-09-28 | Onboarding questionnaire v2 | [onboarding-questionnaire-v2.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-questionnaire-v2.md) |
 | 2026-09-27 | Ads improvements (Search RSA image assets) | [ads-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ads-improvements.md) |
 | 2026-09-27 | Investor positioning — landing and ads | [investor-positioning-landing-ads.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/investor-positioning-landing-ads.md) |
 | 2026-09-25 | UI accessibility and test reliability | [ui-accessibility-and-test-reliability.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ui-accessibility-and-test-reliability.md) |
@@ -149,6 +153,8 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-09-28 | Onboarding research holding period is not the chart pin | Screen D writes `holding_period_preference`. It does not read or write `user_profiles.default_holding_period`. |
+| 2026-09-28 | Onboarding `step` reuses the Tour Step GA4 dimension | One custom dimension per parameter name. Filter reports by event name. `name_count` is a custom metric. |
 | 2026-09-27 | Search RSA images are not PMax harness JPEGs | Google's overlay carve-out is PMax-only. Chart chrome and in-pixel UI text fail Search as "Text or graphic overlays". |
 | 2026-09-27 | No chrome-stripped Search exporter; no harness change for Search stills | That would be a new encoder contract. Search assets are studio photographs in `docs/ops/google-ads-search-images/`. |
 | 2026-09-27 | Homepage and ads subject period is 6 months; signup stays open | Teasers use `DEFAULT_HORIZON`. A missing 6-month ads subject fails (`no_6m_coverage`) and does not fall back. Scalp exclusion is copy and negatives, not a funnel block. |

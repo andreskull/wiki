@@ -4,7 +4,7 @@ title: "Post-signup onboarding"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-09-09
-updated: 2026-09-09
+updated: 2026-09-28
 tags: [onboarding, auth, routing, ga4, signup, activation]
 ---
 
@@ -12,7 +12,9 @@ tags: [onboarding, auth, routing, ga4, signup, activation]
 
 ## Definition
 
-A newly registered account on `https://finfluencers.trade` is sent to `/onboarding` immediately after a successful auth callback, then to the pending destination (or `/leaderboard`). Returning sign-ins never see the wizard. Skip is visible and measured. The two-question form and `user_onboarding_preferences` schema are unchanged.
+A newly registered account on `https://finfluencers.trade` is sent to `/onboarding` immediately after a successful auth callback, then to the pending destination (or `/leaderboard`). Returning sign-ins never see the wizard. Skip is visible and measured.
+
+The page is one research question per screen (promoted **2026-09-25**, wrapped **2026-09-28**): channel, whether they follow anyone, up to three names if they do, and a holding-period preference. That preference does not write `user_profiles.default_holding_period`. The row still lands in `user_onboarding_preferences`. Four nullable columns were added by migration `20260924180000`. The pipeline dashboard Users page reads them. GA4 `step` stays the existing Tour Step dimension; `name_count` is a custom metric. Permanent doc: [onboarding-questionnaire-v2.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-questionnaire-v2.md).
 
 The old 24-hour `ProtectedRoute` gate never ran for homepage signups because `/leaderboard` is public. One trigger at the callback replaces it. **Accepted consequence:** abandon or skip is never re-prompted.
 
