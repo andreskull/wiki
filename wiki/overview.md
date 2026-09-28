@@ -2,12 +2,12 @@
 type: overview
 title: "Wiki Overview"
 created: 2026-04-06
-updated: 2026-09-27
+updated: 2026-09-28
 ---
 
 # Wiki Overview
 
-Three products, one methodology, one wiki. Updated: 2026-09-27.
+Three products, one methodology, one wiki. Updated: 2026-09-28.
 
 ## Products
 
@@ -46,7 +46,7 @@ Three products, one methodology, one wiki. Updated: 2026-09-27.
 - [[concepts/session-replay-analytics]] — Microsoft Clarity on Production; analytics consent; Balanced + Settings mask; weekly review until 2026-09-17 (2026-08-18)
 - [[concepts/post-signup-onboarding]] — auth-callback detour after registration; skippable; counts in GA4 not Clarity (2026-09-09)
 - [[concepts/user-default-holding-period]] — system start 6 months; Settings pin; named `?horizon=` wins; URL omit uses system default (2026-09-16)
-- [[concepts/feedback-roadmap]] — native `/feedback` board; Declined + public note; `notify_requested_at` intent marker; never rewrite `handle_feedback_notification()` (2026-08-22)
+- [[concepts/feedback-roadmap]] — native `/feedback` board; Declined + public note; `notify_requested_at` intent marker; never rewrite `handle_feedback_notification()`; board smoke is on demand so regression does not spend Resend credits (2026-08-22; e2e opt-in 2026-09-28)
 - [[concepts/core-web-vitals-field]] — first-party field RUM + DATA_READY; field decides done (2026-09-08)
 - [[concepts/core-web-vitals-mobile]] — SPA delivery: lab LCP under 2.5 s on `/`; Search Console group half MkDocs (2026-08-22; lab-as-gate amended 2026-09-08)
 - [[concepts/onboarding-new-podcast-source]] — gor_dagster: add a podcast RSS end-to-end (regex gate; SI auto-discovers `podcast_rss`; Finfluencers Directory required since 2026-07-27)

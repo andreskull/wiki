@@ -4,7 +4,7 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-09-27
+updated: 2026-09-28
 tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard]
 ---
 
@@ -46,7 +46,7 @@ Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in pro
 
 **GA4 custom dimensions + BigQuery export (2026-09-02).** Web Vitals parameters arrived populated but were unregistered — Explore read `(not set)`. Registered 10 dimensions + `metric_value`; export to `gurus-on-record`. See [[decisions/ga4-instrumentation-registration-2026-09]], [[concepts/core-web-vitals-field]], [[entities/bigquery]].
 
-**Feedback board can decline with a public admin note** — fifth status `declined`, mandatory note (table CHECK), `notify_requested_at` intent marker, vote allowlist on both RLS policies. Orphaned posts (`user_id` NULL) disable “Email the submitter” instead of silently skipping. See [[concepts/feedback-roadmap]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feedback-decline-with-note.md). Living system: [feedback-system.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/feedback-system.md).
+**Feedback board can decline with a public admin note** — fifth status `declined`, mandatory note (table CHECK), `notify_requested_at` intent marker, vote allowlist on both RLS policies. Orphaned posts (`user_id` NULL) disable “Email the submitter” instead of silently skipping. Board smoke (`e2e/feedback-smoke.spec.ts`) is **on demand only** since **2026-09-28**: fixture inserts email moderators through Resend, so `npm run test:e2e` ignores the file. Run `npm run test:e2e:feedback` (Chromium, once). See [[concepts/feedback-roadmap]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feedback-decline-with-note.md). Living system: [feedback-system.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/feedback-system.md) §6.
 
 **Microsoft Clarity session replay live** — Production only, analytics consent, Balanced masking, Settings page-root mask, credential URLs skipped. Weekly review in [session-replay-review.md](file:///Users/andreskull/finfluencer-tracker/docs/ops/session-replay-review.md); exit-criteria **2026-09-17**. See [[concepts/session-replay-analytics]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/session-replay-analytics.md).
 
@@ -155,6 +155,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 | 2026-09-27 | Ads account edits stay a UI checklist | No ads API client, no new campaign, no budget or bid change. Runbook: `docs/ops/investor-positioning-ads-checklist.md`. |
 | 2026-09-25 | Button fill and alpha colours are separate tokens; `text-primary` uses `--positive` | `#1f812d` clears white on a button (4.67:1) and fails as small text. Alpha uses `#51ad57` / `#e36b65`. |
 | 2026-09-25 | `color-contrast` stays on; HowItWorks numerals are the only exemption | They are a watermark: `text-border`, `aria-hidden`, `data-contrast-exempt`. |
+| 2026-09-28 | Feedback board smoke is on demand, not in `npm run test:e2e` | Fixture inserts email moderators through Resend. One suite run per browser project was spending the daily quota. `npm run test:e2e:feedback` runs Chromium once. |
 | 2026-09-25 | A full local Playwright matrix is not a release gate | Every browser at once against one server fails a different handful of waits each pass. CI uses one worker. |
 | 2026-09-24 | Sector name filter visibility is a class on the sector page, not a change to `NameFilterInput` | `/leaderboard` and `/shows` keep a phone-only filter. The top bar still opens `/leaderboard`. |
 | 2026-09-16 | System holding-period start is `DEFAULT_HORIZON = '6m'` on every product view | Unifies the old 1m/1y split; Settings is the only writer |

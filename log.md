@@ -269,3 +269,7 @@ Wrapped `investor-positioning-landing-ads/`. Permanent record at `finfluencer-tr
 
 Recorded investor positioning on [[projects/finfluencer-tracker]], [[concepts/google-ads-creative-assets]], [[projects/gor_dagster]], [[products/finfluencer-trade]], [[synthesis/gtm-growth]], [[overview]], and [[index]]. No new concept page.
 
+## [2026-09-28] sync | finfluencer-tracker — feedback e2e on demand
+
+`e2e/feedback-smoke.spec.ts` is out of `npm run test:e2e`. Fixture inserts email moderators through Resend; a multi-browser run was spending the daily quota. On demand: `npm run test:e2e:feedback` (Chromium, once). Updated [[projects/finfluencer-tracker]], [[concepts/feedback-roadmap]], [[products/finfluencer-trade]], [[overview]], [[index]], and repo `WIKI.md`. Living detail in `docs/architecture/feedback-system.md` §6.
+

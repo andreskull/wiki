@@ -4,7 +4,7 @@ title: "In-app feedback & public roadmap"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-08-22
-updated: 2026-08-22
+updated: 2026-09-28
 tags: [feedback, roadmap, supabase, resend, rls, notify]
 ---
 
@@ -36,6 +36,7 @@ Silent delete was the only reject tool, so considered-and-rejected requests eith
 - When `user_id` is null: disable the notify checkbox, do not hide it; `deriveNotifyChecked(..., hasSubmitter=false)` is always false. Do not change the edge skip into an error.
 - HTML-escape every interpolated email field (`shared/escapeHtml.ts`, `&` first). Title and description are submitter-authored.
 - Creator auto-upvote still records; the moderator upvote alert for a self-vote is suppressed.
+- **`e2e/feedback-smoke.spec.ts` is not a regression test (2026-09-28).** Each fixture insert into `feedback_posts` fires `notify-moderators` and sends a Resend email to `info@finfluencers.trade`, even when `user_id` is null. A multi-browser run used to spend the daily quota. Run it only with `npm run test:e2e:feedback` (Chromium, once). Do not export `RUN_FEEDBACK_E2E` before `npm run test:e2e`. `scripts/verify-feedback-decline.ts` is the same kind of manual insert. Living detail: [feedback-system.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/feedback-system.md) §6.
 
 ## Related concepts / sources
 
