@@ -299,3 +299,11 @@ Recorded post-cutoff IPO resolution on [[projects/gor_dagster]] (Stage 5–6, da
 ## [2026-09-28] sync | finfluencer-tracker
 
 Recorded the profile and leaderboard script split on [[projects/finfluencer-tracker]], [[concepts/core-web-vitals-mobile]], [[concepts/core-web-vitals-field]], [[products/finfluencer-trade]], [[overview]], and [[index]]. Show profile reports data-ready and is data late. Supabase stand-ins are on `development`. The profile body split was not shipped. No new concept page.
+
+## [2026-09-29] wrapup | gor_dagster | Information Ratio replaces Sharpe
+
+Permanent record at `gor_dagster/docs/architecture/features/information-ratio.md`. Kept-pick annualized alpha / sample stddev, NULL below 20. Sharpe columns already dropped. Temp `docs/features/information-ratio/` deleted after confirmation.
+
+## [2026-09-29] sync | gor_dagster
+
+Recorded Information Ratio on [[projects/gor_dagster]] (decision, completed features, wrapped note), [[projects/finfluencer-tracker]], [[concepts/signal-performance]], [[overview]], and [[index]]. New concept [[concepts/information-ratio]].

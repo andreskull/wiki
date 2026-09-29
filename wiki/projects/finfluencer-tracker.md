@@ -4,7 +4,7 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-09-28
+updated: 2026-09-29
 tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard]
 ---
 
@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-09-28)
+## Current status (2026-09-29)
+
+**Information Ratio live (2026-09-29)**: The leaderboard column is **IR** and the profile card is **Info Ratio**. Both read `information_ratio` (NULL below 20 kept picks shows "—"; a gated row stays locked). Methodology defines it. The Trader upgrade email says "Information Ratios" on both deployed `stripe-webhook` functions. See [[concepts/information-ratio]] and [information-ratio.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/information-ratio.md).
 
 **Profile and leaderboard script split wrapped (2026-09-28)**: The show profile reports data-ready on the real header row, and a production trace named data as the late leg. Desktop `/leaderboard` does not have enough samples to name a cause. Supabase realtime and storage stand-ins are on `development` (`e66103c`), not production (`20bb0b3`). The profile body still loads with the first card; the 591,608 byte target was not met. See [[concepts/core-web-vitals-mobile]], [[concepts/core-web-vitals-field]], and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/profile-leaderboard-script-split.md).
 
@@ -132,6 +134,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-09-29 | Information Ratio on the leaderboard, profile cards, Methodology, and the Trader email | Cross-repo: [information-ratio.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/information-ratio.md) |
 | 2026-09-28 | Profile and leaderboard script split | [profile-leaderboard-script-split.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/profile-leaderboard-script-split.md) |
 | 2026-09-28 | Onboarding questionnaire v2 | [onboarding-questionnaire-v2.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-questionnaire-v2.md) |
 | 2026-09-28 | Finfluencer, show, and ticker profile pages (show/leaderboard/panelist/ticker pages, M1–M14; FR-1.11 cancelled before build) | Cross-repo: [finfluencer-and-show-profiles.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/finfluencer-and-show-profiles.md) |

@@ -4,7 +4,7 @@ title: "Signal performance (truncation & implicit flip)"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-08
-updated: 2026-09-28
+updated: 2026-09-29
 tags: [performance, actionable-signal, bigquery, truncation, finfluencer-trade]
 ---
 
@@ -49,6 +49,7 @@ Implicit closes do **not** apply across tickers (e.g. long AMD does not close lo
 
 ## Related pages
 
+- [[concepts/information-ratio]] — risk-adjusted score of those alphas (kept picks, NULL below 20); replaced Sharpe on 2026-09-29
 - [[concepts/actionable-signal]]
 - [[concepts/post-cutoff-ipo-resolution]]
 - [[concepts/cumulative-performance-charts]]
