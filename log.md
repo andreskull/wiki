@@ -307,3 +307,13 @@ Permanent record at `gor_dagster/docs/architecture/features/information-ratio.md
 ## [2026-09-29] sync | gor_dagster
 
 Recorded Information Ratio on [[projects/gor_dagster]] (decision, completed features, wrapped note), [[projects/finfluencer-tracker]], [[concepts/signal-performance]], [[overview]], and [[index]]. New concept [[concepts/information-ratio]].
+
+## [2026-09-30] decision-updated | Regulated LinkedIn contacts get an existence notice, not silence — [[decisions/exclude-regulated-finance-employees-from-outreach-2026-08]] refined. Scorecard, chart, and "would love your take" stay withheld. Unset Affiliation still drafts nothing.
+
+## [2026-09-30] wrapup | finfluencer-tracker | Supabase ledger baseline
+
+Permanent record at `finfluencer-tracker/docs/architecture/features/supabase-ledger-baseline.md`. Migrations replay from empty to production's schema; 73 old files archived; both live histories repaired with schema byte-identical before and after. Temp `docs/features/supabase-ledger-baseline/` deletion awaits confirmation.
+
+## [2026-09-30] sync | finfluencer-tracker
+
+Recorded the Supabase ledger baseline on [[projects/finfluencer-tracker]] (current status, completed features, four decisions) and [[index]]. No new concept page.

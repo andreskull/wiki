@@ -4,8 +4,8 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-09-29
-tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard]
+updated: 2026-09-30
+tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
 ---
 
 # finfluencer-tracker
@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-09-29)
+## Current status (2026-09-30)
+
+**Supabase ledger baseline wrapped (2026-09-30)**: `supabase/migrations/` now replays from an empty database to production's schema. The 73 old migrations moved to `supabase/migrations_archive/`; the live pair is `20261001000000_baseline_schema.sql` (generated from production with `pg_dump` 17) plus a hand-written idempotent `20261001000100_baseline_supplement.sql` (extensions, `auth.users` trigger, publication membership). Both live histories were repaired with `migration repair`; the catalog snapshot was byte-identical before and after. `npm run db:replay-check` proves a replay equals production (two documented exceptions). Two sector RPC bodies were realigned first (`20260930100000`). `supabase/seed.sql` is local only. New migrations before 2026-10-01 00:01 UTC must be named `20261001000200_…` or later. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/supabase-ledger-baseline.md).
 
 **Information Ratio live (2026-09-29)**: The leaderboard column is **IR** and the profile card is **Info Ratio**. Both read `information_ratio` (NULL below 20 kept picks shows "—"; a gated row stays locked). Methodology defines it. The Trader upgrade email says "Information Ratios" on both deployed `stripe-webhook` functions. See [[concepts/information-ratio]] and [information-ratio.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/information-ratio.md).
 
@@ -134,6 +136,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-09-30 | Supabase ledger baseline | [supabase-ledger-baseline.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/supabase-ledger-baseline.md) |
 | 2026-09-29 | Information Ratio on the leaderboard, profile cards, Methodology, and the Trader email | Cross-repo: [information-ratio.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/information-ratio.md) |
 | 2026-09-28 | Profile and leaderboard script split | [profile-leaderboard-script-split.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/profile-leaderboard-script-split.md) |
 | 2026-09-28 | Onboarding questionnaire v2 | [onboarding-questionnaire-v2.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-questionnaire-v2.md) |
@@ -163,6 +166,10 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-09-30 | Migration history is a baseline pair, not 73 replays | Replaying the old files never matched production. A generated schema file plus a supplement for what `pg_dump --schema=public` omits (publication membership, `auth.users` triggers) replays to a snapshot-identical schema. Old files stay in `migrations_archive/` |
+| 2026-09-30 | Replay is proved with a catalog snapshot, not by eye | `scripts/ledger-catalog-snapshot.sql` diffed against production; approved exceptions live in `scripts/ledger-snapshot-exceptions.txt` (`pg_net` extension, notification function URL). Run `npm run db:replay-check` before any push |
+| 2026-09-30 | Live histories repaired, live schema untouched | `migration repair` reverted the 73 old versions and applied the two baseline versions on development and production. Schema snapshots matched before and after; backups of `schema_migrations` kept |
+| 2026-09-30 | Do not install extensions the app does not use | The replay dropped `pg_graphql` in the supplement (`DROP EXTENSION IF EXISTS`) so a local stack matches production |
 | 2026-09-28 | Show data-ready is the real header row, from one `isDataReadyRoute` list | A guest cannot read below `TierGate`. A second route list in `BottomNav` prefetched before that header |
 | 2026-09-28 | Unused Supabase realtime and storage are build aliases | `supabase-js` constructs both inside `createClient`, so tree-shaking cannot drop them. Deleting the two alias lines restores the real clients |
 | 2026-09-28 | Show profile is data late; desktop `/leaderboard` is not enough samples | No show body split and no leaderboard page change. A shell `shows` request, and a desktop field read that drops 40 ms no-geography samples, are later features |
