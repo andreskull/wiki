@@ -317,3 +317,19 @@ Permanent record at `finfluencer-tracker/docs/architecture/features/supabase-led
 ## [2026-09-30] sync | finfluencer-tracker
 
 Recorded the Supabase ledger baseline on [[projects/finfluencer-tracker]] (current status, completed features, four decisions) and [[index]]. No new concept page.
+
+## [2026-10-01] wrapup | gor_dagster | Sector ETF registry
+
+Permanent record at `gor_dagster/docs/architecture/features/sector-etf-registry.md`. Registry flag on in production since 2026-09-30; check order dismissed → registry → curator alias → Human queue; GICS concepts use the benchmark ETFs; seed merges, never deletes, and refuses ambiguous ETF tickers (AGG, MCHI, VWO dropped). First day: "energy" → VDE, "utilities" → VPU. Pending sector backlog was empty. `WIKI.md` and `CLAUDE.md` resolver section updated. Temp `docs/features/data-driven-sector-etf-registry/` deleted.
+
+## [2026-10-01] sync | gor_dagster
+
+Recorded the sector ETF registry on [[projects/gor_dagster]] (Stage 6, decision, completed features, wrapped note; removed from active features; sensor cadence corrected to 4h), [[overview]], and [[index]]. New concept [[concepts/sector-etf-registry]].
+
+## [2026-10-06] wrapup | finfluencer-tracker | Onboarding skip improvements
+
+Permanent record at `finfluencer-tracker/docs/architecture/features/onboarding-skip-improvements.md`. Skip stays. Inline validation kept. Loading masks are not hit targets. Completion gate not met (6 of 14, 29 Sep–5 Oct). Dead-click gate not passed (no matched skip-session rate). Temp `docs/features/onboarding-skip-improvements/` deleted.
+
+## [2026-10-06] sync | finfluencer-tracker
+
+Recorded onboarding skip improvements on [[projects/finfluencer-tracker]], [[concepts/post-signup-onboarding]], [[products/finfluencer-trade]], [[overview]], and [[index]]. No new concept page.

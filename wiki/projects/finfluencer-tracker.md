@@ -4,7 +4,7 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-09-30
+updated: 2026-10-06
 tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
 ---
 
@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-09-30)
+## Current status (2026-10-06)
+
+**Onboarding skip improvements wrapped (2026-10-06)**: Skip stays a full-width secondary button. Continue shows an inline error and keeps the typed answer. Loading shells on the leaderboard, compare, and profiles do not take taps. The completion bar was missed: 6 of 14 sign-ups finished in 29 Sep–5 Oct (43%; the bar was 50%). Dead clicks after Skip were not re-measured on the skip segment. See [[concepts/post-signup-onboarding]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-skip-improvements.md).
 
 **Supabase ledger baseline wrapped (2026-09-30)**: `supabase/migrations/` now replays from an empty database to production's schema. The 73 old migrations moved to `supabase/migrations_archive/`; the live pair is `20261001000000_baseline_schema.sql` (generated from production with `pg_dump` 17) plus a hand-written idempotent `20261001000100_baseline_supplement.sql` (extensions, `auth.users` trigger, publication membership). Both live histories were repaired with `migration repair`; the catalog snapshot was byte-identical before and after. `npm run db:replay-check` proves a replay equals production (two documented exceptions). Two sector RPC bodies were realigned first (`20260930100000`). `supabase/seed.sql` is local only. New migrations before 2026-10-01 00:01 UTC must be named `20261001000200_…` or later. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/supabase-ledger-baseline.md).
 
@@ -122,6 +124,7 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [finfluencer-ticker-pick-lookup](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/finfluencer-ticker-pick-lookup.md) | Finfluencer ticker lookup + ranked-list RPC; two box-plot charts retired (**2026-09-05**) |
 | [post-signup-onboarding](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/post-signup-onboarding.md) | Auth-callback onboarding detour; skippable wizard; pending dest (**2026-09-09**) |
 | [onboarding-questionnaire-v2](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-questionnaire-v2.md) | One research question per screen; channel, follows, names, holding period (**2026-09-28**) |
+| [onboarding-skip-improvements](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-skip-improvements.md) | Inline validation; Skip stays; loading masks are not hit targets; completion gate not met (**2026-10-06**) |
 | [user-default-holding-period](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/user-default-holding-period.md) | System start 6 months; Settings pin; URL omit uses system default (**2026-09-16**) |
 | [sector-leaderboard-wide-name-filter](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/sector-leaderboard-wide-name-filter.md) | Name filter in the sector table header at every width; top bar still opens `/leaderboard` (**2026-09-24**) |
 | [ui-accessibility-and-test-reliability](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ui-accessibility-and-test-reliability.md) | Button fill vs alpha colours; contrast enforced; phone name wrap (**2026-09-25**) |
@@ -136,6 +139,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-10-06 | Onboarding skip improvements | [onboarding-skip-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-skip-improvements.md) |
 | 2026-09-30 | Supabase ledger baseline | [supabase-ledger-baseline.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/supabase-ledger-baseline.md) |
 | 2026-09-29 | Information Ratio on the leaderboard, profile cards, Methodology, and the Trader email | Cross-repo: [information-ratio.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/information-ratio.md) |
 | 2026-09-28 | Profile and leaderboard script split | [profile-leaderboard-script-split.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/profile-leaderboard-script-split.md) |
@@ -175,6 +179,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 | 2026-09-28 | Show profile is data late; desktop `/leaderboard` is not enough samples | No show body split and no leaderboard page change. A shell `shows` request, and a desktop field read that drops 40 ms no-geography samples, are later features |
 | 2026-09-28 | The profile body split and the lazy toaster were not shipped | The body (at least 93 KB) was the cut to the 591,608 byte target. The toaster is 13 KB. Select and the Radix overlay stack stay in `app-core` |
 | 2026-09-28 | The inline bootstrap preloads landing chunks only on `/` | They were on every non-ad path. A bare `import.meta.env` must not be read: Vite inlines the whole env object into `ad-shared` |
+| 2026-10-06 | Do not raise onboarding completion by hiding Skip | Skip is the measured choice. A loading mask is not a hit target. The 50% bar was missed (6 of 14, 29 Sep–5 Oct) |
 | 2026-09-28 | Onboarding research holding period is not the chart pin | Screen D writes `holding_period_preference`. It does not read or write `user_profiles.default_holding_period`. |
 | 2026-09-28 | Onboarding `step` reuses the Tour Step GA4 dimension | One custom dimension per parameter name. Filter reports by event name. `name_count` is a custom metric. |
 | 2026-09-27 | Search RSA images are not PMax harness JPEGs | Google's overlay carve-out is PMax-only. Chart chrome and in-pixel UI text fail Search as "Text or graphic overlays". |
@@ -260,7 +265,7 @@ Shipped MVP scope: [`gor_dagster/docs/MVP_MASTER_PLAN.md`](file:///Users/andresk
 ## Deferred / out of scope
 
 - Terminal product SKU / Terminal downward-reconcile product map
-- Revisit skippable onboarding vs 50% completion target (1–8 Sep 2026: skip 17 / complete 6 / `sign_up` 29) — [[concepts/post-signup-onboarding]]
+- Onboarding completion stayed under 50% after the skip-path work (6 of 14, 29 Sep–5 Oct 2026). Skip stays. A later lift is a new product decision — [[concepts/post-signup-onboarding]]
 - Magic-link / OTP deliverability (Gmail Spam on a young domain; `rua=` DMARC still open; not an app defect)
 - Email capture / newsletter on landing
 - Embedded Stripe Payment Element migration

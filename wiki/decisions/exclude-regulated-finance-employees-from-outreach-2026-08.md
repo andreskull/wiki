@@ -4,7 +4,7 @@ title: "Exclude employees of registered financial entities from finfluencers.tra
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-08-31
-updated: 2026-08-31
+updated: 2026-09-30
 tags: [outreach, gtm, compliance, linkedin, icp, decision]
 ---
 
@@ -50,21 +50,20 @@ surface, not an SRO one, and is tracked independently of this decision.
 
 ## Decision made
 
-**Qualify outreach contacts by employer type, and hold anyone at a registered entity from
-automated performance messaging.** Retail investors, independent podcasters, newsletter authors,
-owner-operated research shops, educators, journalists, and academics remain the target.
+**Qualify outreach contacts by employer type. Regulated contacts get a notice that the site
+exists. They do not get a scorecard, a chart, or a request for a take.** Retail investors,
+independent podcasters, newsletter authors, owner-operated research shops, educators,
+journalists, and academics remain the people who receive a performance intro.
 
-Enforced in code rather than by convention. The Notion database *LinkedIn Finfluencer Outreach*
-carries an `Affiliation` select property (`independent` / `regulated`); anything else, including
-unset, holds. `scripts/export_linkedin_outreach_snapshot.py` carries it into the snapshot and
-`scripts/draft_linkedin_outreach_intros.py` routes non-`independent` contacts to `manual_review`
-with `fallback_reason=regulated_affiliation_hold` — no message drafted, no chart rendered.
+Enforced in code. The Notion database *LinkedIn Finfluencer Outreach* carries an `Affiliation`
+select (`independent` / `regulated`). `independent` gets the normal intro. `regulated` gets
+`action=regulated_notice`. Unset holds (`fallback_reason=regulated_affiliation_hold`, no
+message). Refined 2026-09-30: a regulated contact is told the site exists, because withholding
+every message meant they never heard of it. The notice names the site and what it scores, and
+stops.
 
-The gate **fails closed**: unclassified contacts are held. Classifying costs one glance at a
-current employer; guessing wrong costs the recipient a compliance problem.
-
-A hold withholds the automated message, not the operator's judgment — a human may still write
-something by hand.
+The gate **fails closed** on unclassified contacts. Classifying costs one glance at a current
+employer; guessing wrong costs the recipient a compliance problem.
 
 ## Consequences
 

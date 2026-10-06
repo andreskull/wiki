@@ -4,7 +4,7 @@ title: "Post-signup onboarding"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-09-09
-updated: 2026-09-28
+updated: 2026-10-06
 tags: [onboarding, auth, routing, ga4, signup, activation]
 ---
 
@@ -23,6 +23,8 @@ The old 24-hour `ProtectedRoute` gate never ran for homepage signups because `/l
 Activation (`onboarding_completed`) was unreachable for ad traffic that registered from the homepage. Deployed **2026-08-31** (PR #71). First clean window 1–8 Sep 2026: 29 `sign_up`, 30 `onboarding_view`, 6 completed, 17 skipped. Funnel **counts** live in GA4, not Clarity — Clarity skips credential URLs and idle-defers first init, so `onboarding_view` on the first post-callback route can miss the film ([[concepts/session-replay-analytics]]).
 
 `sign_up` stays the bidding signal ([[concepts/google-ads-conversion-tracking]], [[concepts/reddit-ads-conversion-tracking]]). `onboarding_skipped` is mirrored into Clarity, is not a GA4 key event, and is never an Ads conversion.
+
+Skip-path work shipped **2026-09-22** and was measured **2026-10-06**. Continue shows an inline error and keeps the typed answer. The blocking field is a Clarity session tag, `ft_onboarding_invalid`, because Clarity events cannot carry parameters. Skip stays a full-width ghost button. Route and chart loading shells are `pointer-events-none`. The 50% completion bar was missed: 6 of 14 sign-ups finished in 29 Sep–5 Oct (43%). Dead clicks on the skip segment were not re-measured. Permanent doc: [onboarding-skip-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-skip-improvements.md).
 
 ## Which projects use it
 
@@ -43,6 +45,7 @@ Activation (`onboarding_completed`) was unreachable for ad traffic that register
 ## Related concepts / sources
 
 - Permanent doc: [post-signup-onboarding.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/post-signup-onboarding.md)
+- Skip-path follow-up: [onboarding-skip-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-skip-improvements.md)
 - Ops: [session-replay-review.md](file:///Users/andreskull/finfluencer-tracker/docs/ops/session-replay-review.md)
 - Public `/leaderboard` is why the old gate failed: [[concepts/session-replay-analytics]], [landing-conversion-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-conversion-improvements.md)
 

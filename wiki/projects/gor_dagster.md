@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-09-29
+updated: 2026-10-01
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, linkedin, gemini, podcast-rss, outreach, source-quote, google-ads]
 ---
 
@@ -125,10 +125,11 @@ Docs: [Facts Extraction Architecture](file:///Users/andreskull/gor_dagster/docs/
 
 ### Stage 6 — Instrument + Speaker Resolution
 
-**Job:** `potential_prediction_resolution_job` → asset `resolve_pending_predictions` (speakers first, then instruments; `in_process_executor`). Sensor: `potential_prediction_resolution_sensor` (2h cadence).
+**Job:** `potential_prediction_resolution_job` → asset `resolve_pending_predictions` (speakers first, then instruments; `in_process_executor`). Sensor: `potential_prediction_resolution_sensor` (4h cadence). A manual run needs the sensor's `run_config`; the asset's defaults have every resolver flag off.
 
 **Instrument Resolution:** Maps raw ticker/company mentions to canonical `FinancialInstrument` entities via layered matching:
 
+- **Sector calls (`mention_type = 'sector_theme'`, ticker not spoken) — on since 2026-09-30:** dismissed hash → `SectorEtfRegistry` (concept ETF; GICS = benchmark ETFs) → curator alias on a registry miss → Human queue `REGISTRY_NO_MATCH`. No other layer. [[concepts/sector-etf-registry]]
 - Step 0: `DismissedInstrumentHash` auto-dismiss
 - Layer 0.5: `InstrumentAlias` instant lookup
 - **Layer 0.75: promoted-ticker lookup** (≥2 consistent manual curations, no conflicting aliases — **2026-07-07**)
@@ -410,6 +411,7 @@ Key rule: all Python code must be written to `.py` files before execution — ne
 | LinkedIn enrichment (trust-tiered) | Discovery never auto-writes profiles; trusted-only Supabase sync; published audit 100% trusted-or-none; no third-party LinkedIn API (2026-07-23). [[concepts/linkedin-enrichment]] |
 | Google Ads creatives (manual PMax) | Resolve in Python, render in tracker Chromium, write-once GCS. Rank featured subject on scored picks, not alpha. Subject period moved from `1y` to `6m` on **2026-09-27** (`HOLDING_PERIOD` in `build_google_ads_variants.py` — working tree only at wrapup). Live run **`2026-09-04T0804Z`** (V1 + V4) was still `1y`. No Dagster schedule, no Google Ads API. [[concepts/google-ads-creative-assets]] |
 | Profile pages: show open, ticker masked | Show profiles and the show leaderboard are open to **everyone** including paid panelists' show-scoped performance — the paywall lives on the finfluencer's own profile, not a show's view of that panelist; show-scoped reads use `SECURITY DEFINER` RPCs so tier-RLS on `signals` can't make a paid panelist vanish. Ticker pages are login-gated as a whole; within them, a paid finfluencer's per-finfluencer alpha and pick cards are masked for free users via per-row `CASE WHEN f.is_free_tier OR get_user_tier() IN (...)`. **2026-05-25**. [finfluencer-and-show-profiles.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/finfluencer-and-show-profiles.md) |
+| Sector calls resolve through the registry first | A known sector label resolves to its concept's ETF (GICS = the benchmark ETF) even when a curator alias exists; a dismissed hash stays dismissed; an unknown label uses its alias, else the Human queue. The seed never deletes and refuses to write when an ETF ticker is not exactly one `FinancialInstrument` row. No remap of earlier sector links (2026-09-30). [[concepts/sector-etf-registry]] |
 | Information Ratio, not a return Sharpe | Leaderboard and profile cards use mean annualized alpha over its sample standard deviation, kept picks only, NULL below 20. One BigQuery helper, a Postgres twin, and `IR_MIN_PICKS`. Sharpe columns are gone. Wrapped **2026-09-29**. [[concepts/information-ratio]] |
 | Widget added ≠ widget shipped | A render gate should be checked against a random baseline (exact binomial, not eyeballed) before trusting "clearly away from random" copy; a metric resting on ~10% of a person's data points is noise next to a full-sample average (hit rate, alpha, Sharpe) that already answers the same question. FR-1.11 (top/bottom decile capture, "Needle finder"/"Value trap") cancelled **2026-09-28** on both grounds before T-M15.1 was built. [finfluencer-and-show-profiles.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/finfluencer-and-show-profiles.md) |
 
@@ -421,6 +423,7 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 
 | Completed | Topic | Doc |
 |---|---|---|
+| 2026-10-01 | Sector ETF registry switched on (sector calls → concept ETF; dismissed → registry → alias → human; Map to sector concept in the curation queue; merging seed) | [sector-etf-registry.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/sector-etf-registry.md) |
 | 2026-09-29 | Information Ratio replaces Sharpe (kept-pick alpha / sample stddev, NULL below 20; Sharpe columns dropped) | [information-ratio.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/information-ratio.md) |
 | 2026-05-17 | BigQuery cost optimization (partition guardrails, `SELECT *` lint, cost snapshots under `docs/operations/`) | [bigquery-cost-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bigquery-cost-optimization.md) |
 | 2026-05-30 | 7investing RSS onboarding (Anchor/Spotify; Patterns 4+5; SI monitored set) | [7investing-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/7investing-ingestion.md) |
@@ -462,12 +465,13 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 
 These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; not indexed verbatim by wiki.
 
+**Wrapped 2026-10-01:** `data-driven-sector-etf-registry/` → [sector-etf-registry.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/sector-etf-registry.md) (flag on in production 2026-09-30; first day "energy" → VDE, "utilities" → VPU; pending sector backlog was empty — the old 601-label list was resolved/dismissed history; crypto registry still off. [[concepts/sector-etf-registry]]. Temp folder removed.)
+
 **Wrapped 2026-09-29:** `information-ratio/` → [information-ratio.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/information-ratio.md) (IR = kept-pick annualized alpha / sample stddev, NULL below 20; Sharpe columns dropped in BigQuery and Supabase; leaderboard **IR**, profile **Info Ratio**; Trader email says Information Ratios. [[concepts/information-ratio]]. Temp folder removed.)
 
 | Feature | Folder / notes |
 |---|---|
 | Batch LLM integration | `batch-integration/` — Phase 1 done (`LLMBatchProcessor`); Phase 5 = recursive SI wave batch (migrated from recursive-llm-extraction wrapup) |
-| Data-driven sector ETF registry | `data-driven-sector-etf-registry/` — registry tables exist; activation still off |
 
 **Wrapped 2026-09-28:** `post-cutoff-ipo-resolution/` → [post-cutoff-ipo-resolution.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/post-cutoff-ipo-resolution.md) (optional ticker; reactive `first_tradable_date`; `v_ticker_tenancy`; SpaceX and notable IPOs recovered; 32 historical identities; BEAT 2017 → BioTelemetry. Sector-ETF / crypto activation stayed in `data-driven-sector-etf-registry/`)
 
