@@ -333,3 +333,11 @@ Permanent record at `finfluencer-tracker/docs/architecture/features/onboarding-s
 ## [2026-10-06] sync | finfluencer-tracker
 
 Recorded onboarding skip improvements on [[projects/finfluencer-tracker]], [[concepts/post-signup-onboarding]], [[products/finfluencer-trade]], [[overview]], and [[index]]. No new concept page.
+
+## [2026-10-07] wrapup | gor_dagster | Retiring LLM models
+
+Permanent record at `gor_dagster/docs/architecture/features/retiring-llm-models.md`. Eleven eval configs refuse new runs; Sonnet 4.5 and GPT-5.1 refused on send path without model substitution; production Gemini SI/FE unchanged. Temp `docs/features/retiring-llm-models/` deleted.
+
+## [2026-10-07] sync | gor_dagster
+
+Recorded retiring LLM models on [[projects/gor_dagster]] (decision, completed features, wrapped note), [[concepts/llm-config-registry]], and [[index]].

@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-10-01
+updated: 2026-10-07
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, linkedin, gemini, podcast-rss, outreach, source-quote, google-ads]
 ---
 
@@ -411,6 +411,7 @@ Key rule: all Python code must be written to `.py` files before execution — ne
 | LinkedIn enrichment (trust-tiered) | Discovery never auto-writes profiles; trusted-only Supabase sync; published audit 100% trusted-or-none; no third-party LinkedIn API (2026-07-23). [[concepts/linkedin-enrichment]] |
 | Google Ads creatives (manual PMax) | Resolve in Python, render in tracker Chromium, write-once GCS. Rank featured subject on scored picks, not alpha. Subject period moved from `1y` to `6m` on **2026-09-27** (`HOLDING_PERIOD` in `build_google_ads_variants.py` — working tree only at wrapup). Live run **`2026-09-04T0804Z`** (V1 + V4) was still `1y`. No Dagster schedule, no Google Ads API. [[concepts/google-ads-creative-assets]] |
 | Profile pages: show open, ticker masked | Show profiles and the show leaderboard are open to **everyone** including paid panelists' show-scoped performance — the paywall lives on the finfluencer's own profile, not a show's view of that panelist; show-scoped reads use `SECURITY DEFINER` RPCs so tier-RLS on `signals` can't make a paid panelist vanish. Ticker pages are login-gated as a whole; within them, a paid finfluencer's per-finfluencer alpha and pick cards are masked for free users via per-row `CASE WHEN f.is_free_tier OR get_user_tier() IN (...)`. **2026-05-25**. [finfluencer-and-show-profiles.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/finfluencer-and-show-profiles.md) |
+| Retiring LLM models — refuse, do not substitute | Eleven eval configs (`si-claude-sonnet-4.5`, `tk_c45_*`, `tk_gpt51_*`) refuse new runs at `create_from_config` and batch submit; Sonnet 4.5 snapshot and `gpt-5.1` refused on the model send path without remapping. Registry + pricing rows stay for historical cost; production SI/FE unchanged (2026-10-07). [retiring-llm-models.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/retiring-llm-models.md) |
 | Sector calls resolve through the registry first | A known sector label resolves to its concept's ETF (GICS = the benchmark ETF) even when a curator alias exists; a dismissed hash stays dismissed; an unknown label uses its alias, else the Human queue. The seed never deletes and refuses to write when an ETF ticker is not exactly one `FinancialInstrument` row. No remap of earlier sector links (2026-09-30). [[concepts/sector-etf-registry]] |
 | Information Ratio, not a return Sharpe | Leaderboard and profile cards use mean annualized alpha over its sample standard deviation, kept picks only, NULL below 20. One BigQuery helper, a Postgres twin, and `IR_MIN_PICKS`. Sharpe columns are gone. Wrapped **2026-09-29**. [[concepts/information-ratio]] |
 | Widget added ≠ widget shipped | A render gate should be checked against a random baseline (exact binomial, not eyeballed) before trusting "clearly away from random" copy; a metric resting on ~10% of a person's data points is noise next to a full-sample average (hit rate, alpha, Sharpe) that already answers the same question. FR-1.11 (top/bottom decile capture, "Needle finder"/"Value trap") cancelled **2026-09-28** on both grounds before T-M15.1 was built. [finfluencer-and-show-profiles.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/finfluencer-and-show-profiles.md) |
@@ -423,6 +424,7 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 
 | Completed | Topic | Doc |
 |---|---|---|
+| 2026-10-07 | Retiring LLM models — closed Sonnet 4.5 / GPT-5.1 eval configs; config-id + model-level refusal; historical artefacts readable | [retiring-llm-models.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/retiring-llm-models.md) |
 | 2026-10-01 | Sector ETF registry switched on (sector calls → concept ETF; dismissed → registry → alias → human; Map to sector concept in the curation queue; merging seed) | [sector-etf-registry.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/sector-etf-registry.md) |
 | 2026-09-29 | Information Ratio replaces Sharpe (kept-pick alpha / sample stddev, NULL below 20; Sharpe columns dropped) | [information-ratio.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/information-ratio.md) |
 | 2026-05-17 | BigQuery cost optimization (partition guardrails, `SELECT *` lint, cost snapshots under `docs/operations/`) | [bigquery-cost-optimization.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bigquery-cost-optimization.md) |
@@ -464,6 +466,8 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 ## Active features in progress
 
 These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; not indexed verbatim by wiki.
+
+**Wrapped 2026-10-07:** `retiring-llm-models/` → [retiring-llm-models.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/retiring-llm-models.md) (eleven closed eval ids; refuse not remap; production Gemini SI/FE unchanged; `pipeline_eligibility.py` untouched. Temp folder removed.)
 
 **Wrapped 2026-10-01:** `data-driven-sector-etf-registry/` → [sector-etf-registry.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/sector-etf-registry.md) (flag on in production 2026-09-30; first day "energy" → VDE, "utilities" → VPU; pending sector backlog was empty — the old 601-label list was resolved/dismissed history; crypto registry still off. [[concepts/sector-etf-registry]]. Temp folder removed.)
 

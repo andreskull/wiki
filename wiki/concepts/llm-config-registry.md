@@ -4,7 +4,7 @@ title: "LLM Config Registry"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-07-27
+updated: 2026-10-07
 tags: [llm, configuration, registry, experimentation, multi-model]
 ---
 
@@ -35,6 +35,8 @@ Rather than hardcoding model names and prompts into individual assets, all LLM c
 **LinkedIn discovery:** `linkedin-gemini-flash` → model `gemini-3.5-flash-lite` (2026-07-27)
 
 **Legacy speaker attribution eval configs:** `gemini`, `gemini_20`, `gemini_25_pro`, `gpt5`, `gpt4o`, `gpt4o_mini`, `o3_mini`, `claude4_sonnet`
+
+**Closed experiments (2026-10-07):** `si-claude-sonnet-4.5`, seven `tk_c45_*`, three `tk_gpt51_*` — still in `LLM_CONFIGS` with historical `model` strings; `get_llm_config` works; new runs refused via `CLOSED_EXPERIMENT_CONFIG_IDS` / `assert_experiment_accepts_new_runs`. Config id and model stay matched (Sonnet 4.5 is not retargeted to 4.6). See [retiring-llm-models.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/retiring-llm-models.md).
 
 ## Ladder surfaces (do not conflate)
 
