@@ -4,7 +4,7 @@ title: "Field Core Web Vitals and data-ready"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-09-08
-updated: 2026-09-28
+updated: 2026-10-09
 tags: [lcp, inp, data-ready, ga4, bigquery, performance, field-rum]
 ---
 
@@ -15,6 +15,8 @@ tags: [lcp, inp, data-ready, ga4, bigquery, performance, field-rum]
 First-party field RUM on finfluencers.trade: GA4 `web_vitals` events (LCP, INP, CLS, TTFB, plus `DATA_READY`) segmented by rendering engine, device class, and route, exported to BigQuery. **Field decides done; lab decides whether a change helped.**
 
 `DATA_READY` is time from navigation (or SPA route entry) until real leaderboard/teaser rows exist. Core Web Vitals cannot see it: LCP and CLS can be “good” on a skeleton. The field sends LCP, INP, CLS, and TTFB. It does not send FCP.
+
+**2026-10-09:** ad landing time-to-content wrapped. `nav_kind` (`hard` / `spa`) is on every `web_vitals` event. The ad-click read is `nav_kind=hard`. On the 2026-09-25 window, mobile hard `DATA_READY` was 2.0 s on sectors (n = 5, under 2.5 s) and 6.2 s on `/finfluencer/:slug` (n = 3). The profile lab showed the header call ending before `app-core`, so server HTML stayed closed. Record: [ad-landing-time-to-content.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ad-landing-time-to-content.md).
 
 **2026-09-28:** the show profile reports `DATA_READY` with surface `'show'` when the real header row commits (`data-testid="show-profile-header"`). `src/lib/dataReadyRoutes.ts` is the only list of routes that wait before nav prefetch. The first production rows were two SPA navigations. A hard-navigation baseline was not opened. The finfluencer profile's field verdict after the script inventory was not taken. Per-sample breakdown: `docs/ops/sql/data_ready_sample_breakdown.sql`.
 

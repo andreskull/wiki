@@ -4,7 +4,7 @@ title: "Mobile Core Web Vitals"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-08-22
-updated: 2026-09-28
+updated: 2026-10-09
 tags: [lcp, inp, performance, vercel, vite, search-console, ga4, bigquery, analytics]
 ---
 
@@ -12,7 +12,7 @@ tags: [lcp, inp, performance, vercel, vite, search-console, ga4, bigquery, analy
 
 ## Definition
 
-Delivery and loading changes that brought mobile Largest Contentful Paint on the Vite SPA under the Good threshold of **2.5 s**, and stopped third-party loaders competing with first paint (the INP lever), without changing the rendering architecture. The product stays a client-rendered SPA on Vercel. SSR and build-time prerendering were not opened.
+Delivery and loading changes that brought mobile Largest Contentful Paint on the Vite SPA under the Good threshold of **2.5 s**, and stopped third-party loaders competing with first paint (the INP lever), without changing the rendering architecture. The product stays a client-rendered SPA on Vercel. SSR and build-time prerendering were not opened. Ad landing (wrapped 2026-10-09) reconsidered both per route and left them closed: first paint and layout shift had passed, and the profile's late leg was the page script.
 
 The 8-URL Search Console group was mixed origin: four Vite SPA URLs (`/`, `/show/:slug`, `/leaderboard`, `/privacy`) and four MkDocs `/blog*` URLs proxied via `vercel.json`. This work can only move the SPA half. Blog delivery is a [[projects/gor-blog]] question.
 

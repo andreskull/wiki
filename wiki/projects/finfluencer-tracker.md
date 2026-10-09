@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-10-06)
+## Current status (2026-10-09)
+
+**Ad landing time to content wrapped (2026-10-09)**: The HTML shell starts the guest data request on `/leaderboard`, `/shows`, `/leaderboard/sectors`, and `/finfluencer/:slug`. `nav_kind` splits a cold visit from an in-app one. Sectors closed under 2.5 s. The profile was still over, and the production trace showed `app-core` finishing after the header call, so server HTML stayed closed. Ads landing-page experience on 2026-10-09 was still mostly Below average and is not the gate. See [[concepts/core-web-vitals-field]], [[concepts/core-web-vitals-mobile]], and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ad-landing-time-to-content.md).
 
 **Onboarding skip improvements wrapped (2026-10-06)**: Skip stays a full-width secondary button. Continue shows an inline error and keeps the typed answer. Loading shells on the leaderboard, compare, and profiles do not take taps. The completion bar was missed: 6 of 14 sign-ups finished in 29 Sep–5 Oct (43%; the bar was 50%). Dead clicks after Skip were not re-measured on the skip segment. See [[concepts/post-signup-onboarding]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-skip-improvements.md).
 

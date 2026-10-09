@@ -345,3 +345,9 @@ Recorded retiring LLM models on [[projects/gor_dagster]] (decision, completed fe
 ## [2026-10-09] sync | finfluencer-tracker
 
 Reddit Conversions API is live in the pixel doc. Server `SIGN_UP` since 2026-09-24; click id rides the magic link; two-week read kept the €10/day test budget. Updated [[projects/finfluencer-tracker]], [[concepts/reddit-ads-conversion-tracking]], [[products/finfluencer-trade]], [[overview]], [[index]].
+
+## [2026-10-09] wrapup | finfluencer-tracker | Ad landing time to content
+
+## [2026-10-09] sync | finfluencer-tracker
+
+Ad landing time to content wrapped. The shell starts the guest request on the four ad routes. `nav_kind` splits a cold visit. Server HTML stayed closed. Updated [[projects/finfluencer-tracker]], [[concepts/core-web-vitals-field]], [[concepts/core-web-vitals-mobile]], [[overview]], [[index]].
