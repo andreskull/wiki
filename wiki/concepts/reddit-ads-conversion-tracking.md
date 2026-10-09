@@ -4,7 +4,7 @@ title: "Reddit Ads conversion tracking"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-08-17
-updated: 2026-08-17
+updated: 2026-10-09
 tags: [reddit-ads, pixel, conversion-tracking, consent, marketing]
 ---
 
@@ -23,11 +23,13 @@ Pixel ID `a2_jhxip4hotxq3`. Account Botastico OÜ (`jhxip4hotxq3`). Env: `VITE_R
 
 ## Relevance
 
-Parallel paid channel to [[concepts/google-ads-conversion-tracking]]. Same signup moment, same advertising cookie category, separate pixel. Advanced Matching (hashed email) is disclosed on `/privacy` but **not sent**. `rdt_cid` is stored as `ft_rdt_cid` for a future Conversions API; unused today.
+Parallel paid channel to [[concepts/google-ads-conversion-tracking]]. Same signup moment, same advertising cookie category, separate pixel. The server Conversions API has sent `SIGN_UP` since **2026-09-24** (`conversion_id = user.id`, so Reddit dedupes it with the pixel). The click id is in `localStorage` for 28 days and also on the magic-link URL, because the mail app opens a different browser. Hashed email, IP, and user agent go to that server call. They are still **not** passed to `rdt('init')`.
 
 ## Which projects use it
 
-- [[projects/finfluencer-tracker]] — pixel, consent, SignUp (shipped **2026-08-17**)
+- [[projects/finfluencer-tracker]] — pixel and consent (**2026-08-17**); server SignUp and `signup_attribution` (**2026-10-09**)
+
+Two-week read (24 Sep–7 Oct 2026): Reddit 7 real Sign Ups, first-party Reddit rows 8, GA4 `reddit / cpc` `sign_up` 7. Counts agreed within ±1. About €20.69 per real signup. The €10/day test budget stays. SignUp match quality was still N/A on 27 Sep.
 
 ## Campaigns (as of 2026-08-17)
 

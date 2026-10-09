@@ -2,7 +2,7 @@
 type: overview
 title: "Wiki Overview"
 created: 2026-04-06
-updated: 2026-10-06
+updated: 2026-10-09
 ---
 
 # Wiki Overview
@@ -44,7 +44,7 @@ Three products, one methodology, one wiki. Updated: 2026-10-06.
 - [[concepts/finfluencer-ticker-pick-lookup]] — profile ticker lookup + ranked lists share `finfluencer_ticker_list`; PostgREST 1000-row cap is a silent lie; two box-plot charts retired (2026-09-05)
 - [[concepts/subscription-entitlement-ssot]] — profile tier = app entitlement; Stripe billing-only; reconcile + RLS close (2026-07-27)
 - [[concepts/cumulative-performance-charts]] — profile `/compare` cumulative % curves + export; waypoint-shaped path; SPY `benchmark_daily_prices` (2026-08-04)
-- [[concepts/reddit-ads-conversion-tracking]] — Reddit pixel `SignUp` / `PageVisit`; consent gate before `pixel.js`; Conversions campaign live (2026-08-17)
+- [[concepts/reddit-ads-conversion-tracking]] — Reddit pixel and Conversions API; server `SignUp` live; €10/day test budget kept (2026-10-09)
 - [[concepts/session-replay-analytics]] — Microsoft Clarity on Production; analytics consent; Balanced + Settings mask; weekly review until 2026-09-17 (2026-08-18)
 - [[concepts/post-signup-onboarding]] — auth-callback detour after registration; skippable; counts in GA4 not Clarity (2026-09-09)
 - [[concepts/user-default-holding-period]] — system start 6 months; Settings pin; named `?horizon=` wins; URL omit uses system default (2026-09-16)
@@ -59,4 +59,4 @@ Three products, one methodology, one wiki. Updated: 2026-10-06.
 - Botastico: **`botastico-api`** + **`botastico`** monorepo indexed (SSL/monitoring 2026-07-15); portal/script/stripe/etc. still thin in wiki
 - `rattaproff` — category URL export from Woo slugs (2026-08-14); HUF/EUR pricing note (May 2026)
 - **`gor_dagster` feature folders in flight** — wiki gains permanent `docs/architecture/features/` entries as each wraps up
-- **finfluencer-tracker:** profile script split wrapped **2026-09-28** without the body cut (at least 93 KB still before the first card; stand-ins not on production); show profile is data late; field CWV wrapped **2026-09-08** — `/` teaser DATA_READY still ~4 s if cheaper `landing_stats` is wanted later; onboarding completion stayed under 50% after the skip-path work (6 of 14, 29 Sep–5 Oct 2026; Skip stays); Clarity weekly review until **2026-09-17**; official Clarity↔GA4 OAuth link deferred; Reddit CAPI / Advanced Matching deferred; Terminal SKU / product map deferred; magic-link deliverability deferred; true daily portfolio marks parked ([[concepts/core-web-vitals-field]], [[concepts/post-signup-onboarding]], [[concepts/session-replay-analytics]], [[concepts/cumulative-performance-charts]], [[concepts/reddit-ads-conversion-tracking]])
+- **finfluencer-tracker:** profile script split wrapped **2026-09-28** without the body cut (at least 93 KB still before the first card; stand-ins not on production); show profile is data late; field CWV wrapped **2026-09-08** — `/` teaser DATA_READY still ~4 s if cheaper `landing_stats` is wanted later; onboarding completion stayed under 50% after the skip-path work (6 of 14, 29 Sep–5 Oct 2026; Skip stays); Clarity weekly review until **2026-09-17**; official Clarity↔GA4 OAuth link deferred; Reddit pixel Advanced Matching still off (CAPI live); Terminal SKU / product map deferred; magic-link deliverability deferred; true daily portfolio marks parked ([[concepts/core-web-vitals-field]], [[concepts/post-signup-onboarding]], [[concepts/session-replay-analytics]], [[concepts/cumulative-performance-charts]], [[concepts/reddit-ads-conversion-tracking]])

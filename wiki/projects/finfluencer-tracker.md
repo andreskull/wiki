@@ -4,7 +4,7 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-10-06
+updated: 2026-10-09
 tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
 ---
 
@@ -64,7 +64,7 @@ Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in pro
 
 **Marketing Explore nav live** — header dropdown + mobile hamburger + footer Product column expose Leaderboard, Compare, and Shows on every marketing page (`/`, `/methodology`, `/privacy`, `/terms`). Single source: `src/config/marketingNav.ts` `EXPLORE_LINKS`. [Feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/public-navigation-discoverability.md).
 
-**Reddit Ads pixel live** — consent-gated `PageVisit` + `SignUp` on production; Conversions campaign optimises on `SignUp`; Traffic Max paused. See [[concepts/reddit-ads-conversion-tracking]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/reddit-pixel-tracking.md).
+**Reddit Ads pixel and Conversions API live** — consent-gated `PageVisit` + pixel `SignUp`; server `SIGN_UP` since 2026-09-24 (test mode off the same day). Click id rides the magic link. Two-week read kept the €10/day test budget (2026-10-08). See [[concepts/reddit-ads-conversion-tracking]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/reddit-pixel-tracking.md).
 
 **Cumulative performance charts shipped** — profile vs S&P, `/compare` head-to-head, Play animation, watermarked PNG/JPEG/MP4 export. See [[concepts/cumulative-performance-charts]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/cumulative-performance-comparison-charts.md).
 
@@ -159,6 +159,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 | 2026-08-18 | Session replay & behavioural analytics | [session-replay-analytics.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/session-replay-analytics.md) |
 | 2026-08-17 | Public navigation discoverability | [public-navigation-discoverability.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/public-navigation-discoverability.md) |
 | 2026-08-17 | Reddit pixel tracking | [reddit-pixel-tracking.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/reddit-pixel-tracking.md) |
+| 2026-10-09 | Reddit Conversions API (same doc) | [reddit-pixel-tracking.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/reddit-pixel-tracking.md) |
 | 2026-08-04 | Cumulative performance comparison charts | [cumulative-performance-comparison-charts.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/cumulative-performance-comparison-charts.md) |
 | 2026-07-27 | Subscription entitlement SSOT | [subscription-entitlement-ssot.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/subscription-entitlement-ssot.md) |
 | 2026-07-23 | LinkedIn URL on finfluencer profiles (trusted sync) | Cross-repo: [linkedin-enrichment.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/linkedin-enrichment.md) |
@@ -223,8 +224,9 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 | 2026-08-17 | Do not `forceMount` the Explore `NavigationMenu` panel | Crawl paths already exist via homepage CTAs + footer; force-mounting hides a duplicate nav from screen readers |
 | 2026-08-17 | Hero teaser NAME column: trim `lg` fixed tracks, keep `1.2fr 1fr` | 50/50 split costs the h1 a fold line; `min-w-0` + oversized numeric columns was the collapse |
 | 2026-08-14 | Reddit `pixel.js` gated in our code; no-choice default matches Google Consent Mode | Reddit ignores Consent Mode; US/UK/CA never see the EEA banner so a click-to-accept gate left ad visitors unmeasured |
-| 2026-08-12 | Reddit `SignUp` rides `maybeTrackSignUp`; `conversionId = user.id` | One dedupe path with Google; keeps Pixel + future CAPI collapsible |
-| 2026-08-12 | Advanced Matching: privacy clause now, hashed email not sent | Avoid a second privacy review without shipping PII at current volume |
+| 2026-08-12 | Reddit `SignUp` rides `maybeTrackSignUp`; `conversionId = user.id` | One dedupe path with Google; Pixel and CAPI collapse on that id |
+| 2026-08-12 | Advanced Matching: privacy clause now, hashed email not sent on the pixel | CAPI hashes the email instead (2026-10-09). `rdt('init')` still gets no match keys |
+| 2026-10-09 | Reddit click id rides the magic link as `ml_*` | The mail app does not share `localStorage` with the browser that loaded the ad |
 | 2026-08-04 | Compare S&P optional (default off); plan-locked picks refused at picker | Head-to-head first; avoid dead-end dual-upgrade selection |
 | 2026-08-03 | Holding period ≠ chart lookback (two orthogonal controls) | Book selection vs viewport; both URL-synced |
 | 2026-08-03 | Shared `chartExportFrame` for PNG and every MP4 frame | Pixel parity; MP4 needs silent AAC + end-hold + AAC tail-pad |
@@ -255,6 +257,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 - **`signal_performance UNIQUE (signal_id, requested_horizon)`** — implicit unique index replaced `idx_sigperf_signal_horizon`; covering index stays
 - **`show_ticker_list`** — same variant sign filter as the finfluencer RPC (`>= 0` / `<= 0`); still granted to `anon` + `authenticated`
 - **`show_summary_stats()` / `show_distinct_ticker_counts()`** — guest `/shows` columns; keep-list (do not drop with retired chart RPCs)
+- **`signup_attribution`** — one row per user; authenticated insert of own row only; no client select. First-touch flags, not the click ids
 - **`feedback_posts`** — statuses include `declined`; `admin_note` + `notify_requested_at`; vote RLS allowlist `under_review`/`planned`; never rewrite `handle_feedback_notification()` ([[concepts/feedback-roadmap]])
 - Promotion: Preview → development Supabase + Stripe test; production Vercel → production Supabase + live Stripe. Edge function `notify-moderators` deploys **twice**.
 
@@ -274,7 +277,7 @@ Shipped MVP scope: [`gor_dagster/docs/MVP_MASTER_PLAN.md`](file:///Users/andresk
 - True daily portfolio marks (parked — [daily-marks-plan.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/daily-marks-plan.md)); show↔show compare; non-S&P benchmarks
 - Search RSA women square still Pending at wrapup (2026-09-27); glance on the next `ads-performance-morning-review` A9 pass — do not replace unless Disapproved ([ads-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ads-improvements.md))
 - 6-month Performance Max stills were not uploaded. The ops checklist allows that upload inside the existing asset group ([investor-positioning-landing-ads.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/investor-positioning-landing-ads.md))
-- Reddit Conversions API + Advanced Matching hashed email (pixel + privacy clause live; [[concepts/reddit-ads-conversion-tracking]])
+- Pixel Advanced Matching (hashed email on `rdt('init')`). CAPI already hashes it. Revisit only if SignUp match quality stays unscored ([[concepts/reddit-ads-conversion-tracking]])
 - Official Clarity↔GA4 OAuth dashboard link (playback URLs in GA4); campaign tags already on recordings ([[concepts/session-replay-analytics]])
 - Feedback note history / threading / voter-notify; reconstructing deleted submitter accounts; declined-last ordering must move server-side if the board paginates ([[concepts/feedback-roadmap]])
 - Profile body still downloads before the first card (at least 93 KB). The 591,608 byte target was not met. Stand-ins are on `development`, not production ([profile-leaderboard-script-split.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/profile-leaderboard-script-split.md))

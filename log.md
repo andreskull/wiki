@@ -341,3 +341,7 @@ Permanent record at `gor_dagster/docs/architecture/features/retiring-llm-models.
 ## [2026-10-07] sync | gor_dagster
 
 Recorded retiring LLM models on [[projects/gor_dagster]] (decision, completed features, wrapped note), [[concepts/llm-config-registry]], and [[index]].
+
+## [2026-10-09] sync | finfluencer-tracker
+
+Reddit Conversions API is live in the pixel doc. Server `SIGN_UP` since 2026-09-24; click id rides the magic link; two-week read kept the €10/day test budget. Updated [[projects/finfluencer-tracker]], [[concepts/reddit-ads-conversion-tracking]], [[products/finfluencer-trade]], [[overview]], [[index]].

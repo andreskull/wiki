@@ -4,7 +4,7 @@ title: "finfluencer.trade"
 product: finfluencer-trade
 project: null
 created: 2026-04-06
-updated: 2026-10-06
+updated: 2026-10-09
 tags: [finfluencer, finance, pipeline, dagster, blog, tracking, linkedin, stripe, entitlement, charts, clarity, session-replay, feedback, lcp, ticker, lookup, onboarding, holding-period]
 ---
 
@@ -28,7 +28,7 @@ The platform follows financial influencers (podcasters, YouTubers, analysts) and
 |---|---|
 | [[projects/gor_dagster]] | Data pipeline — ingestion, transcription, speaker attribution, facts extraction, signal generation. The core backend. |
 | [[projects/gor-blog]] | Public MkDocs site — blog, directory, articles; private **`research/cramer/`** (v1 closed 2026-09-24; catalog [`CONSERVATION.md`](file:///Users/andreskull/gor-blog/research/cramer/CONSERVATION.md)) |
-| [[projects/finfluencer-tracker]] | App + landing on Vercel — auth, billing, leaderboards, **user-default holding period** (**2026-09-16** [[concepts/user-default-holding-period]]); **post-signup onboarding** (**2026-08-31** / wrap **2026-09-09** [[concepts/post-signup-onboarding]]); **finfluencer ticker lookup** (**2026-09-05** [[concepts/finfluencer-ticker-pick-lookup]]); cumulative charts / `/compare` / export (**2026-08-04** [[concepts/cumulative-performance-charts]]); marketing **Explore** nav to Leaderboard / Compare / Shows (**2026-08-17**); Reddit pixel `SignUp` (**2026-08-17** [[concepts/reddit-ads-conversion-tracking]]); **Clarity session replay** (**2026-08-18** [[concepts/session-replay-analytics]]); `/feedback` **Declined + admin note** (**2026-08-22** [[concepts/feedback-roadmap]]); **mobile CWV** lab LCP under 2.5 s (**2026-08-22** [[concepts/core-web-vitals-mobile]]); **field CWV + DATA_READY** (**2026-09-08** [[concepts/core-web-vitals-field]]); entitlement SSOT **2026-07-27** ([[concepts/subscription-entitlement-ssot]]) |
+| [[projects/finfluencer-tracker]] | App + landing on Vercel — auth, billing, leaderboards, **user-default holding period** (**2026-09-16** [[concepts/user-default-holding-period]]); **post-signup onboarding** (**2026-08-31** / wrap **2026-09-09** [[concepts/post-signup-onboarding]]); **finfluencer ticker lookup** (**2026-09-05** [[concepts/finfluencer-ticker-pick-lookup]]); cumulative charts / `/compare` / export (**2026-08-04** [[concepts/cumulative-performance-charts]]); marketing **Explore** nav to Leaderboard / Compare / Shows (**2026-08-17**); Reddit pixel and Conversions API (**2026-08-17** / **2026-10-09** [[concepts/reddit-ads-conversion-tracking]]); **Clarity session replay** (**2026-08-18** [[concepts/session-replay-analytics]]); `/feedback` **Declined + admin note** (**2026-08-22** [[concepts/feedback-roadmap]]); **mobile CWV** lab LCP under 2.5 s (**2026-08-22** [[concepts/core-web-vitals-mobile]]); **field CWV + DATA_READY** (**2026-09-08** [[concepts/core-web-vitals-field]]); entitlement SSOT **2026-07-27** ([[concepts/subscription-entitlement-ssot]]) |
 | [[projects/cramer-mad-money-research]] | Public v1 kit + working paper (SSRN 6643379) — Cramer / *Mad Money* 2018–2024, frozen 2026-09-24 |
 
 ## Architecture summary
@@ -58,7 +58,7 @@ Active development. Pipeline is production-ready for core transcription and fact
 - **Profile and leaderboard script split (wrap 2026-09-28):** show profile reports data-ready and is data late; desktop `/leaderboard` has too few samples to name a late leg; Supabase realtime and storage are build aliases on `development`; the profile body split was not shipped ([profile-leaderboard-script-split.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/profile-leaderboard-script-split.md))
 - **Onboarding questionnaire v2 (2026-09-25 / wrap 2026-09-28):** one research question per screen; holding answer is not the chart pin; Users page in the pipeline dashboard reads the four columns ([onboarding-questionnaire-v2.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-questionnaire-v2.md))
 - **Clarity session replay (2026-08-18):** Production-only Microsoft Clarity; same analytics-consent gate as GA4/Reddit; Balanced + Settings page-root mask; funnel events in GA4 (not Ads conversions); weekly review until **2026-09-17** ([[concepts/session-replay-analytics]])
-- **Reddit pixel (2026-08-17):** consent-gated `pixel.js`; `SignUp` rides `maybeTrackSignUp`; Conversions campaign live, Traffic Max paused ([[concepts/reddit-ads-conversion-tracking]])
+- **Reddit pixel and Conversions API (2026-08-17 / 2026-10-09):** consent-gated `pixel.js`; server `SIGN_UP` since 2026-09-24; €10/day test budget kept ([[concepts/reddit-ads-conversion-tracking]])
 - **Cumulative charts / SPY sync (2026-07-30 → 2026-08-04):** App RPC builds chain-linked equity curves from mirrored signals + SPY `benchmark_daily_prices` synced from BigQuery `PriceHistory`; waypoint-shaped intra-window path (not true daily marks) ([[concepts/cumulative-performance-charts]])
 - **LinkedIn URLs (2026-07-23):** Only trusted provenance syncs BQ → Supabase `finfluencers.linkedin_url` → tracker profiles; discovery never auto-publishes ([[concepts/linkedin-enrichment]])
 - **LinkedIn outreach (2026-08-11):** Notion Accepted drafts + optional claim=chart MP4; no LinkedIn API send ([[concepts/linkedin-outreach]])

@@ -77,7 +77,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/concepts/cumulative-performance-charts]] | finfluencer-tracker: cumulative % profile + `/compare` + watermarked export; SPY sync; waypoint-shaped path (2026-08-04) |
 | [[wiki/concepts/botastico-ssl-certificates]] | botastico: GCP LB managed certs, auto-renew, renewal-failure monitoring (2026-07-15) |
 | [[wiki/concepts/google-ads-conversion-tracking]] | finfluencers.trade paid measurement — ONE Google tag `G-BLE3H05Q5T` → GA4 `485294334` + `AW-18322362149`; legacy "Finfluencers.Bet" name renamed 2026-08-04; trust IDs not names |
-| [[wiki/concepts/reddit-ads-conversion-tracking]] | finfluencers.trade Reddit pixel — `SignUp` + `PageVisit`, consent gate before `pixel.js`; Conversions campaign live, Traffic Max paused (2026-08-17) |
+| [[wiki/concepts/reddit-ads-conversion-tracking]] | finfluencers.trade Reddit pixel and Conversions API — `SignUp` + `PageVisit`, consent gate before `pixel.js`; server SignUp live; €10/day test budget kept (2026-10-09) |
 | [[wiki/concepts/session-replay-analytics]] | finfluencers.trade Microsoft Clarity — Production-only replay; analytics consent; Balanced + Settings mask; funnel events never Ads conversions (2026-08-18) |
 | [[wiki/concepts/post-signup-onboarding]] | finfluencer-tracker: auth-callback onboarding detour; one research question per screen (2026-09-28); skippable; skip-path work measured 2026-10-06 (completion 43%, Skip stays); funnel counts in GA4 not Clarity (2026-09-09) |
 | [[wiki/concepts/user-default-holding-period]] | finfluencer-tracker: system start 6 months; Settings pin; named `?horizon=` wins; URL omit uses system default (2026-09-16) |
