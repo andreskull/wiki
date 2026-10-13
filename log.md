@@ -355,3 +355,7 @@ Ad landing time to content wrapped. The shell starts the guest request on the fo
 ## [2026-10-13] sync | finfluencer-trade
 
 F5Bot mention monitoring is Olli's hourly flow in `gor-blog/_internal/f5bot/`. Priority 8 on [[synthesis/gtm-growth]] is closed. The Apps Script, the keyword Sheet, and the old classification labels are gone.
+
+## [2026-10-13] wrapup | gor-blog | F5Bot automation rebuild
+
+Permanent note is `_internal/f5bot/f5bot-automation.md` (not under `docs/`, which is the public site). Updated [[projects/gor-blog]], [[synthesis/gtm-growth]], [[index]].

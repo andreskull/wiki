@@ -4,7 +4,7 @@ title: "gor-blog"
 product: finfluencer-trade
 project: gor-blog
 created: 2026-04-06
-updated: 2026-09-24
+updated: 2026-10-13
 tags: [blog, mkdocs, content, finfluencer, research, articles, newsletter, convertkit]
 ---
 
@@ -50,7 +50,7 @@ gor-blog/
 └── api/                     ← newsletter / Kit integration code
 ```
 
-Internal implementation notes that are tightly coupled to specific code modules sit next to that code (e.g. `api/newsletter/registered-users-kit-import.md`, `api/newsletter/cumulative-compare-launch.md`), not under `features/`.
+Internal implementation notes that are tightly coupled to specific code modules sit next to that code (e.g. `api/newsletter/registered-users-kit-import.md`, `api/newsletter/cumulative-compare-launch.md`, `_internal/f5bot/f5bot-automation.md`), not under `features/`.
 
 ## Published content (as of 2026-04-06)
 
@@ -77,6 +77,8 @@ New articles about finfluencers or the platform are written directly as posts in
 
 ## Growth and product strategy
 
+**F5Bot (live 2026-10-07, wrapped 2026-10-13).** Olli scores Reddit alerts from the `info@` mailbox every hour and drafts `engage` / `both`. `research` is logged and not packeted. Code and the wrap-up note: [`_internal/f5bot/`](file:///Users/andreskull/gor-blog/_internal/f5bot/f5bot-automation.md). Secrets stay in `~/gor_dagster/.env`. The Apps Script, keyword Sheet, and old classification labels are gone. Priority 8 on [[synthesis/gtm-growth]] is closed.
+
 **[[synthesis/gtm-growth]]** — living GTM / growth hub (priorities and live channels). Product planning index: [[products/finfluencer-trade]] § Planning and strategy. **Cramer v1 is closed.** Catalog: [`research/cramer/CONSERVATION.md`](file:///Users/andreskull/gor-blog/research/cramer/CONSERVATION.md). The May 2026 campaign log ([`cramer-study-launch-campaign.md`](file:///Users/andreskull/gor-blog/research/cramer/promotion/cramer-study-launch-campaign.md)) is a frozen record.
 
 ## Required elements on every blog post
@@ -88,6 +90,8 @@ Every blog post in `docs/blog/posts/` must include the CTAs codified in [[concep
 **Sector Alpha research series published (2026-09-15 / 2026-09-16)**: Three research and methodology articles shipped: *Introducing Sector Alpha & Sector Leaderboards* (2026-09-15), *Do Financial Shows Pick Winning Stocks or Winning Sectors?* (2026-09-15, auditing 37,000+ public recommendations), and *Why 6 Months is Our Starting Holding Period* (2026-09-16). Embedded high-res visual assets and companion newsletter draft `emails/newsletters/2026-09-sector-alpha-launch.md`.
 
 **Search Console mobile CWV (2026-08-22):** four of the eight Poor-LCP URLs are MkDocs (`/blog/`, two posts, `/blog/about/`). The Vite SPA fix in [[projects/finfluencer-tracker]] cannot move them; a correct SPA-only fix can still leave the *group* Poor. See [[concepts/core-web-vitals-mobile]].
+
+**F5Bot automation live (2026-10-13).** Hourly local scoring of the F5Bot mailbox. See the growth section above and [[synthesis/gtm-growth]].
 
 **Cramer v1 closed (2026-09-24).** Blog post, SSRN 6643379, and the public kit stay as published. May promotion files are frozen. LinkedIn feature spec removed. Re-analysis not started. See [`CONSERVATION.md`](file:///Users/andreskull/gor-blog/research/cramer/CONSERVATION.md).
 
