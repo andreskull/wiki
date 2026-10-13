@@ -112,7 +112,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 | Page | Description |
 |------|-------------|
-| [[wiki/synthesis/gtm-growth]] | Living GTM / growth hub for finfluencers.trade — live channels, open priorities, doc map (Cramer v1 frozen 2026-09-24) |
+| [[wiki/synthesis/gtm-growth]] | Living GTM / growth hub for finfluencers.trade — live channels, open priorities, doc map. F5Bot rebuild closed 2026-10-13. |
 | [[wiki/synthesis/lint-finfluencer-trade-2026-04-06]] | Wiki lint — finfluencer.trade product scope (2026-04-06) |
 | [[wiki/synthesis/lint-gor-blog-2026-04-06]] | Wiki lint — gor-blog project (2026-04-06) |
 | [[wiki/synthesis/lint-finfluencer-tracker-2026-04-06]] | Wiki lint — finfluencer-tracker project (2026-04-06) |

@@ -4,7 +4,7 @@ title: "Finfluencers.trade GTM / growth hub"
 product: finfluencer-trade
 project: null
 created: 2026-09-18
-updated: 2026-09-27
+updated: 2026-10-13
 tags: [gtm, growth, marketing, ads, outreach, newsletter]
 ---
 
@@ -12,7 +12,7 @@ tags: [gtm, growth, marketing, ads, outreach, newsletter]
 
 **Living source of truth** for go-to-market and growth. Start here for priorities and where channel docs live.
 
-Last reviewed: **2026-09-18** (Europe/Tallinn).
+Last reviewed: **2026-10-13** (Europe/Tallinn).
 
 ## How to use this page
 
@@ -48,7 +48,7 @@ TikTok (and most Shorts feeds) skew younger, entertainment-first, short attentio
 
 - Blog CMS: MkDocs `gor-blog`, **Finfluencer Research** category
 - Notion: thin **status rows only** (no requirements/design dumps)
-- F5Bot Apps Script: **full rebuild** of `_internal/f5bot-automation/` (not patch)
+- F5Bot: Olli scores the mailbox hourly and drafts `engage` / `both`. The Apps Script is gone.
 - X stays in **Overheard firehose**
 - Engagement accounts + which app data to cite: defer until drafting
 - Intake packets: `gor-blog/_internal/pipeline-intake/`
@@ -60,7 +60,7 @@ TikTok (and most Shorts feeds) skew younger, entertainment-first, short attentio
 | Google Ads Search + PMax | Conversions wired; PMax creatives V1+V4 live; Search RSA studio stills Eligible **2026-09-27** (one square still Pending); homepage and ads subject period is 6 months **2026-09-27** — [[concepts/google-ads-conversion-tracking]], [[concepts/google-ads-creative-assets]] |
 | Reddit Ads | Conversions live; Traffic Max paused — [[concepts/reddit-ads-conversion-tracking]] |
 | PeerPush | Campaign existed; **renewed / currently active** |
-| F5Bot mention monitoring | Alerts by email (Reddit primary). Apps Script triage/drafts in `gor-blog/_internal/f5bot-automation/` — **built, unsatisfactory → rebuild** |
+| F5Bot mention monitoring | Live since 2026-10-07. Olli scores Reddit alerts hourly from `gor-blog/_internal/f5bot/` and drafts `engage` / `both`. Andres posts. |
 | Microsoft Clarity | Live — [[concepts/session-replay-analytics]] |
 | Kit / ConvertKit newsletter | Live; signup/newsletter list grows over time; guide in `gor-blog` |
 | Blog CTA pattern | Live — [[concepts/blog-post-cta-pattern]] |
@@ -86,7 +86,7 @@ Order is the working queue. No timeline phases.
 5. Engaged-user nurture — segment first (longer/return visits), then emails
 6. Meta Pixel + Meta ads setup
 7. LinkedIn regular posting — finfluencer / accountability thought leadership
-8. Rebuild F5Bot automation — full rebuild of `gor-blog/_internal/f5bot-automation/` (not patch)
+8. ~~Rebuild F5Bot automation~~ — done 2026-10-13. Replaced by Olli's hourly flow in `gor-blog/_internal/f5bot/`.
 9. X monitoring decision — stays in Overheard firehose for now; revisit source/manual later
 10. Low-ticket PDF SKU — optional one-time paid report on site
 11. YouTube — parked
@@ -119,7 +119,7 @@ Not part of the numbered GTM queue. Overheard scores digests → RESEARCH+ENGAGE
 | PMax creative brief + assets | [`finfluencer-tracker/marketing/`](file:///Users/andreskull/finfluencer-tracker/marketing/) | Execution assets |
 | Reddit ads notes | [`finfluencer-tracker/reddit-ads-call-brief-2026-08-17.md`](file:///Users/andreskull/finfluencer-tracker/reddit-ads-call-brief-2026-08-17.md) | Channel setup notes |
 | LinkedIn outreach state | [`gor-blog/.linkedin-outreach-state.json`](file:///Users/andreskull/gor-blog/.linkedin-outreach-state.json) | Recent run snapshot |
-| F5Bot automation (rebuild) | `gor-blog/_internal/f5bot-automation/` | Alert triage / draft replies |
+| F5Bot (Olli) | `gor-blog/_internal/f5bot/` | Hourly score; drafts `engage` / `both` |
 | Pipeline / outreach ops | `gor_dagster` docs + scripts | Execution |
 | App MVP / post-MVP product | `gor_dagster/docs/MVP_MASTER_PLAN.md`, `INCR_01_MASTER_PLAN.md` | Product scope (not GTM) |
 
@@ -131,7 +131,7 @@ Not part of the numbered GTM queue. Overheard scores digests → RESEARCH+ENGAGE
 | Reddit Ads | Tracker pixel | As needed |
 | PeerPush | PeerPush campaign | Renewed / live — monitor |
 | Meta Ads | To stand up; needs Pixel | After Pixel + creative |
-| Reddit organic | F5Bot alerts → (rebuilt) drafts → human reply | When alerts fire |
+| Reddit organic | F5Bot alerts → Olli drafts `engage` / `both` → human reply | Hourly while the Mac is awake |
 | LinkedIn organic + outreach | Personal LinkedIn; Notion; `gor_dagster` pipeline | Pipeline + human send; regular posts |
 | X / Twitter | Manual today | Decide monitor later |
 | Newsletter | `gor-blog` Kit API | Nurture **engaged** segment; broadcast after meaningful ships |
