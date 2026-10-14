@@ -4,7 +4,7 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-10-09
+updated: 2026-10-14
 tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
 ---
 
@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-10-09)
+## Current status (2026-10-14)
+
+**Search QS landing page wrapped (2026-10-14)**: `/leaderboard` heading is Finfluencers Stock Picks Leaderboard, with "Scored against the market" under it, including in the HTML shell. The 14-day read (30 Sep–13 Oct) put Search lost impression share (rank) at 72.42% against 86.82% on 29 Sep. Both `trading stocks` keywords are Quality Score 8 with landing-page experience Average. The page copy stays. Account edits are a checklist in `docs/ops/search-qs-ad-groups.md`. Leftovers in Reklaamirühm 1 were closed outside this feature. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/search-qs-landing-page.md).
 
 **Ad landing time to content wrapped (2026-10-09)**: The HTML shell starts the guest data request on `/leaderboard`, `/shows`, `/leaderboard/sectors`, and `/finfluencer/:slug`. `nav_kind` splits a cold visit from an in-app one. Sectors closed under 2.5 s. The profile was still over, and the production trace showed `app-core` finishing after the header call, so server HTML stayed closed. Ads landing-page experience on 2026-10-09 was still mostly Below average and is not the gate. See [[concepts/core-web-vitals-field]], [[concepts/core-web-vitals-mobile]], and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ad-landing-time-to-content.md).
 
@@ -122,6 +124,7 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [google-ads-creative-assets](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md) | PMax images + video from the shipped encoder; banner / overlay / outro (**2026-09-04**) |
 | [ads-improvements](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ads-improvements.md) | Search RSA studio stills; overlay carve-out is PMax-only; stills in `docs/ops/google-ads-search-images/` (**2026-09-27**) |
 | [investor-positioning-landing-ads](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/investor-positioning-landing-ads.md) | Homepage hold-period promise; 6-month teasers; ads checklist, no ads API (**2026-09-27**) |
+| [search-qs-landing-page](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/search-qs-landing-page.md) | Leaderboard heading and supporting line; Search ad-group checklist; Quality Score is evidence (**2026-10-14**) |
 | [customer-list-ad-audiences](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/customer-list-ad-audiences.md) | Registered-user Customer Match; Monday CSV refresh; Reddit parked (**2026-09-22**) |
 | [finfluencer-ticker-pick-lookup](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/finfluencer-ticker-pick-lookup.md) | Finfluencer ticker lookup + ranked-list RPC; two box-plot charts retired (**2026-09-05**) |
 | [post-signup-onboarding](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/post-signup-onboarding.md) | Auth-callback onboarding detour; skippable wizard; pending dest (**2026-09-09**) |
@@ -141,6 +144,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-10-14 | Search QS landing page | [search-qs-landing-page.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/search-qs-landing-page.md) |
 | 2026-10-06 | Onboarding skip improvements | [onboarding-skip-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-skip-improvements.md) |
 | 2026-09-30 | Supabase ledger baseline | [supabase-ledger-baseline.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/supabase-ledger-baseline.md) |
 | 2026-09-29 | Information Ratio on the leaderboard, profile cards, Methodology, and the Trader email | Cross-repo: [information-ratio.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/information-ratio.md) |

@@ -367,3 +367,11 @@ Fourteenth `podcast_rss` source. Pattern 8 is the Omny clip UUID. The ingestion 
 ## [2026-10-14] sync | gor_dagster
 
 Market Call onboarding. Updated [[projects/gor_dagster]], [[concepts/onboarding-new-podcast-source]], [[overview]], [[index]].
+
+## [2026-10-14] wrapup | finfluencer-tracker | Search QS landing page
+
+`/leaderboard` heading and supporting line are live. The 14-day Quality Score read is recorded. Leftovers in Reklaamirühm 1 were closed outside this feature. Permanent doc `docs/architecture/features/search-qs-landing-page.md`.
+
+## [2026-10-14] sync | finfluencer-tracker
+
+Search QS landing page. Updated [[projects/finfluencer-tracker]], [[products/finfluencer-trade]], [[overview]], [[index]].
