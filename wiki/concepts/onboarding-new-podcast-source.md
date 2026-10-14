@@ -4,7 +4,7 @@ title: "Onboarding a new podcast source"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-05-13
-updated: 2026-09-22
+updated: 2026-10-14
 tags: [rss, dagster, content-source, pipeline, si-sensor, gor_dagster, gor-blog]
 ---
 
@@ -28,7 +28,7 @@ Since **2026-07-27**, every onboarding **must** revise the public Finfluencers D
 
 | Gate | Symptom if missed | Typical fix |
 |------|-------------------|-------------|
-| **1** — `extract_episode_id_from_enclosure_url` | `ValueError` on every episode | New regex branch **last** in `rss_ingestion.py` + tests (e.g. **Pattern 6** Megaphone `ARML…` or **Pattern 7** `PPLLC…` for direct `feeds.megaphone.fm/{slug}` feeds) |
+| **1** — `extract_episode_id_from_enclosure_url` | `ValueError` on every episode | New regex branch **last** in `rss_ingestion.py` + tests (e.g. **Pattern 6** Megaphone `ARML…`, **Pattern 7** `PPLLC…` for direct `feeds.megaphone.fm/{slug}` feeds, or **Pattern 8** Omny clip UUID on `omny.fm/d/clips/.../audio.mp3`) |
 | **2** — SI sensor source discovery | No `stt_speaker_attributions` despite green RSS/STT | **Resolved for `podcast_rss`** — `si_sensor` queries all active podcast RSS ContentSources. Verify `source_type = 'podcast_rss'` on the new row. |
 | **3** — backfill ordering | Rare: old episodes ingest first when limits apply | Usually N/A when `MAX_BACKFILL_EPISODES=-1`; override if feed is oldest-first |
 
@@ -45,6 +45,8 @@ Pipeline PRs plus directory + wrap-up: **Preflight script** → **Regex + valida
 **Ops tips (2026-08-19):** Do **not** add a playbook Requirement for idempotency / safe re-runs (former Requirement 9). Proven across prior shows. Directory revision is Requirement 12.
 
 **Ops tips (2026-08-22 / The Intrinsic Value Podcast):** Megaphone `PPLLC{digits}.mp3` is **Pattern 7** (not ARML Pattern 6). Trim iTunes network suffixes on `ContentSource.name` **before** the first `mat_shows` sync — slugs freeze after insert. Example: [intrinsic-value-podcast-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/intrinsic-value-podcast-ingestion.md) (12th `podcast_rss` source; 784/784 downloaded; Covered `the-intrinsic-value-podcast`).
+
+**Ops tips (2026-10-14 / Market Call):** Omny paginates with `atom:link rel="next"`. The unbounded ingestion fetch follows it (cap `RSS_MAX_PAGES = 20`); the sensor head probe does not. Pattern 8 reads the clip UUID on the raw enclosure, including a Podtrac prefix, and ignores the Triton token. A crashed catalog resumes on the next new episode's job, because the sensor only compares page 1. Example: [bnn-market-call.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bnn-market-call.md) (14th `podcast_rss` source; 1,006/1,006 downloaded; directory Covered `market-call`).
 
 **Ops tips (2026-09-22 / Hedge Fund Tips with Tom Hayes):** For a multi-hour show, set `ContentSource.url` NULL after `add_new_rss_source_job` until one proof episode passes ElevenLabs STT, SI, and FE, then restore the feed URL. ElevenLabs waits are signed URL 14400s, POST 3600s, poll 7200s; do not change credit pacing. A merged monologue keeps the first `source_utterance_end`; the real tail is `merge_metadata.merged_utterances[].utterance_end`. An FE window can finish after the last prediction. Add the directory card only after `/show/{slug}` returns 200. Example: [hedge-fund-tips-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hedge-fund-tips-ingestion.md) (13th `podcast_rss` source; Patterns 4+5; 359/359 downloaded; directory deferred).
 

@@ -359,3 +359,11 @@ F5Bot mention monitoring is Olli's hourly flow in `gor-blog/_internal/f5bot/`. P
 ## [2026-10-13] wrapup | gor-blog | F5Bot automation rebuild
 
 Permanent note is `_internal/f5bot/f5bot-automation.md` (not under `docs/`, which is the public site). Updated [[projects/gor-blog]], [[synthesis/gtm-growth]], [[index]].
+
+## [2026-10-14] wrapup | gor_dagster | Market Call
+
+Fourteenth `podcast_rss` source. Pattern 8 is the Omny clip UUID. The ingestion job follows `rel="next"`; the sensor stays on page 1. Permanent doc `docs/architecture/features/bnn-market-call.md`.
+
+## [2026-10-14] sync | gor_dagster
+
+Market Call onboarding. Updated [[projects/gor_dagster]], [[concepts/onboarding-new-podcast-source]], [[overview]], [[index]].
