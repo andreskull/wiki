@@ -4,7 +4,7 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-10-14
+updated: 2026-10-16
 tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
 ---
 
@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-10-14)
+## Current status (2026-10-16)
+
+**Mobile sign-up drop closed (2026-10-16)**: mobile new users (`auth.users`) fell from 3.5 to 1.1 a day after deploy `29b315f` on 2026-09-29. The deploy was not the cause: the rate recovered with it in production. About half of the lost Search mobile sign-ups were non-US traffic removed by the 2026-09-28 location change ("Presence only"); Search Partners (6% to 43% of Search clicks, 1 conversion in 36) filled the rest and stalled `/signup` (mobile users on `/auth/callback` per users on `/signup` went 71% to 31% to 84% after partners were switched off on 2026-10-07). The 7 days after that gave 16 mobile new users (2.3 a day) against a geo-adjusted expectation of 15.5; the rollback was never built. The original 3 a day target was not met (2.3); Search mobile 15% was (20%). Reddit mobile conversion stays low (1 on 129 sessions; thin). `paywall_view` and `paywall_cta_click` now measure the paywall to `/signup` step. `sharpe` was dropped on 2026-09-29, so the Information Ratio display could not have been reverted anyway. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/mobile-signup-drop.md).
 
 **Search QS landing page wrapped (2026-10-14)**: `/leaderboard` heading is Finfluencers Stock Picks Leaderboard, with "Scored against the market" under it, including in the HTML shell. The 14-day read (30 Sep–13 Oct) put Search lost impression share (rank) at 72.42% against 86.82% on 29 Sep. Both `trading stocks` keywords are Quality Score 8 with landing-page experience Average. The page copy stays. Account edits are a checklist in `docs/ops/search-qs-ad-groups.md`. Leftovers in Reklaamirühm 1 were closed outside this feature. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/search-qs-landing-page.md).
 
@@ -124,6 +126,7 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [google-ads-creative-assets](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/google-ads-creative-assets.md) | PMax images + video from the shipped encoder; banner / overlay / outro (**2026-09-04**) |
 | [ads-improvements](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ads-improvements.md) | Search RSA studio stills; overlay carve-out is PMax-only; stills in `docs/ops/google-ads-search-images/` (**2026-09-27**) |
 | [investor-positioning-landing-ads](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/investor-positioning-landing-ads.md) | Homepage hold-period promise; 6-month teasers; ads checklist, no ads API (**2026-09-27**) |
+| [mobile-signup-drop](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/mobile-signup-drop.md) | Why mobile sign-ups fell after `29b315f` (Search mix, not the deploy); `paywall_view` / `paywall_cta_click`; new-users-per-day query; deploy annotations in `docs/ops/production-deploys.md` |
 | [search-qs-landing-page](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/search-qs-landing-page.md) | Leaderboard heading and supporting line; Search ad-group checklist; Quality Score is evidence (**2026-10-14**) |
 | [customer-list-ad-audiences](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/customer-list-ad-audiences.md) | Registered-user Customer Match; Monday CSV refresh; Reddit parked (**2026-09-22**) |
 | [finfluencer-ticker-pick-lookup](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/finfluencer-ticker-pick-lookup.md) | Finfluencer ticker lookup + ranked-list RPC; two box-plot charts retired (**2026-09-05**) |
@@ -144,6 +147,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-10-16 | Mobile sign-up drop | [mobile-signup-drop.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/mobile-signup-drop.md) |
 | 2026-10-14 | Search QS landing page | [search-qs-landing-page.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/search-qs-landing-page.md) |
 | 2026-10-06 | Onboarding skip improvements | [onboarding-skip-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-skip-improvements.md) |
 | 2026-09-30 | Supabase ledger baseline | [supabase-ledger-baseline.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/supabase-ledger-baseline.md) |
@@ -177,6 +181,9 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-10-16 | Diagnose a sign-up drop in `auth.users` first, and split GA4 by network and country before suspecting a deploy | Blended GA4 Search hid Search Partners and a location cut that removed non-US sign-ups. The deploy was not the cause |
+| 2026-10-16 | Add `paywall_view` and `paywall_cta_click`; leave `paywall_hit` unchanged | `paywall_hit` fires at gate mount (page load on a profile). Changing its meaning mid-diagnosis would have broken the comparison |
+| 2026-10-16 | A code rollback cannot undo a column drop | `sharpe` was dropped after `29b315f`; plan rollbacks around database state, not the commit |
 | 2026-09-30 | Migration history is a baseline pair, not 73 replays | Replaying the old files never matched production. A generated schema file plus a supplement for what `pg_dump --schema=public` omits (publication membership, `auth.users` triggers) replays to a snapshot-identical schema. Old files stay in `migrations_archive/` |
 | 2026-09-30 | Replay is proved with a catalog snapshot, not by eye | `scripts/ledger-catalog-snapshot.sql` diffed against production; approved exceptions live in `scripts/ledger-snapshot-exceptions.txt` (`pg_net` extension, notification function URL). Run `npm run db:replay-check` before any push |
 | 2026-09-30 | Live histories repaired, live schema untouched | `migration repair` reverted the 73 old versions and applied the two baseline versions on development and production. Schema snapshots matched before and after; backups of `schema_migrations` kept |

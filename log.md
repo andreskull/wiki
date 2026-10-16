@@ -375,3 +375,11 @@ Market Call onboarding. Updated [[projects/gor_dagster]], [[concepts/onboarding-
 ## [2026-10-14] sync | finfluencer-tracker
 
 Search QS landing page. Updated [[projects/finfluencer-tracker]], [[products/finfluencer-trade]], [[overview]], [[index]].
+
+## [2026-10-16] wrapup | finfluencer-tracker | Mobile sign-up drop
+
+Mobile new users fell 3.5 to 1.1 a day after `29b315f`. The cause was Search traffic mix (non-US cut on 2026-09-28, Search Partners), not the deploy; the rollback was not built. Window 0 read 2026-10-07..13: 16 mobile new users. Original 3/day outcome check not met (2.3), Search mobile 15% met (20%). Permanent doc `docs/architecture/features/mobile-signup-drop.md`.
+
+## [2026-10-16] sync | finfluencer-tracker
+
+Mobile sign-up drop. Updated [[projects/finfluencer-tracker]], [[products/finfluencer-trade]], [[overview]], [[index]].
