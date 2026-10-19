@@ -383,3 +383,20 @@ Mobile new users fell 3.5 to 1.1 a day after `29b315f`. The cause was Search tra
 ## [2026-10-16] sync | finfluencer-tracker
 
 Mobile sign-up drop. Updated [[projects/finfluencer-tracker]], [[products/finfluencer-trade]], [[overview]], [[index]].
+
+## [2026-10-18] wrapup | gor_dagster | Instrument creation deduplication
+
+Permanent record at `gor_dagster/docs/architecture/features/instrument-creation-dedup.md`. All creation paths guarded via `services/instrument_identity_guard.py`; OpenFIGI adopts same-company FIGI-less rows or defers on twins; EODHD name-search confirms composite FIGI via ISIN or defers without FIGI-less insert; daily check `instrument_twins_flagged` warns on twin pairs. Temp folder removed.
+
+## [2026-10-18] sync | gor_dagster
+
+Recorded instrument creation deduplication on [[projects/gor_dagster]].
+
+## [2026-10-19] wrapup | finfluencer-tracker | Signed-out QA findings and data integrity (fix-findings-0810)
+
+Permanent record at `finfluencer-tracker/docs/architecture/features/signed-out-qa-findings-fix.md`. Resolved 38 QA findings across 8 batches: fixed signed-out home chart default (A/B pre-selection + 1Y fallback) and signed-in prefill, added visual comparison mode toggles (Relative % vs Normalized Index), fixed profile show counts using `guest_signals_summary` RPC, preserved single-panelist shows in `v_shows_ranking` via fallback join, resolved market sync banner false positives (EST close window check + fallback date handling), added show hosts deduplication and disambiguation in database views (`v_podcasts_with_hosts`), and hardened error handling across landing pages. Deleted temporary `docs/features/fix-findings-0810/`.
+
+## [2026-10-19] sync | finfluencer-tracker
+
+Recorded signed-out QA findings and data integrity resolution on [[projects/finfluencer-tracker]] (current status, completed features table, key architecture decisions: guest summary show counts, single-panelist show fallback, market sync banner schedule), [[overview]], and [[index]].
+

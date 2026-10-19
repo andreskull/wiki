@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-10-14
+updated: 2026-10-18
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, linkedin, gemini, podcast-rss, outreach, source-quote, google-ads]
 ---
 
@@ -468,6 +468,8 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 ## Active features in progress
 
 These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; not indexed verbatim by wiki.
+
+**Wrapped 2026-10-18:** `instrument-creation-dedup/` → [instrument-creation-dedup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/instrument-creation-dedup.md) (All creation paths guarded via `services/instrument_identity_guard.py`; OpenFIGI adopts same-company FIGI-less rows or defers on twins; EODHD name-search confirms composite FIGI via ISIN or defers without FIGI-less insert; daily check `instrument_twins_flagged` warns on twin pairs. Temp folder removed.)
 
 **Wrapped 2026-10-14:** `bnn-market-call/` → [bnn-market-call.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bnn-market-call.md) (14th `podcast_rss` source; Pattern 8; 1,006/1,006 downloaded; weekday episode inserted three minutes after the sensor tick that launched the job; directory Covered `market-call`. Temp folder removed.)
 

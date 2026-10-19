@@ -4,7 +4,7 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-10-16
+updated: 2026-10-19
 tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
 ---
 
@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-10-16)
+## Current status (2026-10-19)
+
+**Signed-out QA findings and data integrity wrapped (2026-10-19)**: 11-area sweep across 38 tasks (`fix-findings-0810`). Committed static snapshots for landing and guest compare charts (`landingShowcase.json`, `compareShowcase.json`); `prebuild` freshness gate fails if > 31 days old; automated Monday anon refresh (`refresh-showcase-snapshots.yml`, $\le 5$ pp threshold). Upstream SPY adjusted price restatement anomaly repaired and verified against Yahoo (+0.0 pp divergence); recurring Dagster drift check wired. Server-side masking SSOT for non-Traders on paid profiles and on shows with $\ge 80\%$ picks from a single paid finfluencer (*The Morning Filter* 100%, *Hedge Fund Tips* 99.5%). 25 explicit routes in `vercel.json` with genuine 404s and `noindex`. Default `/compare` experience prefilled with Jim Cramer vs Josh Brown with inline signup redirect for locked subjects. Unified Q4 pick count predicate (`start_long`, `hold_long`, `start_short`, `hold_short`) with `is_kept` strictly isolated to sector averages. Mobile sign-up uplift: no viewport jumping on `/leaderboard`, sticky locked bar offset below header, flexible Turnstile widget for 320/360px viewports, `signup_cta_click` + GA4 `location` dimension, and non-PII signup rows RPC. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/signed-out-qa-findings-fix.md).
 
 **Mobile sign-up drop closed (2026-10-16)**: mobile new users (`auth.users`) fell from 3.5 to 1.1 a day after deploy `29b315f` on 2026-09-29. The deploy was not the cause: the rate recovered with it in production. About half of the lost Search mobile sign-ups were non-US traffic removed by the 2026-09-28 location change ("Presence only"); Search Partners (6% to 43% of Search clicks, 1 conversion in 36) filled the rest and stalled `/signup` (mobile users on `/auth/callback` per users on `/signup` went 71% to 31% to 84% after partners were switched off on 2026-10-07). The 7 days after that gave 16 mobile new users (2.3 a day) against a geo-adjusted expectation of 15.5; the rollback was never built. The original 3 a day target was not met (2.3); Search mobile 15% was (20%). Reddit mobile conversion stays low (1 on 129 sessions; thin). `paywall_view` and `paywall_cta_click` now measure the paywall to `/signup` step. `sharpe` was dropped on 2026-09-29, so the Information Ratio display could not have been reverted anyway. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/mobile-signup-drop.md).
 
@@ -147,6 +149,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-10-19 | Signed-out QA findings and data integrity (`fix-findings-0810`) | [signed-out-qa-findings-fix.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/signed-out-qa-findings-fix.md) |
 | 2026-10-16 | Mobile sign-up drop | [mobile-signup-drop.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/mobile-signup-drop.md) |
 | 2026-10-14 | Search QS landing page | [search-qs-landing-page.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/search-qs-landing-page.md) |
 | 2026-10-06 | Onboarding skip improvements | [onboarding-skip-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/onboarding-skip-improvements.md) |
@@ -181,6 +184,9 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-10-19 | Showcase snapshots are committed static fixtures guarded by build and cron, not live client RPCs | Live RPC fetches full history since 2015 (thousands of points) and costs compute on every guest load; static fixtures downsample to 180 points and prebuild fails if older than 31 days |
+| 2026-10-19 | Single-paid-panelist shows (>= 80% picks) mask aggregates identically to paid individual profiles | A show dominated by one paid individual (*The Morning Filter* at 100%, *Hedge Fund Tips* at 99.5%) acts as an unmasked proxy for a paid track record |
+| 2026-10-19 | Q4 pick count predicate includes holds; is_kept is isolated strictly to sector averages | Holds are genuine conviction signals and part of public mention count; filtering is_kept in raw counts caused headline vs sector alpha gaps |
 | 2026-10-16 | Diagnose a sign-up drop in `auth.users` first, and split GA4 by network and country before suspecting a deploy | Blended GA4 Search hid Search Partners and a location cut that removed non-US sign-ups. The deploy was not the cause |
 | 2026-10-16 | Add `paywall_view` and `paywall_cta_click`; leave `paywall_hit` unchanged | `paywall_hit` fires at gate mount (page load on a profile). Changing its meaning mid-diagnosis would have broken the comparison |
 | 2026-10-16 | A code rollback cannot undo a column drop | `sharpe` was dropped after `29b315f`; plan rollbacks around database state, not the commit |
