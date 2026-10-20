@@ -4,7 +4,7 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-10-19
+updated: 2026-10-20
 tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
 ---
 
@@ -20,7 +20,15 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-10-19)
+## Current status (2026-10-20)
+
+**Conversion measurement wrapped (2026-10-20)**: Consent Mode, `purchase`, and the engagement events have been live since 2026-08-11. GA4 key events other than `sign_up` are imported to Google Ads as secondary. `sign_up` (€20) stays the only primary. `comparison_created` and `purchase` were not promoted: last 30 days through 2026-10-19 were 99 `sign_up`, 5 `comparison_created`, 0 `purchase`. See [[concepts/google-ads-conversion-tracking]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/conversion-measurement-plan.md).
+
+**Landing tour improvements wrapped (2026-10-20)**: the first-visit tour on `/` is a 50/50 test (`TOUR_ARM_TOUR_SHARE`). `tour_assign` fires in both arms after the same idle delay. Slide 1 is a fixed proof line plus Just browse. Closes, abandons, and time on a slide are recorded, and a sign-up carries the arm and outcome across the magic link. `internal_accounts` is the only test-user list; a listed account skips Google Ads and Reddit SignUp, while GA4 `sign_up` and `signup_attribution` still record it. First read 25 Sep–20 Oct: tour 6/103, none 7/112. The split stays 50/50. Grok and ank read the funnel on the Thursday review. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-tour-improvements.md).
+
+**RUM off GA4 wrapped (2026-10-20)**: since the 2026-10-12 production release, LCP, INP, CLS, TTFB, and DATA_READY go by `sendBeacon` to `/api/rum` and Supabase `web_vitals_events`, not to GA4. Late `web_vitals` hits from frozen iOS tabs had been stretching GA4 sessions. GA4 `web_vitals` is 0 from the release. Paid sessions over 2 hours with under 30 seconds of engagement went from 4 in 8 days to 1 in 6. Production e2e intercepts the beacon and carries the internal-traffic flag. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/rum-off-ga4.md).
+
+**Mobile experience uplift wrapped (2026-10-20)**: production 2026-09-23 (`7f2df15`). Below `md` the document scrolls. List pages are one table. The landing page dropped from 14,305 px to 7,888 px at 375 px, and the four-slide first-visit tour shipped here (the arm test is the landing-tour doc above). The 14-day read accepted `/leaderboard` mobile field LCP p75 at 1.80 s against a 1.5 s target. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/mobile-experience-uplift.md).
 
 **Signed-out QA findings and data integrity wrapped (2026-10-19)**: 11-area sweep across 38 tasks (`fix-findings-0810`). Committed static snapshots for landing and guest compare charts (`landingShowcase.json`, `compareShowcase.json`); `prebuild` freshness gate fails if > 31 days old; automated Monday anon refresh (`refresh-showcase-snapshots.yml`, $\le 5$ pp threshold). Upstream SPY adjusted price restatement anomaly repaired and verified against Yahoo (+0.0 pp divergence); recurring Dagster drift check wired. Server-side masking SSOT for non-Traders on paid profiles and on shows with $\ge 80\%$ picks from a single paid finfluencer (*The Morning Filter* 100%, *Hedge Fund Tips* 99.5%). 25 explicit routes in `vercel.json` with genuine 404s and `noindex`. Default `/compare` experience prefilled with Jim Cramer vs Josh Brown with inline signup redirect for locked subjects. Unified Q4 pick count predicate (`start_long`, `hold_long`, `start_short`, `hold_short`) with `is_kept` strictly isolated to sector averages. Mobile sign-up uplift: no viewport jumping on `/leaderboard`, sticky locked bar offset below header, flexible Turnstile widget for 320/360px viewports, `signup_cta_click` + GA4 `location` dimension, and non-PII signup rows RPC. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/signed-out-qa-findings-fix.md).
 
@@ -72,7 +80,7 @@ Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in pro
 
 **Marketing Explore nav live** — header dropdown + mobile hamburger + footer Product column expose Leaderboard, Compare, and Shows on every marketing page (`/`, `/methodology`, `/privacy`, `/terms`). Single source: `src/config/marketingNav.ts` `EXPLORE_LINKS`. [Feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/public-navigation-discoverability.md).
 
-**Reddit Ads pixel and Conversions API live** — consent-gated `PageVisit` + pixel `SignUp`; server `SIGN_UP` since 2026-09-24 (test mode off the same day). Click id rides the magic link. Two-week read kept the €10/day test budget (2026-10-08). See [[concepts/reddit-ads-conversion-tracking]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/reddit-pixel-tracking.md).
+**Reddit Ads pixel and Conversions API live** — consent-gated `PageVisit` + pixel `SignUp`; server `SIGN_UP` since 2026-09-24 (test mode off the same day). Click id rides the magic link. A listed `internal_accounts` row skips the pixel and the server SignUp (2026-09-25). Two-week read kept the €10/day test budget (2026-10-08). See [[concepts/reddit-ads-conversion-tracking]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/reddit-pixel-tracking.md).
 
 **Cumulative performance charts shipped** — profile vs S&P, `/compare` head-to-head, Play animation, watermarked PNG/JPEG/MP4 export. See [[concepts/cumulative-performance-charts]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/cumulative-performance-comparison-charts.md).
 
@@ -118,8 +126,12 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [system-overview](file:///Users/andreskull/finfluencer-tracker/docs/architecture/system-overview.md) | Stack, Vercel, routing |
 | [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md) | Supabase prod/dev, BQ → app path, entitlement SSOT summary |
 | [cumulative-performance-comparison-charts](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/cumulative-performance-comparison-charts.md) | Cumulative % charts, `/compare`, Play, export (**2026-08-04**) |
-| [reddit-pixel-tracking](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/reddit-pixel-tracking.md) | Reddit pixel, consent gate, SignUp conversion (**2026-08-17**) |
+| [reddit-pixel-tracking](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/reddit-pixel-tracking.md) | Reddit pixel, consent gate, SignUp conversion (**2026-08-17**); listed accounts skip SignUp (**2026-09-25**) |
+| [landing-tour-improvements](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-tour-improvements.md) | 50/50 first-visit tour, close and abandon events, sign-up arm tag, internal-account skip (**2026-10-20**) |
+| [mobile-experience-uplift](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/mobile-experience-uplift.md) | Document scroll below `md`, one-table lists, shorter landing, first-visit tour (**2026-10-20**) |
+| [rum-off-ga4](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/rum-off-ga4.md) | Web vitals to `/api/rum` and Supabase, not GA4 (**2026-10-20**) |
 | [session-replay-analytics](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/session-replay-analytics.md) | Clarity replay, consent gate, masking, funnel events (**2026-08-18**) |
+| [conversion-measurement-plan](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/conversion-measurement-plan.md) | Consent, `purchase`, key events imported to Ads as secondary; `sign_up` is the only primary (**2026-10-20**) |
 | [public-navigation-discoverability](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/public-navigation-discoverability.md) | Marketing Explore nav to Leaderboard / Compare / Shows (**2026-08-17**) |
 | [feedback-decline-with-note](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feedback-decline-with-note.md) | Declined status, admin note, notify intent marker (**2026-08-22**) |
 | [core-web-vitals-mobile](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/core-web-vitals-mobile.md) | Mobile LCP/INP delivery: splitting, fonts, cache, idle third-party (**2026-08-22**; lab-vs-field amended **2026-09-08**) |
@@ -149,6 +161,10 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-10-20 | Landing tour improvements | [landing-tour-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-tour-improvements.md) |
+| 2026-10-20 | Conversion measurement (`sign_up` only primary) | [conversion-measurement-plan.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/conversion-measurement-plan.md) |
+| 2026-10-20 | RUM off GA4 | [rum-off-ga4.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/rum-off-ga4.md) |
+| 2026-10-20 | Mobile experience uplift | [mobile-experience-uplift.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/mobile-experience-uplift.md) |
 | 2026-10-19 | Signed-out QA findings and data integrity (`fix-findings-0810`) | [signed-out-qa-findings-fix.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/signed-out-qa-findings-fix.md) |
 | 2026-10-16 | Mobile sign-up drop | [mobile-signup-drop.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/mobile-signup-drop.md) |
 | 2026-10-14 | Search QS landing page | [search-qs-landing-page.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/search-qs-landing-page.md) |
@@ -184,6 +200,12 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-10-20 | The landing-tour arm is stored in the browser; `tour_assign` fires in both arms | There is no remote flag service. Counting `tour_view` alone hides the control group |
+| 2026-10-20 | `internal_accounts` is the only test-user list; a listed account skips Ads and Reddit SignUp | The skip keys on the account, not the browser flag. GA4 `sign_up` and `signup_attribution` still record it |
+| 2026-10-20 | The tour test stays at 50/50 | First read was 6 vs 7 sign-ups. The Thursday ads review reads the funnel |
+| 2026-10-20 | `sign_up` stays the only Google Ads primary; `comparison_created` and `purchase` stay secondary | Last 30 days: 99 signups, 5 comparisons, 0 purchases. Promoting either would change bidding without a series to optimise |
+| 2026-08-11 | Imported GA4 events are secondary; a URL rule is never primary | The old primary counted arrivals at `/signup`. Key-event status is what exposes an event to Ads |
+| 2026-10-20 | Field RUM goes to `/api/rum`, never to GA4 | A frozen iOS tab delivers batched `web_vitals` hours later inside the old GA4 session. No gtag flag stops that |
 | 2026-10-19 | Showcase snapshots are committed static fixtures guarded by build and cron, not live client RPCs | Live RPC fetches full history since 2015 (thousands of points) and costs compute on every guest load; static fixtures downsample to 180 points and prebuild fails if older than 31 days |
 | 2026-10-19 | Single-paid-panelist shows (>= 80% picks) mask aggregates identically to paid individual profiles | A show dominated by one paid individual (*The Morning Filter* at 100%, *Hedge Fund Tips* at 99.5%) acts as an unmasked proxy for a paid track record |
 | 2026-10-19 | Q4 pick count predicate includes holds; is_kept is isolated strictly to sector averages | Holds are genuine conviction signals and part of public mention count; filtering is_kept in raw counts caused headline vs sector alpha gaps |
@@ -286,6 +308,7 @@ Shipped MVP scope: [`gor_dagster/docs/MVP_MASTER_PLAN.md`](file:///Users/andresk
 
 ## Deferred / out of scope
 
+- Promoting `purchase` to primary, once there is a real series of payments. Client-side `purchase` still misses renewals ([conversion-measurement-plan.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/conversion-measurement-plan.md))
 - Terminal product SKU / Terminal downward-reconcile product map
 - Onboarding completion stayed under 50% after the skip-path work (6 of 14, 29 Sep–5 Oct 2026). Skip stays. A later lift is a new product decision — [[concepts/post-signup-onboarding]]
 - Magic-link / OTP deliverability (Gmail Spam on a young domain; `rua=` DMARC still open; not an app defect)

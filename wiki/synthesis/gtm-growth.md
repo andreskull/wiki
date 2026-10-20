@@ -4,7 +4,7 @@ title: "Finfluencers.trade GTM / growth hub"
 product: finfluencer-trade
 project: null
 created: 2026-09-18
-updated: 2026-10-13
+updated: 2026-10-20
 tags: [gtm, growth, marketing, ads, outreach, newsletter]
 ---
 
@@ -24,7 +24,7 @@ Last reviewed: **2026-10-13** (Europe/Tallinn).
 | Campaign packs / Kit how-to | `gor-blog/` root markdown (see doc map) |
 | Ad creatives / PMax assets | `finfluencer-tracker/marketing/` |
 | Outreach runners | `gor_dagster` scripts + ops docs |
-| Morning Ads review | Claude Scheduled: `ads-performance-morning-review` |
+| Morning Ads review | `gor_dagster` skill `ads-review`. Grok Bot routine `Ads morning review` at 08:10 Europe/Tallinn. Procedure: `scripts/marketing_daily/ads_review/` |
 
 Update this page when priorities change, a channel ships or pauses, or a campaign pack is added. Keep durable “how it works” on concept pages; keep one-off campaign copy in repo files.
 

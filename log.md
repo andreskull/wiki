@@ -400,3 +400,23 @@ Permanent record at `finfluencer-tracker/docs/architecture/features/signed-out-q
 
 Recorded signed-out QA findings and data integrity resolution on [[projects/finfluencer-tracker]] (current status, completed features table, key architecture decisions: guest summary show counts, single-panelist show fallback, market sync banner schedule), [[overview]], and [[index]].
 
+## [2026-10-20] wrapup | gor_dagster | Ads review — human-in-the-loop
+
+Permanent record at `gor_dagster/docs/architecture/features/ads-review-human-in-the-loop.md`. Shared review files for Claude (manual) and Grok (08:10 Europe/Tallinn). Ank applies approved ad changes. Runs push `staging`. Tasks 6, 10, 11 and 12 skipped. `GROK_REVIEW.md` is stale after a merge. Temp folder removed.
+
+## [2026-10-20] sync | gor_dagster
+
+Ads review. Updated [[projects/gor_dagster]], [[overview]], [[index]], [[synthesis/gtm-growth]], [[concepts/google-ads-conversion-tracking]].
+
+## [2026-10-20] sync | finfluencer-tracker
+
+Landing tour improvements. 50/50 arm stays; first read 6/103 vs 7/112; Thursday review keeps the funnel. Listed accounts skip Reddit SignUp. Also recorded RUM off GA4 and mobile experience uplift, which were already in the repo `WIKI.md` and missing here. Updated [[projects/finfluencer-tracker]], [[projects/gor_dagster]] (Users page now writes `internal_accounts`), [[concepts/reddit-ads-conversion-tracking]], [[products/finfluencer-trade]], [[overview]], [[index]].
+
+## [2026-10-20] wrapup | finfluencer-tracker | Conversion measurement plan
+
+Permanent record at `finfluencer-tracker/docs/architecture/features/conversion-measurement-plan.md`. Consent, `purchase`, and engagement events live since 2026-08-11. `sign_up` (€20) stays the only Google Ads primary. `comparison_created` and `purchase` were not promoted (99 / 5 / 0 in the last 30 days). Temporary `docs/features/conversion-measurement-plan/` removed.
+
+## [2026-10-20] sync | finfluencer-tracker
+
+Conversion measurement. Updated [[projects/finfluencer-tracker]], [[products/finfluencer-trade]], [[concepts/google-ads-conversion-tracking]], [[concepts/reddit-ads-conversion-tracking]], [[overview]], and [[index]].
+

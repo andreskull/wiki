@@ -4,7 +4,7 @@ title: "Reddit Ads conversion tracking"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-08-17
-updated: 2026-10-09
+updated: 2026-10-20
 tags: [reddit-ads, pixel, conversion-tracking, consent, marketing]
 ---
 
@@ -23,7 +23,7 @@ Pixel ID `a2_jhxip4hotxq3`. Account Botastico OÜ (`jhxip4hotxq3`). Env: `VITE_R
 
 ## Relevance
 
-Parallel paid channel to [[concepts/google-ads-conversion-tracking]]. Same signup moment, same advertising cookie category, separate pixel. The server Conversions API has sent `SIGN_UP` since **2026-09-24** (`conversion_id = user.id`, so Reddit dedupes it with the pixel). The click id is in `localStorage` for 28 days and also on the magic-link URL, because the mail app opens a different browser. Hashed email, IP, and user agent go to that server call. They are still **not** passed to `rdt('init')`.
+Parallel paid channel to [[concepts/google-ads-conversion-tracking]]. Same signup moment, same advertising cookie category, separate pixel. The server Conversions API has sent `SIGN_UP` since **2026-09-24** (`conversion_id = user.id`, so Reddit dedupes it with the pixel). Since **2026-09-25** a listed `internal_accounts` row skips both the pixel SignUp and the server SignUp. The skip keys on the account, not the browser flag. GA4 `sign_up` and `signup_attribution` still run. A timeout counts as not internal. See [landing-tour-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-tour-improvements.md). The click id is in `localStorage` for 28 days and also on the magic-link URL, because the mail app opens a different browser. Hashed email, IP, and user agent go to that server call. They are still **not** passed to `rdt('init')`.
 
 ## Which projects use it
 
@@ -52,7 +52,7 @@ Do not optimise on `PageVisit`. Traffic objective cannot be edited in place.
 
 - Permanent doc: [reddit-pixel-tracking.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/reddit-pixel-tracking.md)
 - Google parallel: [[concepts/google-ads-conversion-tracking]]
-- Consent / GA4 plan still in-flight: `docs/features/conversion-measurement-plan/` (not indexed until wrapup)
+- Google measurement, wrapped 2026-10-20: [conversion-measurement-plan.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/conversion-measurement-plan.md). `sign_up` is the only primary.
 
 ## Related pages
 
