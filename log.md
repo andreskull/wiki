@@ -420,3 +420,6 @@ Permanent record at `finfluencer-tracker/docs/architecture/features/conversion-m
 
 Conversion measurement. Updated [[projects/finfluencer-tracker]], [[products/finfluencer-trade]], [[concepts/google-ads-conversion-tracking]], [[concepts/reddit-ads-conversion-tracking]], [[overview]], and [[index]].
 
+## [2026-10-21] sync | finfluencer-tracker
+
+RUM off GA4 and mobile experience uplift, second pass. Both were already summarised on the project page; this adds what that pass left out: the seven architecture decisions from the repo `WIKI.md`, the final RUM outcome (one late `view_page` session in 202 paid, accepted; the ads review's "(not set)" cohort not reproduced in the export), the `api/rum` sink in the tech stack, and the Vercel recovery note. The field-RUM concept page and the GA4 registration decision no longer say RUM goes to GA4. Updated [[projects/finfluencer-tracker]], [[concepts/core-web-vitals-field]], [[decisions/ga4-instrumentation-registration-2026-09]], [[index]].

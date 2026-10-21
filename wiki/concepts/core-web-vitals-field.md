@@ -4,17 +4,19 @@ title: "Field Core Web Vitals and data-ready"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-09-08
-updated: 2026-10-09
-tags: [lcp, inp, data-ready, ga4, bigquery, performance, field-rum]
+updated: 2026-10-21
+tags: [lcp, inp, data-ready, ga4, bigquery, supabase, performance, field-rum]
 ---
 
 # Field Core Web Vitals and data-ready
 
 ## Definition
 
-First-party field RUM on finfluencers.trade: GA4 `web_vitals` events (LCP, INP, CLS, TTFB, plus `DATA_READY`) segmented by rendering engine, device class, and route, exported to BigQuery. **Field decides done; lab decides whether a change helped.**
+First-party field RUM on finfluencers.trade: `web_vitals` reports (LCP, INP, CLS, TTFB, plus `DATA_READY`) segmented by rendering engine, device class, and route. **Until 2026-10-12 they were GA4 events exported to BigQuery; since that production release they are beaconed to `/api/rum` and stored in Supabase `web_vitals_events`, and GA4 receives none.** **Field decides done; lab decides whether a change helped.**
 
 `DATA_READY` is time from navigation (or SPA route entry) until real leaderboard/teaser rows exist. Core Web Vitals cannot see it: LCP and CLS can be “good” on a skeleton. The field sends LCP, INP, CLS, and TTFB. It does not send FCP.
+
+**2026-10-12 (wrapped 2026-10-20):** the sink moved off GA4. gtag batched the hits, and a frozen iOS page delivered them hours later inside the old GA4 session, which stretched session duration (349 s average against 17 s of engagement, Oct 4–10). Each report now carries `page_load_id` and `page_age_ms`, which removes the old ambiguous join. Read new windows with `docs/ops/sql/web_vitals_events_p75.sql` (Supabase, run by Andres); windows before the release stay in BigQuery. The field rules above are unchanged: one deploy per window, filter `metric_name` first, segment by `nav_kind`. Production e2e intercepts the beacon, so those runs write no rows. Record: [rum-off-ga4.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/rum-off-ga4.md).
 
 **2026-10-09:** ad landing time-to-content wrapped. `nav_kind` (`hard` / `spa`) is on every `web_vitals` event. The ad-click read is `nav_kind=hard`. On the 2026-09-25 window, mobile hard `DATA_READY` was 2.0 s on sectors (n = 5, under 2.5 s) and 6.2 s on `/finfluencer/:slug` (n = 3). The profile lab showed the header call ending before `app-core`, so server HTML stayed closed. Record: [ad-landing-time-to-content.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/ad-landing-time-to-content.md).
 
@@ -37,7 +39,8 @@ Field window on SHA `a38e360` (2026-09-05 → 09-08): `/` LCP met ≤ 2.5 s; `/`
 - Show surface and sample breakdown: [profile-leaderboard-script-split.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/profile-leaderboard-script-split.md)
 - Ops remasure index: [core-web-vitals.md](file:///Users/andreskull/finfluencer-tracker/docs/ops/core-web-vitals.md)
 - August delivery (lab LCP): [[concepts/core-web-vitals-mobile]]
-- GA4 registration + BQ export: [[decisions/ga4-instrumentation-registration-2026-09]]
+- GA4 registration + BQ export (pre-2026-10-12 windows only): [[decisions/ga4-instrumentation-registration-2026-09]]
+- Sink move and outcome: [rum-off-ga4.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/rum-off-ga4.md)
 - Lab-vs-field rule: [[decisions/field-authoritative-cwv-2026-09]]
 
 ## Related pages

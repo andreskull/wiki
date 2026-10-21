@@ -4,7 +4,7 @@ title: "Register GA4 custom dimensions and link BigQuery export for Web Vitals t
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-09-02
-updated: 2026-09-02
+updated: 2026-10-21
 tags: [finfluencer-tracker, ga4, bigquery, analytics, core-web-vitals, decision]
 ---
 
@@ -34,6 +34,8 @@ GA4 built-ins (`ga_session_id`, `page_location`, etc.) and `batch_ordering_id`/`
 Linked **BigQuery export** to GCP project **`gurus-on-record`** (user's choice — the only account-settings input that couldn't be made unilaterally): Daily export, event + user data, full event set, no exclusions, **data location: United States (us)**, GA4's default.
 
 **BigQuery region — closed same day, not revisited:** kept US multi-region. Rationale: this is site operational/performance telemetry, not user data — consent-gated, pseudonymous, EEA decliners already excluded from analytics consent. No EU-residency requirement applies.
+
+> **Update 2026-10-21.** New `web_vitals` data no longer reaches GA4: since the 2026-10-12 production release the field RUM goes to `/api/rum` and Supabase (see [[concepts/core-web-vitals-field]] and [rum-off-ga4.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/rum-off-ga4.md)). The custom dimensions and the BigQuery export described here stay valid, and they remain the only source for windows before that date.
 
 ## Consequences
 

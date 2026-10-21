@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-09-29
+updated: 2026-10-21
 ---
 
 # Wiki Index
@@ -82,7 +82,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/concepts/post-signup-onboarding]] | finfluencer-tracker: auth-callback onboarding detour; one research question per screen (2026-09-28); skippable; skip-path work measured 2026-10-06 (completion 43%, Skip stays); funnel counts in GA4 not Clarity (2026-09-09) |
 | [[wiki/concepts/user-default-holding-period]] | finfluencer-tracker: system start 6 months; Settings pin; named `?horizon=` wins; URL omit uses system default (2026-09-16) |
 | [[wiki/concepts/feedback-roadmap]] | finfluencer-tracker native `/feedback` board — Declined + public admin note; `notify_requested_at` intent marker; vote allowlist; never rewrite `handle_feedback_notification()`; board smoke is on demand (`npm run test:e2e:feedback`) because fixture inserts spend Resend credits (2026-08-22; e2e opt-in 2026-09-28) |
-| [[wiki/concepts/core-web-vitals-field]] | finfluencer-tracker first-party field RUM + DATA_READY; field decides done; show surface added 2026-09-28; `/` teaser still ~4 s (2026-09-08) |
+| [[wiki/concepts/core-web-vitals-field]] | finfluencer-tracker first-party field RUM + DATA_READY; field decides done; show surface added 2026-09-28; `/` teaser still ~4 s (2026-09-08); sink moved from GA4 to `/api/rum` + Supabase 2026-10-12 |
 | [[wiki/concepts/core-web-vitals-mobile]] | finfluencer-tracker SPA delivery — lab LCP under 2.5 s on `/`; Supabase realtime/storage stand-ins on `development` (2026-09-28); Search Console group half MkDocs (2026-08-22; lab-as-gate amended 2026-09-08) |
 
 ---
@@ -103,7 +103,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 |------|-------------|
 | [[wiki/decisions/botastico-gcp-managed-ssl-2026-07]] | botastico: stay on GCP managed LB certs; alert on renewal failure only (2026-07-15) |
 | [[wiki/decisions/exclude-regulated-finance-employees-from-outreach-2026-08]] | finfluencer.trade: qualify outreach by employer; hold contacts at registered entities from automated performance messaging (2026-08-31) |
-| [[wiki/decisions/ga4-instrumentation-registration-2026-09]] | finfluencer-tracker: register 10 GA4 custom dimensions + `metric_value` metric, link BigQuery export to `gurus-on-record` (US multi-region, kept) after finding registration was never done (2026-09-02) |
+| [[wiki/decisions/ga4-instrumentation-registration-2026-09]] | finfluencer-tracker (pre-2026-10-12 RUM windows only): register 10 GA4 custom dimensions + `metric_value` metric, link BigQuery export to `gurus-on-record` (US multi-region, kept) after finding registration was never done (2026-09-02) |
 | [[wiki/decisions/field-authoritative-cwv-2026-09]] | finfluencer-tracker: field first-party p75 decides CWV done; lab decides whether a change helped (2026-09-08) |
 
 ---

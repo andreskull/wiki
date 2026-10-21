@@ -4,8 +4,8 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-10-20
-tags: [finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
+updated: 2026-10-21
+tags: [rum, web-vitals, mobile, finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
 ---
 
 # finfluencer-tracker
@@ -26,7 +26,7 @@ Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in pro
 
 **Landing tour improvements wrapped (2026-10-20)**: the first-visit tour on `/` is a 50/50 test (`TOUR_ARM_TOUR_SHARE`). `tour_assign` fires in both arms after the same idle delay. Slide 1 is a fixed proof line plus Just browse. Closes, abandons, and time on a slide are recorded, and a sign-up carries the arm and outcome across the magic link. `internal_accounts` is the only test-user list; a listed account skips Google Ads and Reddit SignUp, while GA4 `sign_up` and `signup_attribution` still record it. First read 25 Sep–20 Oct: tour 6/103, none 7/112. The split stays 50/50. Grok and ank read the funnel on the Thursday review. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-tour-improvements.md).
 
-**RUM off GA4 wrapped (2026-10-20)**: since the 2026-10-12 production release, LCP, INP, CLS, TTFB, and DATA_READY go by `sendBeacon` to `/api/rum` and Supabase `web_vitals_events`, not to GA4. Late `web_vitals` hits from frozen iOS tabs had been stretching GA4 sessions. GA4 `web_vitals` is 0 from the release. Paid sessions over 2 hours with under 30 seconds of engagement went from 4 in 8 days to 1 in 6. Production e2e intercepts the beacon and carries the internal-traffic flag. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/rum-off-ga4.md).
+**RUM off GA4 wrapped (2026-10-20)**: since the 2026-10-12 production release, LCP, INP, CLS, TTFB, and DATA_READY go by `sendBeacon` to `/api/rum` and Supabase `web_vitals_events`, not to GA4. Late `web_vitals` hits from frozen iOS tabs had been stretching GA4 sessions (Oct 4–10: 349 s average session against 17 s of engagement). GA4 `web_vitals` is 0 from the release. Paid sessions over 2 hours with under 30 seconds of engagement went from 4 in 8 days (all iOS, all ending in `web_vitals`) to 1 in 202 paid sessions on Oct 13–18; that one is a late `view_page` from a GA4 rule, not `web_vitals`, and Andres accepted it. The GA4 rule was not examined or changed. The ads review's Oct 13 "(not set)" cohort (59 sessions on Oct 12) does not appear in the BigQuery export and is unresolved. Production e2e intercepts the beacon (`captureRum()`) and carries the internal-traffic flag, because each unintercepted run had inserted real rows and counted as new GA4 users. The migration went to production before the code. Read the table with `docs/ops/sql/web_vitals_events_p75.sql`; rows before 2026-10-12 stay in BigQuery. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/rum-off-ga4.md) (its limitations list a Vercel recovery for a missed `main` build: Create Deployment → `main` → Deploy to Production).
 
 **Mobile experience uplift wrapped (2026-10-20)**: production 2026-09-23 (`7f2df15`). Below `md` the document scrolls. List pages are one table. The landing page dropped from 14,305 px to 7,888 px at 375 px, and the four-slide first-visit tour shipped here (the arm test is the landing-tour doc above). The 14-day read accepted `/leaderboard` mobile field LCP p75 at 1.80 s against a 1.5 s target. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/mobile-experience-uplift.md).
 
@@ -111,7 +111,7 @@ Monetization stays at **Spectator → Trader column masking**, not a login wall 
 ## Tech stack
 
 - **Frontend:** React 18, Vite, Tailwind, shadcn/ui, TanStack Query, React Router
-- **Hosting:** Vercel (SPA + `api/` serverless for OG meta, sitemap)
+- **Hosting:** Vercel (SPA + `api/` serverless for OG meta, sitemap, and the field-RUM sink `api/rum`)
 - **Supabase (PostgreSQL):** two separate projects — **production** and **development**
 - **Payments:** Stripe hosted Checkout + portal; webhooks via Supabase Edge Functions (`stripe-webhook`, `create-checkout`, `check-subscription`)
 - **Pipeline data:** production **BigQuery** ([[entities/bigquery]]); app reads Supabase mirror only
@@ -200,12 +200,18 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-10-20 | Field RUM (`web_vitals`, DATA_READY) goes to `/api/rum` and Supabase `web_vitals_events`, never to GA4 | gtag batches hits and a frozen iOS page delivers them hours later inside the old GA4 session; no gtag flag makes an event non-session-extending, so an idle guard at report time cannot fix it |
+| 2026-10-20 | A migration the client code depends on goes to production before the code is promoted | Until the table exists, production reports fail to save and are lost; visitors see nothing either way |
+| 2026-10-20 | Production e2e specs intercept `/api/rum`, and the e2e fixture sets `ft_internal_v1` | Each unintercepted run inserted real rows (116 deleted by hand), and each fresh browser counted as new users in GA4 |
+| 2026-10-20 | Below `md` the document scrolls and `--app-topbar-h` positions sticky chrome; from `md` the inner `main` scrolls | Mobile browser chrome never retracted when the document height equalled the viewport; `env(safe-area-inset-*)` is 0 on iOS without `viewport-fit=cover` |
+| 2026-10-20 | List pages are one `<table>` with CSS column visibility and `table-fixed md:table-auto` | `table-layout: auto` lets a long name push the metric column off-screen in WebKit. Check a new page's metric count and label length against 320 px before using `SortPillRow` |
+| 2026-10-20 | A page reading `useUserDefaultHorizon().defaultHorizon` needs the `horizonTouchedRef` plus sync-effect pattern | The value resolves after first render; a bare `useState` freezes on the system default and re-clicking the saved radio is a silent no-op |
+| 2026-10-20 | The landing tour is a lazy chunk on idle, gated by a pure `shouldShowTour`, with a build-time kill switch | Zero pre-LCP bytes on the paid entry page; consent banner always wins |
 | 2026-10-20 | The landing-tour arm is stored in the browser; `tour_assign` fires in both arms | There is no remote flag service. Counting `tour_view` alone hides the control group |
 | 2026-10-20 | `internal_accounts` is the only test-user list; a listed account skips Ads and Reddit SignUp | The skip keys on the account, not the browser flag. GA4 `sign_up` and `signup_attribution` still record it |
 | 2026-10-20 | The tour test stays at 50/50 | First read was 6 vs 7 sign-ups. The Thursday ads review reads the funnel |
 | 2026-10-20 | `sign_up` stays the only Google Ads primary; `comparison_created` and `purchase` stay secondary | Last 30 days: 99 signups, 5 comparisons, 0 purchases. Promoting either would change bidding without a series to optimise |
 | 2026-08-11 | Imported GA4 events are secondary; a URL rule is never primary | The old primary counted arrivals at `/signup`. Key-event status is what exposes an event to Ads |
-| 2026-10-20 | Field RUM goes to `/api/rum`, never to GA4 | A frozen iOS tab delivers batched `web_vitals` hours later inside the old GA4 session. No gtag flag stops that |
 | 2026-10-19 | Showcase snapshots are committed static fixtures guarded by build and cron, not live client RPCs | Live RPC fetches full history since 2015 (thousands of points) and costs compute on every guest load; static fixtures downsample to 180 points and prebuild fails if older than 31 days |
 | 2026-10-19 | Single-paid-panelist shows (>= 80% picks) mask aggregates identically to paid individual profiles | A show dominated by one paid individual (*The Morning Filter* at 100%, *Hedge Fund Tips* at 99.5%) acts as an unmasked proxy for a paid track record |
 | 2026-10-19 | Q4 pick count predicate includes holds; is_kept is isolated strictly to sector averages | Holds are genuine conviction signals and part of public mention count; filtering is_kept in raw counts caused headline vs sector alpha gaps |
