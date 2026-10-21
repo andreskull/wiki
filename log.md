@@ -423,3 +423,7 @@ Conversion measurement. Updated [[projects/finfluencer-tracker]], [[products/fin
 ## [2026-10-21] sync | finfluencer-tracker
 
 RUM off GA4 and mobile experience uplift, second pass. Both were already summarised on the project page; this adds what that pass left out: the seven architecture decisions from the repo `WIKI.md`, the final RUM outcome (one late `view_page` session in 202 paid, accepted; the ads review's "(not set)" cohort not reproduced in the export), the `api/rum` sink in the tech stack, and the Vercel recovery note. The field-RUM concept page and the GA4 registration decision no longer say RUM goes to GA4. Updated [[projects/finfluencer-tracker]], [[concepts/core-web-vitals-field]], [[decisions/ga4-instrumentation-registration-2026-09]], [[index]].
+
+## [2026-10-21] sync | finfluencer-tracker (correction)
+
+The Oct 12 "(not set)" cohort was GA4 API lag, closed by the ads review, so it is no longer "unresolved" on [[projects/finfluencer-tracker]]. The ads review's `STATE.md` was already rewritten and P-20261011-C2 now carries the 2026-10-21 outcome check.
