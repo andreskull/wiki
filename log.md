@@ -427,3 +427,11 @@ RUM off GA4 and mobile experience uplift, second pass. Both were already summari
 ## [2026-10-21] sync | finfluencer-tracker (correction)
 
 The Oct 12 "(not set)" cohort was GA4 API lag, closed by the ads review, so it is no longer "unresolved" on [[projects/finfluencer-tracker]]. The ads review's `STATE.md` was already rewritten and P-20261011-C2 now carries the 2026-10-21 outcome check.
+
+## [2026-10-22] wrapup | gor_dagster | Near-duplicate finfluencers
+
+Permanent record at `gor_dagster/docs/architecture/features/near-duplicate-finfluencers.md`. Shared normalizer (`normalize_person_name` + BigQuery SQL mirror `person_name_parts_sql`) and measured Levenshtein rule (`duplicate_pair_match`) power the Duplicates tab (`NEAR_NAME` cards), `scripts/find_duplicate_finfluencers.py --signal near_name`, and the create-finfluencer dialog warning. Curators merge toward `KEEP` with `merge_finfluencers(..., near_name_spelling="keep_target" | "use_source")` or dismiss pairs into `dagster_shared.FinfluencerPairDismissal` (migration 027). Also batched proof-segment updates (`_batch_update_proof_segments`) into a single `MERGE` and added instant modal open + `Merging...` spinner UX. Temp `docs/features/near-duplicate-finfluencers/` removed.
+
+## [2026-10-22] sync | gor_dagster
+
+Recorded near-duplicate finfluencers on [[projects/gor_dagster]] (Stage 6 speaker resolution, `dagster_shared` data model, architecture decisions, completed features, wrapped note), [[overview]], and [[index]].

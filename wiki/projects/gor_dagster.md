@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-10-20
+updated: 2026-10-22
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, linkedin, gemini, podcast-rss, outreach, source-quote, google-ads]
 ---
 
@@ -148,6 +148,8 @@ Unresolvable instruments queue in `PendingInstrumentResolution`. **Re-attempt ma
 
 **Speaker Resolution:** Maps named speakers to `Finfluencer` via `SpeakerMatchScorer` (Jaro-Winkler + org context). Production thresholds: fuzzy auto-resolve **0.935**; org-conflict override **disabled** (1.00). Unresolved speakers queue in `PendingSpeakerResolution`.
 
+**Near-duplicate finfluencers (2026-10-22):** Curation dashboard **Duplicates** tab (`NEAR_NAME` filter/cards), `scripts/find_duplicate_finfluencers.py --signal near_name`, and the **Create New Finfluencer** dialog warning share one normalizer (`normalize_person_name` + BigQuery SQL mirror `person_name_parts_sql`) and one measured Levenshtein rule (`duplicate_pair_match` in `gor_dagster/utils/person_name_match.py`: `strict` tier for surname distance ≤ 2 and ratio ≤ 0.30, `shared` tier with shared show/firm for surname distance ≤ 3 and ratio ≤ 0.50, plus a first-name guard rejecting 3-letter substitutions). Curators merge toward `KEEP` with `merge_finfluencers(..., near_name_spelling="keep_target" | "use_source")` (keeping the retired spelling as an `is_misspelling = TRUE` alias) or dismiss false pairs into `dagster_shared.FinfluencerPairDismissal` (migration `027`). Proof-segment updates in manual speaker resolution are batched into a single `MERGE` (`_batch_update_proof_segments`). Permanent doc: [near-duplicate-finfluencers.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/near-duplicate-finfluencers.md).
+
 **LinkedIn enrichment (2026-07-23):** On auto-create (when `SPEAKER_ENABLE_LINKEDIN_DISCOVERY` is on), resolution may run Gemini+search discovery (`linkedin-gemini-flash`) and queue corroborated candidates — **never** auto-write profiles. Trusted LinkedIn URLs (Notion seed, curator Accept/Set URL, speaker-create XOR URL/unavailable) sync to Supabase `finfluencers.linkedin_url`. Published cohort **100% trusted-or-none**. No third-party LinkedIn API. Permanent doc: [linkedin-enrichment.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/linkedin-enrichment.md). Wiki: [[concepts/linkedin-enrichment]].
 
 **Proof-segment speaker resolution (2026-07-01):** After prediction-level resolution, `_resolve_proof_segment_speakers` resolves each distinct speaker in `proof_segments[]`. Multi-token unresolved secondaries appear in the **unified dashboard queue** (ranked by `predictions_blocked`); `resolve_proof_segment_speaker()` writes `finfluencer_id` back to all affected predictions. `content_quality.proof_segment_speaker_backfill` propagates manual resolutions historically. `display_name` for quotes is enriched at `mat_signals` build (`actionable_signal_sql`), not stored in BQ. Permanent doc: [proof-segment-speaker-resolution.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/proof-segment-speaker-resolution.md). Wiki: [[concepts/proof-segment-speaker-resolution]].
@@ -201,7 +203,8 @@ Production uses **three** datasets for the core pipeline. Default `bigquery_reso
 | `ContentSegment` | A time-bounded chunk of an episode (ad, main content) — in repo schemas; confirm table exists in your project before querying |
 | `ContentMedia` | GCS path to audio/image/video associated with an item or segment — in repo schemas; confirm deployment |
 | `Finfluencer` | A canonical financial influencer entity |
-| `FinfluencerNameVariant` | All known name variants for a Finfluencer (used for resolution) |
+| `FinfluencerNameVariant` | All known name variants for a Finfluencer (used for resolution; `is_misspelling` labels merged/misheard spellings without excluding them from `SpeakerMatchScorer`) |
+| `FinfluencerPairDismissal` | Pairs of finfluencers marked as "different people" (`finfluencer_id_low`, `finfluencer_id_high`), excluded from near-name duplicate suggestions |
 | `FinfluencerBioHistory` | Historical bios with effective dates |
 | `FinfluencerAffiliation` | Organisation + role, used for resolution boosting |
 | `FinfluencerPlatformProfile` | Social/platform profiles per Finfluencer (`provenance_json` for LinkedIn trust tiers) |
@@ -410,6 +413,7 @@ Key rule: all Python code must be written to `.py` files before execution — ne
 | ContentItem load-job idempotency | RSS batch dedupe + `content_item_insert_already_present` guard prevents duplicate physical rows on load-job retry (2026-06-30). Extends [contentitem-dedupe-and-cleanup.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/contentitem-dedupe-and-cleanup.md) |
 | CNBC IPO scoreboard (SPCX v1) | BQ snapshot mats → Supabase RPC `get_ipo_scoreboard_page`; since-call perf SQL; public `/cnbc-ipo`; **kept picks only** in UI; social + blog deferred. [cnbc-ipo-scoreboard.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/cnbc-ipo-scoreboard.md) |
 | LinkedIn enrichment (trust-tiered) | Discovery never auto-writes profiles; trusted-only Supabase sync; published audit 100% trusted-or-none; no third-party LinkedIn API (2026-07-23). [[concepts/linkedin-enrichment]] |
+| Near-duplicate finfluencer detection & merge spelling | `duplicate_pair_match` (`gor_dagster/utils/person_name_match.py`) + BigQuery SQL mirror `person_name_parts_sql` power the Duplicates tab (`NEAR_NAME`), CLI script, and create-dialog warning. Merges always target `KEEP` (`near_name_spelling="keep_target" \| "use_source"`); `is_misspelling` is a descriptive label that `SpeakerMatchScorer` does not filter out; dismissals in `FinfluencerPairDismissal` are keyed by UUID so merging does not carry over dismissals (2026-10-22). [near-duplicate-finfluencers.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/near-duplicate-finfluencers.md) |
 | Ads review is shared files, not a Dagster job | Claude (manual) and Grok (08:10 Europe/Tallinn routine `Ads morning review`) follow `scripts/marketing_daily/ads_review/REVIEW.md`. STATE updates without approval; the procedure changes only on an approved task-change. Review bots stay read-only; ank applies approved Google and Reddit changes. Runs commit and push `staging`. Do not follow `GROK_REVIEW.md` (stale after a merge). [ads-review-human-in-the-loop.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/ads-review-human-in-the-loop.md) |
 | Google Ads creatives (manual PMax) | Resolve in Python, render in tracker Chromium, write-once GCS. Rank featured subject on scored picks, not alpha. Subject period moved from `1y` to `6m` on **2026-09-27** (`HOLDING_PERIOD` in `build_google_ads_variants.py` — working tree only at wrapup). Live run **`2026-09-04T0804Z`** (V1 + V4) was still `1y`. No Dagster schedule, no Google Ads API. [[concepts/google-ads-creative-assets]] |
 | Profile pages: show open, ticker masked | Show profiles and the show leaderboard are open to **everyone** including paid panelists' show-scoped performance — the paywall lives on the finfluencer's own profile, not a show's view of that panelist; show-scoped reads use `SECURITY DEFINER` RPCs so tier-RLS on `signals` can't make a paid panelist vanish. Ticker pages are login-gated as a whole; within them, a paid finfluencer's per-finfluencer alpha and pick cards are masked for free users via per-row `CASE WHEN f.is_free_tier OR get_user_tier() IN (...)`. **2026-05-25**. [finfluencer-and-show-profiles.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/finfluencer-and-show-profiles.md) |
@@ -426,6 +430,7 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 
 | Completed | Topic | Doc |
 |---|---|---|
+| 2026-10-22 | Near-duplicate finfluencers — `NEAR_NAME` cards, `duplicate_pair_match` + SQL parity, `near_name_spelling` merge options, `FinfluencerPairDismissal` (migration 027), create-dialog warning, batched proof-segment `MERGE` | [near-duplicate-finfluencers.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/near-duplicate-finfluencers.md) |
 | 2026-10-20 | Ads review — shared Claude/Grok machinery (Grok 08:10 routine; ank applies approved ad changes; runs push `staging`) | [ads-review-human-in-the-loop.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/ads-review-human-in-the-loop.md) |
 | 2026-10-14 | Market Call RSS onboarding (Omny Pattern 8; job-only `rel="next"`; 1,006/1,006 downloaded; directory Covered `market-call`) | [bnn-market-call.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bnn-market-call.md) |
 | 2026-10-07 | Retiring LLM models — closed Sonnet 4.5 / GPT-5.1 eval configs; config-id + model-level refusal; historical artefacts readable | [retiring-llm-models.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/retiring-llm-models.md) |
@@ -470,6 +475,8 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 ## Active features in progress
 
 These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; not indexed verbatim by wiki.
+
+**Wrapped 2026-10-22:** `near-duplicate-finfluencers/` → [near-duplicate-finfluencers.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/near-duplicate-finfluencers.md) (shared `normalize_person_name` + `person_name_parts_sql` + `duplicate_pair_match`; Duplicates tab `NEAR_NAME` cards, `merge_finfluencers(..., near_name_spelling)`, `FinfluencerPairDismissal` migration 027, create-dialog near-match warning, and single-DML batched proof-segment updates. Temp folder removed.)
 
 **Wrapped 2026-10-20:** `ads-review-human-in-the-loop/` → [ads-review-human-in-the-loop.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/ads-review-human-in-the-loop.md) (shared review files; Grok 08:10 Europe/Tallinn; ank applies approved ad changes; commissioning checklists skipped. Temp folder removed.)
 
