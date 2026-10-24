@@ -4,8 +4,8 @@ title: "LLM Config Registry"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-10-07
-tags: [llm, configuration, registry, experimentation, multi-model]
+updated: 2026-10-24
+tags: [llm, configuration, registry, experimentation, multi-model, claude-haiku, gemini]
 ---
 
 # LLM Config Registry
@@ -26,9 +26,9 @@ Rather than hardcoding model names and prompts into individual assets, all LLM c
 
 ## Config IDs in use
 
-**Production pipeline (2026-07-27):** **`si-gem35fl-recursive`** (@450s) / **`fe-gem35fl-recursive`** (@1800s) — Gemini 3.5 Flash-Lite memory-centric recursive SI/FE. See [gemini-35-flash-lite-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md) and [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md).
+**Production Option 3 Hybrid Routing (2026-10-24):** **`si-haiku55-recursive`** (@450s, Claude Haiku 5.5) for Speaker Identification; **`fe-gem35fl-recursive`** (@1800s, Gemini 3.5 Flash-Lite) for Facts Extraction. See [[decisions/claude-haiku-55-hybrid-routing]] and [claude-haiku-55-evaluation.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/claude-haiku-55-evaluation.md).
 
-**Prior production / readable:** **`si-gem31fl-recursive`** / **`fe-gem31fl-recursive`** (kept in source-priority + ActionableSignal priority 2)
+**Prior production / readable:** **`si-gem35fl-recursive`** (SI rank 2), **`si-gem31fl-recursive`** (SI rank 3), **`fe-gem31fl-recursive`** (FE priority 2)
 
 **Compat / experimentation tails:** `si-dsv4fr-58k`, `fe-dsv4fr-58k`, grok-era `si-grok-*` / `fe-grok-*`, `fe-gpt-5.2`, `tk_gem35fl_*` / `tk_gem31fl_*` token-ceiling grids
 
@@ -57,6 +57,8 @@ Results are stored with config ID in the path:
 
 ## Related pages
 
+- [[decisions/claude-haiku-55-hybrid-routing]]
+- [Claude Haiku 5.5 evaluation & cutover](file:///Users/andreskull/gor_dagster/docs/architecture/features/claude-haiku-55-evaluation.md)
 - [[concepts/speaker-attribution]]
 - [[concepts/actionable-signal]]
 - [[concepts/linkedin-enrichment]]

@@ -4,8 +4,8 @@ title: "finfluencer.trade"
 product: finfluencer-trade
 project: null
 created: 2026-04-06
-updated: 2026-10-20
-tags: [finfluencer, finance, pipeline, dagster, blog, tracking, linkedin, stripe, entitlement, charts, clarity, session-replay, feedback, lcp, ticker, lookup, onboarding, holding-period]
+updated: 2026-10-24
+tags: [finfluencer, finance, pipeline, dagster, blog, tracking, linkedin, stripe, entitlement, charts, clarity, session-replay, feedback, lcp, ticker, lookup, onboarding, holding-period, haiku55, hybrid-routing]
 ---
 
 # finfluencer.trade
@@ -51,6 +51,7 @@ Active development. Pipeline is production-ready for core transcription and fact
 
 ## Key cross-repo decisions
 
+- **Option 3 Hybrid Routing (2026-10-24):** Claude Haiku 5.5 (`si-haiku55-recursive` @ 450s) promoted to Rank #1 for speaker identification (+1.35 pp attribution accuracy, -52.5% cost, -54.9% latency); Gemini 3.5 Flash-Lite (`fe-gem35fl-recursive` @ 1800s) retained for facts extraction due to Haiku 5.5 -44% recall loss and 17.65% rejection rate; 4-tier SI fallback; memory fold boundary hardening. ([[decisions/claude-haiku-55-hybrid-routing]], [[concepts/speaker-attribution]], [[concepts/llm-config-registry]])
 - **Field Core Web Vitals (2026-09-08):** field first-party p75 decides done; lab decides whether a change helped. `/` teaser DATA_READY still misses 2.0 s ([[concepts/core-web-vitals-field]], [[decisions/field-authoritative-cwv-2026-09]])
 - **Mobile Core Web Vitals (2026-08-22):** client-rendered SPA stays; Search Console group is half MkDocs so a SPA-only fix cannot guarantee the *group* goes Good. Lab-as-gate **amended 2026-09-08** ([[concepts/core-web-vitals-mobile]])
 - **Native feedback board (2026-06-02, declined 2026-08-22):** in-app `/feedback` with `notify_requested_at` intent marker; never rewrite `handle_feedback_notification()`; vote allowlist on both RLS policies. Board smoke is on demand since **2026-09-28** (`npm run test:e2e:feedback`); fixture inserts spend Resend credits ([[concepts/feedback-roadmap]])
@@ -70,7 +71,7 @@ Active development. Pipeline is production-ready for core transcription and fact
 - STT transcripts stored in `gor-stt-transcripts` GCS bucket (hardcoded, not from env var)
 - **Backend data (BigQuery / GCS):** all pipeline and integration environments — local, branch, and production — use the **production** datasets and buckets (`dagster_prod`, `dagster_shared`, shared media/STT storage). There is no separate staging warehouse for backend analytics (see [[entities/bigquery]]).
 - **finfluencer-tracker (app layer):** **two Supabase instances** — one for **production** and one for **development** — so app/auth data can be isolated while the app still reads pipeline data sourced from production backend stores.
-- Facts extraction uses `ActionableSignal` VIEW over `PotentialPrediction` table — deduplicates by FE config priority (`fe-gem35fl-recursive` rank 1 since **2026-07-27**)
+- Facts extraction uses `ActionableSignal` VIEW over `PotentialPrediction` table — deduplicates by FE config priority (`fe-gem35fl-recursive` rank 1 since **2026-07-27**; paired with `si-haiku55-recursive` under Option 3 Hybrid Routing since **2026-10-24**)
 - Blog (`gor-blog`) uses MkDocs; its `docs/` folder is the site source, not project documentation
 - **Public app funnel (2026-07-10, nav 2026-08-17):** leaderboards and `/upgrade` public; marketing header/footer Explore menu to Leaderboard / Compare / Shows; monetization at Spectator→Trader column mask + profile depth; Googlebot gets SPA not og-meta empty body ([[projects/finfluencer-tracker]])
 - **Entitlement SSOT (2026-07-27):** `user_profiles.subscription_tier` is app entitlement; Stripe is billing-only; webhook + reconcile self-heal; combined-performance base SELECT closed ([[concepts/subscription-entitlement-ssot]])

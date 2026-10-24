@@ -4,8 +4,8 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-10-22
-tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, linkedin, gemini, podcast-rss, outreach, source-quote, google-ads]
+updated: 2026-10-24
+tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, linkedin, gemini, claude-haiku, podcast-rss, outreach, source-quote, google-ads]
 ---
 
 # gor_dagster
@@ -89,9 +89,9 @@ Docs: [Unified Transcript Schema](file:///Users/andreskull/gor_dagster/docs/sche
 
 Two-stage pipeline: **LLM Identification** then **Transcript Hydration**.
 
-**LLM Identification (Stage 4a):** Production uses **memory-centric recursive SI** via **`si-gem35fl-recursive`** (@**450s** windows; model promote **2026-07-27** — [gemini-35-flash-lite-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md); algorithm [recursive-llm-extraction.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md)): three-wave algorithm (roster bootstrap → parallel window passes → optional resolution → deterministic fold). In-pass fallback: gem35fl → gem31fl → dsv4fr-recursive. Prior **`si-gem31fl-recursive`** artefacts stay readable via source-priority. Legacy single-pass configs remain as compat tails (`si-dsv4fr-58k`, grok-era ids).
+**LLM Identification (Stage 4a):** Production uses **memory-centric recursive SI** via **`si-haiku55-recursive`** (@**450s** windows; model promote **2026-10-24** under Option 3 Hybrid Routing — [[decisions/claude-haiku-55-hybrid-routing]]; permanent doc [claude-haiku-55-evaluation.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/claude-haiku-55-evaluation.md)): three-wave algorithm (roster bootstrap → parallel window passes → optional resolution → deterministic fold). Claude Haiku 5.5 achieved **92.75%** speaker accuracy (+1.35 pp vs Gemini 3.5 Flash-Lite) at **-36.8% to -52.5% lower cost** and **-38.5% to -54.9% lower wallclock latency**. In-pass fallback: `si-haiku55-recursive` → `si-gem35fl-recursive` → `si-gem31fl-recursive` → `si-dsv4fr-recursive`. Prior **`si-gem35fl-recursive`** and **`si-gem31fl-recursive`** artefacts stay readable via source-priority. Legacy single-pass configs remain as compat tails (`si-dsv4fr-58k`, grok-era ids).
 
-An LLM classifies each utterance's speaker at one of three confidence levels (`full_name`, `partial_name`, `unknown`). The output — a flat segment array with `source_utterance_start/end` references — is written to `gs://gor-stt-transcripts/identification/{episode_id}/{provider}_{llm_config_id}.json`. Eight+ LLM model families supported via config registry. Anchor enforcement ensures `full_name` attributions require explicit textual evidence (self-introduction, name mention, etc.); speakers without anchors are forced to `Unknown`.
+An LLM classifies each utterance's speaker at one of three confidence levels (`full_name`, `partial_name`, `unknown`). The output — a flat segment array with `source_utterance_start/end` references — is written to `gs://gor-stt-transcripts/identification/{episode_id}/{provider}_{llm_config_id}.json`. Eight+ LLM model families supported via config registry. Anchor enforcement ensures `full_name` attributions require explicit textual evidence (self-introduction, name mention, etc.); speakers without anchors are forced to `Unknown`. Window passes cannot answer questions for subjects outside their primary utterance boundary (preventing false host overrides).
 
 **Pending:** Vertex AI **batch delivery** for recursive SI backlog cohorts (~50% interactive cost) — active spec `gor_dagster/docs/features/batch-integration/` Phase 5; types stubbed in `EpisodeWaveState` / `WavePhase`.
 
@@ -113,7 +113,7 @@ Docs: [Speaker Attribution Architecture](file:///Users/andreskull/gor_dagster/do
 
 An LLM reads the hydrated transcript and extracts financial predictions: stock picks, position disclosures (start/hold/close long/short), recommendations. Each extracted item becomes a `PotentialPrediction` row in BigQuery. Runs in parallel with `IndividualQuote` creation from the same hydrated transcript.
 
-FE model selection: production **`fe-gem35fl-recursive`** (@**1800s** windows; paired with recursive SI; promote **2026-07-27**). Job-level retry second slot remains **`fe-dsv4fr-58k`**. Chooses the best available hydration (per `Pipeline Model Priority and Retries` policy). Retries upward only — if a lower-priority hydration succeeds first, FE runs on it, then automatically re-runs on a better hydration when available.
+FE model selection: production **`fe-gem35fl-recursive`** (@**1800s** windows; promote **2026-07-27**; retained under Option 3 Hybrid Routing **2026-10-24** — [[decisions/claude-haiku-55-hybrid-routing]]). Evaluated Claude Haiku 5.5 for FE, but Haiku proved overly conservative on recall (0.2541 vs 0.4541 on Gemini, F1 0.3682 vs 0.5629, cutting signal volume by 44%), so Gemini 3.5 Flash-Lite was retained for FE while Haiku was promoted for SI. Job-level retry second slot remains **`fe-dsv4fr-58k`**. Chooses the best available hydration (per `Pipeline Model Priority and Retries` policy, with `si-haiku55-recursive` at Rank #1). Retries upward only — if a lower-priority hydration succeeds first, FE runs on it, then automatically re-runs on a better hydration when available.
 
 `PotentialPrediction` is the raw store. It holds everything including duplicates (from running with different FE configs). `ActionableSignal` is a VIEW over it with deduplication logic.
 
@@ -430,6 +430,7 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 
 | Completed | Topic | Doc |
 |---|---|---|
+| 2026-10-24 | Claude Haiku 5.5 evaluation & Option 3 Hybrid Routing — promoted si-haiku55-recursive for SI (+1.35 pp speaker accuracy, -52.5% cost, -54.9% latency); retained fe-gem35fl-recursive for FE; 4-tier fallback; memory fold boundary hardening | [claude-haiku-55-evaluation.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/claude-haiku-55-evaluation.md) |
 | 2026-10-22 | Near-duplicate finfluencers — `NEAR_NAME` cards, `duplicate_pair_match` + SQL parity, `near_name_spelling` merge options, `FinfluencerPairDismissal` (migration 027), create-dialog warning, batched proof-segment `MERGE` | [near-duplicate-finfluencers.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/near-duplicate-finfluencers.md) |
 | 2026-10-20 | Ads review — shared Claude/Grok machinery (Grok 08:10 routine; ank applies approved ad changes; runs push `staging`) | [ads-review-human-in-the-loop.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/ads-review-human-in-the-loop.md) |
 | 2026-10-14 | Market Call RSS onboarding (Omny Pattern 8; job-only `rel="next"`; 1,006/1,006 downloaded; directory Covered `market-call`) | [bnn-market-call.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bnn-market-call.md) |

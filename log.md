@@ -435,3 +435,11 @@ Permanent record at `gor_dagster/docs/architecture/features/near-duplicate-finfl
 ## [2026-10-22] sync | gor_dagster
 
 Recorded near-duplicate finfluencers on [[projects/gor_dagster]] (Stage 6 speaker resolution, `dagster_shared` data model, architecture decisions, completed features, wrapped note), [[overview]], and [[index]].
+
+## [2026-10-24] wrapup | gor_dagster | Claude Haiku 5.5 evaluation & Option 3 Hybrid Routing
+
+Permanent record at `gor_dagster/docs/architecture/features/claude-haiku-55-evaluation.md`. Promoted `si-haiku55-recursive` (3 waves, 450s window) to primary Rank #1 for Speaker Identification (+1.35 pp attribution accuracy to 96.67%, -52.5% cost to \$0.0045/run, -54.9% latency to 16.7s). Retained `fe-gem35fl-recursive` (1800s window) for Facts Extraction after Haiku 5.5 evaluation revealed a -44% drop in signal recall (0.2541 vs 0.4541) and high rejection rates (17.65%). Implemented Option 3 Hybrid Routing bridge `PIPELINE_FE_CONFIG_BY_SI_CONFIG_ID`, established 4-tier SI fallback chain (`si-haiku55-recursive` -> `si-gem35fl-recursive` -> `si-gem31fl-recursive` -> `si-dsv4fr-recursive`), and hardened recursive memory fold QA boundaries to prevent spurious out-of-window speaker answers. Verified through production smoke runs across SI, hydration, and FE. PR #230 merged to main (`d6a9f06e`).
+
+## [2026-10-24] sync | gor_dagster
+
+Option 3 Hybrid Routing & Claude Haiku 5.5 SI promotion. New decision page [[decisions/claude-haiku-55-hybrid-routing]]. Updated [[concepts/speaker-attribution]], [[concepts/llm-config-registry]], [[concepts/actionable-signal]], [[projects/gor_dagster]] (Stage 4 SI, Stage 5 FE, completed architecture features), [[products/finfluencer-trade]], [[overview]], and [[index]].

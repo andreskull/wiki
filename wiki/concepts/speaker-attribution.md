@@ -4,8 +4,8 @@ title: "Speaker Attribution"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-07-27
-tags: [speaker-attribution, stt, llm, transcript, diarization, elevenlabs]
+updated: 2026-10-24
+tags: [speaker-attribution, stt, llm, transcript, diarization, elevenlabs, claude-haiku, gemini]
 ---
 
 # Speaker Attribution
@@ -14,7 +14,7 @@ The process of identifying and naming speakers in a podcast transcript. A two-st
 
 ## How it works
 
-**Stage 1 — LLM Identification:** Production uses **memory-centric recursive SI** (`si-gem35fl-recursive` @ **450s**, promoted **2026-07-27** — see [gemini-35-flash-lite-migration.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md)): three-wave algorithm — roster bootstrap (1 call) → parallel window passes (delta-only ops against live speaker memory) → optional resolution → deterministic fold. Prior production was `si-gem31fl-recursive` @300s (kept in source-priority / fallback). Show priors from BigQuery seed bootstrap; evidence-gated merges rewrite labels retroactively. Output: identification file at `gs://gor-stt-transcripts/identification/{episode_id}/{provider}_{llm_config_id}.json`. Compat tails (`si-gem31fl-recursive`, `si-dsv4fr-*`, grok-era) remain for artefact priority.
+**Stage 1 — LLM Identification:** Production uses **memory-centric recursive SI** (`si-haiku55-recursive` @ **450s**, promoted **2026-10-24** under Option 3 Hybrid Routing — see [[decisions/claude-haiku-55-hybrid-routing]] and [claude-haiku-55-evaluation.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/claude-haiku-55-evaluation.md)): three-wave algorithm — roster bootstrap (1 call) → parallel window passes (delta-only ops against live speaker memory) → optional resolution → deterministic fold. Claude Haiku 5.5 achieved **92.75%** speaker accuracy (+1.35 pp vs Gemini 3.5 Flash-Lite) at **-36.8% to -52.5% lower cost** and **-38.5% to -54.9% lower wallclock latency**. In-pass fallback: `si-haiku55-recursive` → `si-gem35fl-recursive` → `si-gem31fl-recursive` → `si-dsv4fr-recursive`. Prior production configs (`si-gem35fl-recursive`, `si-gem31fl-recursive`) remain readable via source-priority. Show priors from BigQuery seed bootstrap; evidence-gated merges rewrite labels retroactively. Output: identification file at `gs://gor-stt-transcripts/identification/{episode_id}/{provider}_{llm_config_id}.json`. Compat tails (`si-gem35fl-recursive`, `si-gem31fl-recursive`, `si-dsv4fr-*`, grok-era) remain for artefact priority.
 
 Single-pass mode and eight+ LLM config families remain available via the registry (Gemini, GPT, Claude, etc.).
 
@@ -52,6 +52,8 @@ Permanent reference: [hidden-gems-ingestion.md](file:///Users/andreskull/gor_dag
 
 ## Related pages
 
+- [[decisions/claude-haiku-55-hybrid-routing]]
+- [Claude Haiku 5.5 evaluation & cutover](file:///Users/andreskull/gor_dagster/docs/architecture/features/claude-haiku-55-evaluation.md)
 - [Gemini 3.5 Flash-Lite migration](file:///Users/andreskull/gor_dagster/docs/architecture/features/gemini-35-flash-lite-migration.md)
 - [Recursive LLM extraction](file:///Users/andreskull/gor_dagster/docs/architecture/features/recursive-llm-extraction.md)
 - [[concepts/proof-segment-speaker-resolution]]
