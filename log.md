@@ -452,3 +452,11 @@ Permanent record at `gor_dagster/docs/architecture/features/foreign-listing-reso
 
 Foreign listing resolution. New concept page [[concepts/foreign-listing-resolution]]. Updated [[projects/gor_dagster]] (Stage 6 instrument resolution, architecture decisions, completed architecture features), [[overview]], and [[index]].
 
+## [2026-10-25] wrapup | gor_dagster | Episode-title speaker hint
+
+Permanent record at `gor_dagster/docs/architecture/features/episode-title-speaker-hint.md`. Authoritative publisher spellings from episode titles (Market Call, The Compound and Friends, The Acquirers Podcast) guide recursive Speaker Identification (SI) via bootstrap prompt hypotheses, canonicalization renames, and single-guest seeding. Downstream in speaker resolution, `decide_title_guard` prevents auto-creating misspelled finfluencers under speech-to-text drift (`USE_TITLE_NAME` creates under title spelling with `is_misspelling = TRUE` aliases, while non-matching pickers on single-guest shows queue with `TITLE_GUEST_MISMATCH`). The curation dashboard renders title notes directly in pending table cells. Corrected 23 historical finfluencers via `scripts/correct_finfluencer_name_spellings.py` and `scripts/manifests/finfluencer_name_spellings.yaml`. Verified in production across 300+ episodes (2,734 resolved predictions, 7 new Market Call finfluencers created under exact title spellings, 0 wrong). Temp `docs/features/episode-title-speaker-hint/` removed.
+
+## [2026-10-25] sync | gor_dagster
+
+Episode-title speaker hint. New concept page [[concepts/episode-title-speaker-hint]]. Updated [[projects/gor_dagster]] (Stage 4 SI, Stage 6 speaker resolution, architecture decisions, completed architecture features), [[overview]], and [[index]].
+
