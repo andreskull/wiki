@@ -443,3 +443,12 @@ Permanent record at `gor_dagster/docs/architecture/features/claude-haiku-55-eval
 ## [2026-10-24] sync | gor_dagster
 
 Option 3 Hybrid Routing & Claude Haiku 5.5 SI promotion. New decision page [[decisions/claude-haiku-55-hybrid-routing]]. Updated [[concepts/speaker-attribution]], [[concepts/llm-config-registry]], [[concepts/actionable-signal]], [[projects/gor_dagster]] (Stage 4 SI, Stage 5 FE, completed architecture features), [[products/finfluencer-trade]], [[overview]], and [[index]].
+
+## [2026-10-25] wrapup | gor_dagster | Foreign listing resolution
+
+Permanent record at `gor_dagster/docs/architecture/features/foreign-listing-resolution.md`. The resolver, price pipeline, and curation dashboard natively support foreign listings starting with Canada (TSX `.TO` and TSXV `.V`). Spoken Canadian names and tickers resolve directly using cached EODHD symbol lists (`ExchangeSymbolIndex`), OpenFIGI composite FIGIs, and listing evidence. Single listing policy (`choose_listing`) keeps single-listed profile rows, redirects dual-listed names with liquid US primary lines to their US ticker (`.US`), and filters out OTC wrapper lines (`BEP.UN`, `BIP.UN`) and CDRs. Hardened contained-name matching (`is_contained_name_only`) prevents single-token brand names (e.g. `Magna`) from auto-accepting against longer unrelated candidate names (`Magna Mining`) without agreeing tickers. Dashboard includes Show filter (Market Call), profile badges, and dedicated queue tiles (**Pending mentions**, **Pending Curation**, **Not attempted yet**). Repointed 465 historical prediction rows, repaired 185 aliases, and purged 104 vacated FIGI-less US OTC rows from BigQuery. Temp `docs/features/foreign-listing-resolution/` removed.
+
+## [2026-10-25] sync | gor_dagster
+
+Foreign listing resolution. New concept page [[concepts/foreign-listing-resolution]]. Updated [[projects/gor_dagster]] (Stage 6 instrument resolution, architecture decisions, completed architecture features), [[overview]], and [[index]].
+
