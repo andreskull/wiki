@@ -4,8 +4,8 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-10-21
-tags: [rum, web-vitals, mobile, finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
+updated: 2026-10-30
+tags: [prediction-scores, signals, rum, web-vitals, mobile, finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
 ---
 
 # finfluencer-tracker
@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-10-20)
+## Current status (2026-10-30)
+
+**Prediction Scores & Option 2 3-tier gating wrapped (2026-10-30)**: Ex-ante `1★–5★` 6-Month Prediction Scores (`blend_w50_v1`) and evidence-backed `"Why N stars?"` explanations (`7 of 9` years stability rule, `"heavily traded stocks"` wording) + sample-size-gated `context_line` (`>= 3` count + avg, `1–2` count only, `0` empty) live across `/signals` and finfluencer profile `<FreshScoredPicksSection />` (PRs `#116`–`#120`, migrations `20261023120000`–`20261030120000`). Individual picks and fresh exits (`close_long`, `close_short` with `"Was ★★★★☆"`) are shown strictly for the first 10 US trading sessions after entry (`get_fresh_scored_picks`). Direct client `SELECT` on raw `signals`, `signal_performance`, `signal_current_performance`, and `pick_scores` is revoked for `anon` and `authenticated`. Under the **Option 2 3-tier entitlement model**: **Guest (`anon`)** sees 3 `is_free_tier` finfluencers unmasked on aggregate views, free-account signup gates on locked rows with sort-order leakage closed before `ORDER BY`/`ROW_NUMBER()` in `leaderboard` and `get_sector_leaderboard`, and sees the 3 featured finfluencers' fresh picks on public `/signals` with `stars`/`explanation_text`/`context_line` masked to `NULL` behind a `"Create a free account to see score"` badge; **Spectator (free signed-in)** unlocks 100% of aggregate track records across all 84 finfluencers and 14 shows (`1W`–`1Y`) plus `1★–5★` scores and `"Why N stars?"` explanations for the 3 featured finfluencers; **Trader (€19/mo)** unlocks all fresh `1★–5★` scored picks and exits across all 84 finfluencers. `paywall_hit`, `paywall_view`, and `paywall_cta_click` wired across `leaderboard:main`, `leaderboard:sectors`, `leaderboard:under_radar`, `signals:teaser`, `compare`, and `landing:hero_teaser`. Preserved 64 reproducible research scripts/reports in `docs/features/prediction-scores/research/` while purging ~9.10 GB of transient outputs (`keep-research`). See [[concepts/prediction-scores]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/prediction-scores.md).
 
 **Conversion measurement wrapped (2026-10-20)**: Consent Mode, `purchase`, and the engagement events have been live since 2026-08-11. GA4 key events other than `sign_up` are imported to Google Ads as secondary. `sign_up` (€20) stays the only primary. `comparison_created` and `purchase` were not promoted: last 30 days through 2026-10-19 were 99 `sign_up`, 5 `comparison_created`, 0 `purchase`. See [[concepts/google-ads-conversion-tracking]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/conversion-measurement-plan.md).
 
@@ -94,19 +96,20 @@ Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in pro
 
 **Public conversion funnel shipped (2026-07-10).** Anonymous visitors browse `/leaderboard` and `/shows` without login; profile depth gated behind free Spectator signup; Trader for non-featured finfluencer data. Persistent marketing chrome to those routes shipped **2026-08-17**.
 
-## Access model
+## Access model (Option 2 3-tier gating, 2026-10-30)
 
-| Surface | Anonymous | Spectator | Trader |
-|---------|-----------|-----------|--------|
+| Surface | Anonymous (`anon`) | Spectator (Free Account) | Trader (€19/mo) |
+|---------|--------------------|--------------------------|-----------------|
 | `/cnbc-ipo` (IPO scoreboard) | Public | Public | Public |
-| Leaderboards (`/leaderboard`, `/shows`) | Public (masked columns same as Spectator) | Unchanged | Unchanged |
+| Leaderboards (`/leaderboard`, `/leaderboard/sectors`, `/shows`) | Public: 3 `is_free_tier` finfluencers unmasked; remaining 81 masked (`NULL` before `ORDER BY`/`ROW_NUMBER()`) behind free-account CTA | **Full unmasked** across all 84 finfluencers & 14 shows (`1W`–`1Y`) | **Full unmasked** |
 | `/upgrade` (Pricing) | Public | Unchanged | Unchanged |
-| `/compare` | Login + entitlement on locked subjects | Free list; locked → upgrade | Full picker |
-| Finfluencer profile (incl. cumulative chart) | Teaser + free-account gate | Featured-3 full; others Trader-gated | Full |
-| Show profile | Teaser + free-account gate | Full | Full |
-| `/signals`, `/settings`, … | Login required | Login required | Login required |
+| `/compare` | Prefilled Cramer vs Brown; locked subjects redirect to `/signup` | **Full picker** across all 84 finfluencers | **Full picker** |
+| Finfluencer profile (KPIs, cumulative chart, sector widget, ticker lookup) | 3 `is_free_tier` unmasked; remaining 81 gated behind free-account signup | **Full aggregate track record** across all 84 finfluencers | **Full aggregate track record** |
+| Show profile | Teaser + free-account gate | **Full** | **Full** |
+| `/signals` & profile `<FreshScoredPicksSection />` (sessions 1–10) | Public `/signals`: 3 featured finfluencers' fresh picks visible with `stars`/`explanation_text`/`context_line` masked (`NULL`) behind `"Create a free account to see score"` | **3 featured finfluencers** unmasked with `1★–5★` stars & `"Why N stars?"`; remaining 81 gated behind Trader CTA | **All 84 finfluencers unmasked** |
+| Historical individual picks (> 10 sessions old) | Revoked (aggregates only) | Revoked (aggregates only) | Revoked (aggregates only) |
 
-Monetization stays at **Spectator → Trader column masking**, not a login wall on the leaderboard. **Entitlement for masking/RLS** reads `user_profiles.subscription_tier` after Stripe→profile sync ([[concepts/subscription-entitlement-ssot]]).
+Under **Option 2 (2026-10-30)**, signing up for a free **Spectator** account unlocks 100% of historical aggregate track records across all 84 finfluencers and 14 shows plus `1★–5★` Prediction Scores for the 3 featured finfluencers, while **Trader (€19/mo)** unlocks fresh `1★–5★` scored picks and exits across all 84 finfluencers ([[concepts/prediction-scores]], [[concepts/subscription-entitlement-ssot]]).
 
 ## Tech stack
 
@@ -125,6 +128,7 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [README](file:///Users/andreskull/finfluencer-tracker/docs/architecture/README.md) | Index |
 | [system-overview](file:///Users/andreskull/finfluencer-tracker/docs/architecture/system-overview.md) | Stack, Vercel, routing |
 | [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md) | Supabase prod/dev, BQ → app path, entitlement SSOT summary |
+| [prediction-scores](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/prediction-scores.md) | `1★–5★` 6M Prediction Scores (`blend_w50_v1`), 10-session fresh window (`get_fresh_scored_picks`), Option 2 3-tier gating (`Guest` → `Spectator` → `Trader`), evidence-backed `"Why N stars?"` explanations, and `context_line` sample-size rules (**2026-10-30**) |
 | [cumulative-performance-comparison-charts](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/cumulative-performance-comparison-charts.md) | Cumulative % charts, `/compare`, Play, export (**2026-08-04**) |
 | [reddit-pixel-tracking](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/reddit-pixel-tracking.md) | Reddit pixel, consent gate, SignUp conversion (**2026-08-17**); listed accounts skip SignUp (**2026-09-25**) |
 | [landing-tour-improvements](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-tour-improvements.md) | 50/50 first-visit tour, close and abandon events, sign-up arm tag, internal-account skip (**2026-10-20**) |
@@ -161,6 +165,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-10-30 | Prediction Scores for Fresh Stock Picks & Option 2 3-tier gating (`prediction-scores`) | [prediction-scores.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/prediction-scores.md) |
 | 2026-10-20 | Landing tour improvements | [landing-tour-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-tour-improvements.md) |
 | 2026-10-20 | Conversion measurement (`sign_up` only primary) | [conversion-measurement-plan.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/conversion-measurement-plan.md) |
 | 2026-10-20 | RUM off GA4 | [rum-off-ga4.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/rum-off-ga4.md) |
@@ -200,6 +205,11 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-10-30 | Individual picks & `1★–5★` Prediction Scores are shown strictly for the first 10 US trading sessions after entry (`get_fresh_scored_picks`); raw client `SELECT` on `signals`, `signal_performance`, `signal_current_performance`, and `pick_scores` is revoked | Prevents bulk scraping of historical picks while delivering real-time actionable signals during the fresh window; on session 11, picks roll off into aggregate track records |
+| 2026-10-30 | Option 2 3-tier gating (`Guest` → `Spectator` → `Trader`) unlocks 100% of historical aggregate track records for free signed-in Spectators while gating non-featured fresh `1★–5★` scored picks to Trader | Gives free account signups high immediate value (all 84 finfluencers' aggregate track records + 3 featured finfluencers' `1★–5★` scores) while keeping daily `1★–5★` scored picks across all 84 finfluencers as the core Trader upgrade driver |
+| 2026-10-30 | Public `/signals` is accessible to anonymous visitors (`anon`) with `stars`, `explanation_text`, and `context_line` masked to `NULL` in SQL | Lets anonymous visitors browse real fresh stock picks from the 3 featured finfluencers while requiring a free Spectator signup to reveal the `1★–5★` Prediction Score and `"Why N stars?"` explanation |
+| 2026-10-30 | `leaderboard` and `get_sector_leaderboard` mask locked rows (`NULL`) **before** `ORDER BY` and `ROW_NUMBER()` | Sorting on raw unmasked alpha/IR before masking leaked the relative rank order of locked finfluencers to anonymous visitors |
+| 2026-10-30 | Evidence-backed `"Why N stars?"` explanations enforce the `7 of 9` years stability rule and `"heavily traded stocks"` wording; `context_line` requires `>= 3` prior picks to quote an average | Prevents small-sample noise from appearing in human-readable explanations (`1–2` prior picks quote count only; `0` emits empty string) |
 | 2026-10-20 | Field RUM (`web_vitals`, DATA_READY) goes to `/api/rum` and Supabase `web_vitals_events`, never to GA4 | gtag batches hits and a frozen iOS page delivers them hours later inside the old GA4 session; no gtag flag makes an event non-session-extending, so an idle guard at report time cannot fix it |
 | 2026-10-20 | A migration the client code depends on goes to production before the code is promoted | Until the table exists, production reports fail to save and are lost; visitors see nothing either way |
 | 2026-10-20 | Production e2e specs intercept `/api/rum`, and the e2e fixture sets `ft_internal_v1` | Each unintercepted run inserted real rows (116 deleted by hand), and each fresh browser counted as new users in GA4 |
@@ -293,8 +303,9 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 ## Supabase notes (app layer)
 
 - **Entitlement:** `user_profiles.subscription_tier` (+ status, `stripe_customer_id`, `cancel_at_period_end`, `subscription_reconciled_at`); writers are service-role edge functions only (H9); `get_user_tier()` drives RLS / masked views
+- **Prediction Scores (`public.pick_scores` & `get_fresh_scored_picks`):** Synced from BigQuery `dagster_sync.mat_pick_scores`; direct `SELECT` revoked on `signals`, `signal_performance`, `signal_current_performance`, and `pick_scores` for `anon`/`authenticated`; `get_fresh_scored_picks(p_finfluencer_id, p_direction, p_min_stars, p_limit, p_offset)` serves fresh picks and exits within 10 US trading sessions (`sessions 1–10`) with server-side Option 2 tier masking ([[concepts/prediction-scores]])
 - **Holding-period preference:** `user_profiles.default_holding_period` (nullable text, CHECK `1w|1m|3m|6m|1y`); `authenticated` UPDATE on that column only; `NULL` = follow system 6 months ([[concepts/user-default-holding-period]])
-- **`finfluencer_combined_performance_public`** + **`leaderboard`** — security-definer masked views; base table not readable by anon
+- **`finfluencer_combined_performance_public`** + **`leaderboard`** — security-definer masked views; under Option 2 (`20261030120000`), `anon` sees 3 `is_free_tier` rows unmasked and remaining 81 nulled **before** `ORDER BY`/`ROW_NUMBER()`, while `authenticated` (`spectator`/`trader`) sees all 84 unmasked; base table not readable by anon
 - **`benchmark_daily_prices`** — SPY daily adj_close (synced from BigQuery `PriceHistory`)
 - **`get_cumulative_performance_series(...)`** — security-definer RPC; entitlement mirrors TierGate / `is_free_tier` ([[concepts/cumulative-performance-charts]])
 - **`get_ipo_scoreboard_page(p_ticker)`** RPC — CNBC IPO scoreboard payload
@@ -344,6 +355,7 @@ Vault indexes **WIKI.md** and all of **`docs/`** except **`docs/features/`**. Ru
 - [[products/finfluencer-trade]]
 - [[projects/gor_dagster]]
 - [[projects/gor-blog]]
+- [[concepts/prediction-scores]]
 - [[concepts/user-default-holding-period]]
 - [[concepts/post-signup-onboarding]]
 - [[concepts/core-web-vitals-field]]

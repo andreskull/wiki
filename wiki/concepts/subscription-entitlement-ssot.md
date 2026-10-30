@@ -4,20 +4,24 @@ title: "Subscription entitlement SSOT"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-07-27
-updated: 2026-09-06
-tags: [stripe, supabase, rls, billing, spectator, trader, entitlement]
+updated: 2026-10-30
+tags: [stripe, supabase, rls, billing, spectator, trader, entitlement, prediction-scores]
 ---
 
 # Subscription entitlement SSOT
 
 ## Definition
 
-**Option 1 entitlement model** for finfluencers.trade:
+**Entitlement SSOT** for finfluencers.trade (`user_profiles.subscription_tier` is the single app entitlement source of truth; expanded to the **Option 2 3-tier gating model** on **2026-10-30** alongside [[concepts/prediction-scores]]):
 
 | Concern | Source of truth |
 |---------|-----------------|
 | Billing (checkout, invoices, cancel) | Stripe |
-| App product unlock + Postgres RLS | `user_profiles.subscription_tier` only |
+| App product unlock + Postgres RLS / SECURITY DEFINER RPCs | `user_profiles.subscription_tier` (`get_user_tier()`) only |
+| **Guest (`anon`)** | 3 `is_free_tier` finfluencers unmasked on aggregate leaderboards/profiles (locked rows nulled before `ORDER BY`/`ROW_NUMBER()`); public `/signals` shows the 3 featured finfluencers' fresh picks with `stars`/`explanation_text`/`context_line` masked (`NULL`) behind a free-account CTA |
+| **Spectator (free signed-in)** | Unlocks 100% of aggregate track records across all 84 finfluencers and 14 shows (`1W`–`1Y`), plus `1★–5★` Prediction Scores and `"Why N stars?"` explanations for the 3 featured finfluencers |
+| **Trader (€19/mo)** | Unlocks all fresh `1★–5★` scored picks and exits (sessions 1–10) across all 84 finfluencers |
+| **Raw historical picks (> 10 sessions)** | Client `SELECT` revoked on `signals`, `signal_performance`, `signal_current_performance`, and `pick_scores` for `anon` and `authenticated`; served only through `get_fresh_scored_picks` and aggregate views/RPCs |
 
 Stripe syncs into the profile via edge functions (`stripe-webhook` primary; `check-subscription` reconcile/self-heal; `create-checkout` persists `stripe_customer_id` early). The client (`useSubscription`) unlocks paid UI from the **post-reconcile profile tier**, never from a live Stripe poll alone.
 
