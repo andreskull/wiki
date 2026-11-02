@@ -152,3 +152,8 @@ Not part of the numbered GTM queue. Overheard scores digests → RESEARCH+ENGAGE
 - [[projects/gor-blog]]
 - [[projects/finfluencer-tracker]]
 - [[projects/gor_dagster]]
+
+
+## Current growth operating model (pointer, 2026-11-02)
+
+Live process SoT moved to repo docs — see [[projects/finfluencer-tracker]] § Growth loop: [growth-loop requirements](file:///Users/andreskull/finfluencer-tracker/docs/ops/growth-loop/requirements.md), [design](file:///Users/andreskull/finfluencer-tracker/docs/ops/growth-loop/design.md), [marketing playbook](file:///Users/andreskull/finfluencer-tracker/docs/ops/marketing-playbook.md). This page remains the historical GTM hub.

@@ -473,3 +473,7 @@ Permanent record at `gor_dagster/docs/architecture/features/prediction-scores.md
 Prediction Scores (`1★–5★`) & Option 2 3-tier gating (`prediction-scores`) plus *In the Money with Amber Kanwar* RSS onboarding. New concept page [[concepts/prediction-scores]]. Updated [[concepts/subscription-entitlement-ssot]], [[projects/finfluencer-tracker]], [[projects/gor_dagster]], [[products/finfluencer-trade]], [[overview]], and [[index]].
 
 
+
+## [2026-11-02] sync | finfluencer-tracker
+
+Growth/marketing: indexed `docs/ops/growth-loop/{requirements,design}.md` + `docs/ops/marketing-playbook.md`. Updated project page (new Growth loop section), gtm-growth pointer, index row.

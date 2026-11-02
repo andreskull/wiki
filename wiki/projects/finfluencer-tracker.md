@@ -4,7 +4,7 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-10-30
+updated: 2026-11-02
 tags: [prediction-scores, signals, rum, web-vitals, mobile, finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
 ---
 
@@ -345,6 +345,10 @@ Shipped MVP scope: [`gor_dagster/docs/MVP_MASTER_PLAN.md`](file:///Users/andresk
 - `/show/:slug` still 0.04 s over 2.5 s lab LCP — would need route-level prefetch / SSR ([[concepts/core-web-vitals-mobile]])
 - Four Search Console CWV URLs are MkDocs — a `gor-blog` follow-up if the CrUX *group* is to go Good
 - Search Console field-data confirmation ~**2026-09-19**; do not resubmit Validate Fix before then
+
+## Growth loop & marketing playbook (2026-11-02)
+
+Indexed copies: [growth-loop requirements](file:///Users/andreskull/finfluencer-tracker/docs/ops/growth-loop/requirements.md), [design](file:///Users/andreskull/finfluencer-tracker/docs/ops/growth-loop/design.md), [marketing playbook](file:///Users/andreskull/finfluencer-tracker/docs/ops/marketing-playbook.md). Model: 4 local loops (L1 ads/creative — Franky `PROPOSALS.md`; L2 speed-lane replies — Boss, weekends light max 1 X + 1 Reddit; L3 measurement; L4 SEO/AEO — Boss SEO Page owns, Content Board = Desk backlog) + weekly ank allocator. My Plate = Andres decisions only (capped, via Boss/ank). Park = reason + review date; drop only if obsolete + logged; Monday parked>7d report. Weekly ank parked backlog: Kit post-send impact, founder brand (Andres in loop), Cramer paper + SSRN promo campaign, own-threads, launch pack, clips pairing. Partnerships skipped; in-app product growth stays in `features/`. Commits `5dcc740`, `a75b683` (development).
 
 ## Wiki sync
 
