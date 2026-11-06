@@ -477,3 +477,7 @@ Prediction Scores (`1★–5★`) & Option 2 3-tier gating (`prediction-scores`)
 ## [2026-11-02] sync | finfluencer-tracker
 
 Growth/marketing: indexed `docs/ops/growth-loop/{requirements,design}.md` + `docs/ops/marketing-playbook.md`. Updated project page (new Growth loop section), gtm-growth pointer, index row.
+
+## [2026-11-05] wrapup | gor_dagster | In the Money with Amber Kanwar
+
+Permanent doc `docs/architecture/features/in-the-money-ingestion.md`. `content_source_id` `5a768ce1-3e15-4029-b66a-e7d520c6018f`. Pattern 9. Directory Covered `in-the-money-with-amber-kanwar`. Temp `docs/features/in-the-money-ingestion/` removed 2026-11-06. Updated [[projects/gor_dagster]], [[products/finfluencer-trade]], [[overview]], and [[index]].
