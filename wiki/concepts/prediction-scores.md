@@ -4,7 +4,7 @@ title: "Prediction Scores (1★–5★) & Option 2 3-Tier Gating"
 product: finfluencer-trade
 project: null
 created: 2026-10-30
-updated: 2026-11-04
+updated: 2026-11-10
 tags: [prediction-scores, ml, bigquery, gcs, supabase, entitlement, spectator, trader, signals, dashboard]
 ---
 
@@ -32,7 +32,7 @@ Ex-ante **6-Month Prediction Scores (`1★–5★`)** and evidence-backed **"Why
 - **Strict 10-Session Window:** Individual picks and scores are visible only for the first 10 US trading sessions after entry (`first_tradeable_session_date <= current_session <= window_end_session`), displayed as `"1 day ago"` through `"10 days ago"` (`freshDayLabel`). On session 11, picks roll off `/signals` and profile `<FreshScoredPicksSection />` and contribute exclusively to aggregate track records.
 - **Picks Browser (`/signals`, updated 2026-11-04):** Dense one-row-per-pick browser (`PickRow`) paired with a sticky selected-pick detail pane (`PickDetail` on `lg+`, bottom sheet below `lg`). Supports URL-synced search (`?q=`), quick views (`New (1–3 days ago)`, `4–5★`, `Exits`, `Same ticker, 2+ people`), an `Applied` bar with `Clear filters` and inline `Save as my default` star preference, and grouping by `List | Ticker | Person | Show` (`?group=`). In grouped modes (`Ticker`, `Person`, `Show`), the first group auto-expands and selects its first pick in the detail pane; no combined ticker score is computed. The detail pane shows `"Why N stars?"`, `Source & audio`, and `"Others on <ticker>"` for sibling fresh picks on the same ticker.
 - **Evidence-Backed `"Why N stars?"` Explanations:** Up to 2 reason clauses + 1 caveat clause generated from `dagster_shared.scoring_driver_evidence`, enforcing the **`7 of 9` years stability rule** and **`"heavily traded stocks"`** wording for `stock_dollar_volume_20d`.
-- **`context_line` Sample-Size Rule:** Requires `>= 3` prior picks on the same ticker to quote both count and average 6M alpha; `1–2` prior picks emit count only; `0` prior picks emit `""`.
+- **`context_line` Sample-Size Rule:** Requires `>= 3` prior picks on the same ticker to quote both count and average 6M alpha; `1–2` prior picks emit count only; `0` prior picks emit `""`. From 2026-11-10 a share-class group counts by canonical ticker and names the company ("28 completed Alphabet picks"). The model's own prior-pick features stay on the raw ticker. See [[concepts/share-class-identity]].
 
 ## Option 2 3-Tier Entitlement Model (`Guest` → `Spectator` → `Trader`)
 
@@ -56,3 +56,4 @@ Ex-ante **6-Month Prediction Scores (`1★–5★`)** and evidence-backed **"Why
 - [[concepts/signal-performance]]
 - [[concepts/actionable-signal]]
 - [[concepts/information-ratio]]
+- [[concepts/share-class-identity]]

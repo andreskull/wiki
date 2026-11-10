@@ -481,3 +481,15 @@ Growth/marketing: indexed `docs/ops/growth-loop/{requirements,design}.md` + `doc
 ## [2026-11-05] wrapup | gor_dagster | In the Money with Amber Kanwar
 
 Permanent doc `docs/architecture/features/in-the-money-ingestion.md`. `content_source_id` `5a768ce1-3e15-4029-b66a-e7d520c6018f`. Pattern 9. Directory Covered `in-the-money-with-amber-kanwar`. Temp `docs/features/in-the-money-ingestion/` removed 2026-11-06. Updated [[projects/gor_dagster]], [[products/finfluencer-trade]], [[overview]], and [[index]].
+
+## [2026-11-10] wrapup | finfluencer-tracker | Share-class identity
+
+Permanent doc `docs/architecture/features/share-class-identity.md`. Map in `gor_dagster/utils/share_classes.py`. Production `share_class_tickers` holds 14 rows after the manual sync. New concept [[concepts/share-class-identity]]. Updated [[projects/finfluencer-tracker]], [[projects/gor_dagster]], [[products/finfluencer-trade]], [[overview]], [[index]], [[concepts/prediction-scores]], and [[concepts/finfluencer-ticker-pick-lookup]]. Temp `docs/features/share-class-identity/` removed 2026-11-10 after confirmation.
+
+## [2026-11-10] sync | finfluencer-tracker, gor_dagster
+
+Share-class identity. Same pages as the wrapup entry above.
+
+## [2026-11-10] sync | finfluencer-tracker, gor_dagster
+
+Re-read after `docs/features/share-class-identity/` was removed. [[concepts/share-class-identity]], [[projects/finfluencer-tracker]], [[projects/gor_dagster]], [[concepts/prediction-scores]], [[concepts/finfluencer-ticker-pick-lookup]], [[products/finfluencer-trade]], [[overview]], and [[index]] already match `docs/architecture/features/share-class-identity.md` and finfluencer-tracker `WIKI.md`. No page rewrite. `docs/architecture/README.md` still does not list the feature page.

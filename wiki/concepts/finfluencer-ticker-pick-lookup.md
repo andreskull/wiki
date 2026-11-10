@@ -4,7 +4,7 @@ title: "Finfluencer ticker pick lookup"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-09-06
-updated: 2026-09-06
+updated: 2026-11-10
 tags: [ticker, lookup, supabase, rpc, postgrest, entitlement, profile]
 ---
 
@@ -17,6 +17,8 @@ On a finfluencer profile, signed-in viewers who can already see pick alpha can l
 **Single number truth:** one Supabase RPC, `finfluencer_ticker_list`. `p_ticker` NULL → ranked top-N (feeds the three list widgets). `p_ticker` set → single-ticker summary (feeds the lookup). Same `WHERE` / `GROUP BY`; AC2 parity is structural.
 
 The same ship (**2026-09-05**, PR #72) deleted two low-comprehension box-plot charts and retired the objects that served only them (`broken_records_rare_picks_for_*`, `mainstream_vs_off_consensus_for_finfluencer`, `mainstream_tickers_snapshot`).
+
+From **2026-11-10** the typeahead calls `search_instrument_tickers` and returns one option per canonical ticker ("GOOGL — Alphabet (also GOOG)"). `finfluencer_ticker_list` groups by that canonical ticker. See [[concepts/share-class-identity]].
 
 ## Why a server-side RPC
 
@@ -58,3 +60,4 @@ The user-facing ask (Featurebase, 2026-06-02) was “how has this person done on
 - [[concepts/subscription-entitlement-ssot]]
 - [[concepts/signal-performance]]
 - [[products/finfluencer-trade]]
+- [[concepts/share-class-identity]]

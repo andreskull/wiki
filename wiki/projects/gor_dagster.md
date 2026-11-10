@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-11-05
+updated: 2026-11-10
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, prediction-scores, ml, linkedin, gemini, claude-haiku, podcast-rss, outreach, source-quote, google-ads]
 ---
 
@@ -452,6 +452,7 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 
 | Completed | Topic | Doc |
 |---|---|---|
+| 2026-11-10 | Share-class identity — `utils/share_classes.py` is the one map (seven companies, 14 tickers). `mat_share_class_tickers` syncs it incrementally to `public.share_class_tickers` (threshold 20, never a full refresh). Ticker history and `context_line` use the canonical ticker and the company name; model inputs stay on the raw ticker. Backfill `backfill_share_class_ticker_history` wrote 2,301 production rows on 2026-11-09 | [share-class-identity.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/share-class-identity.md) · [[concepts/share-class-identity]] |
 | 2026-10-30 | Prediction scores pipeline, model registry & dashboard — `blend_w50_v1` 6M outperformance scorer, per-cutoff `status = 'active'` registry (`[T_k, T_{k+1})`), `score_recent_signals` + `mat_pick_scores` sync, evidence-backed `"Why N stars?"` explanations, monthly validation gate, automatic cutoff drift retraining (`>= 500` rows & `>= 5%`), `/scoring-models` dashboard with Candidate Banner | [prediction-scores.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/prediction-scores.md) |
 | 2026-11-05 | In the Money with Amber Kanwar RSS onboarding (15th `podcast_rss` source, `content_source_id` `5a768ce1-3e15-4029-b66a-e7d520c6018f`; Transistor Pattern 9; 175 downloaded of 182 on 2026-11-05; directory Covered `in-the-money-with-amber-kanwar`) | [in-the-money-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/in-the-money-ingestion.md) |
 | 2026-10-25 | Episode-title speaker hint — publisher title spellings guide recursive SI bootstrap canonicalization, decide_title_guard prevents misspelled auto-creates, curation notes, 23 finfluencers corrected | [episode-title-speaker-hint.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/episode-title-speaker-hint.md) |
@@ -611,6 +612,7 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 
 - [[products/finfluencer-trade]]
 - [[projects/gor-blog]]
+- [[concepts/share-class-identity]]
 - [[concepts/prediction-scores]]
 - [[concepts/proof-segment-speaker-resolution]]
 - [[concepts/speaker-attribution]]

@@ -4,7 +4,7 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-11-04
+updated: 2026-11-10
 tags: [prediction-scores, signals, rum, web-vitals, mobile, finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
 ---
 
@@ -20,7 +20,9 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-11-04)
+## Current status (2026-11-10)
+
+**Share-class identity wrapped (2026-11-10)**: seven companies are one ticker each (Alphabet GOOGL/GOOG, Berkshire, Fox, News Corp, Under Armour, Liberty Broadband, Brown-Forman). A pick keeps its own ticker, prices, and return. The map is `gor_dagster/utils/share_classes.py` and syncs to `public.share_class_tickers`; an empty table leaves every RPC as before. Live after the manual sync on 2026-11-10. See [[concepts/share-class-identity]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/share-class-identity.md).
 
 **Picks Browser (`/signals`) wrapped (2026-11-04)**: Dense one-row-per-pick browser (`PickRow`) paired with a sticky selected-pick detail pane (`PickDetail` on `lg+`, bottom sheet below `lg`). Includes URL-synced search (`?q=`), quick views (`New (1–3 days ago)`, `4–5★`, `Exits`, `Same ticker, 2+ people`), an `Applied` bar with `Clear filters` and inline `Save as my default` star preference, and grouping by `List | Ticker | Person | Show` (`?group=`). In grouped views (`Ticker`, `Person`, `Show`), the first group auto-expands and selects its first pick in the detail pane; no combined ticker score is computed. Freshness is displayed as `"1 day ago"` through `"10 days ago"`, and sibling fresh picks on the same ticker are listed under `"Others on <ticker>"` in `PickDetail`. See [[concepts/prediction-scores]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/prediction-scores.md).
 
@@ -130,6 +132,7 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [README](file:///Users/andreskull/finfluencer-tracker/docs/architecture/README.md) | Index |
 | [system-overview](file:///Users/andreskull/finfluencer-tracker/docs/architecture/system-overview.md) | Stack, Vercel, routing |
 | [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md) | Supabase prod/dev, BQ → app path, entitlement SSOT summary |
+| [share-class-identity](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/share-class-identity.md) | One ticker per company for seven share-class groups; class label on a single pick; map synced from `gor_dagster` (**2026-11-10**) |
 | [prediction-scores](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/prediction-scores.md) | `1★–5★` 6M Prediction Scores (`blend_w50_v1`), 10-session fresh window (`get_fresh_scored_picks`), Option 2 3-tier gating (`Guest` → `Spectator` → `Trader`), evidence-backed `"Why N stars?"` explanations, and `context_line` sample-size rules (**2026-10-30**) |
 | [cumulative-performance-comparison-charts](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/cumulative-performance-comparison-charts.md) | Cumulative % charts, `/compare`, Play, export (**2026-08-04**) |
 | [reddit-pixel-tracking](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/reddit-pixel-tracking.md) | Reddit pixel, consent gate, SignUp conversion (**2026-08-17**); listed accounts skip SignUp (**2026-09-25**) |
@@ -167,6 +170,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-11-10 | Share-class identity | [share-class-identity.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/share-class-identity.md) |
 | 2026-10-30 | Prediction Scores for Fresh Stock Picks & Option 2 3-tier gating (`prediction-scores`) | [prediction-scores.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/prediction-scores.md) |
 | 2026-10-20 | Landing tour improvements | [landing-tour-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-tour-improvements.md) |
 | 2026-10-20 | Conversion measurement (`sign_up` only primary) | [conversion-measurement-plan.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/conversion-measurement-plan.md) |
@@ -207,6 +211,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-11-10 | Share classes merge through `share_class_tickers`, not by rewriting picks. `canonical_ticker` is `STABLE` and not granted to clients. The sync is incremental | A pick keeps its ticker, prices, and return. An empty table is the off switch, so a full refresh would split GOOG and GOOGL for the length of the write. A new group is `GROUPS` plus the methodology list, then the next sync |
 | 2026-10-30 | Individual picks & `1★–5★` Prediction Scores are shown strictly for the first 10 US trading sessions after entry (`get_fresh_scored_picks`); raw client `SELECT` on `signals`, `signal_performance`, `signal_current_performance`, and `pick_scores` is revoked | Prevents bulk scraping of historical picks while delivering real-time actionable signals during the fresh window; on session 11, picks roll off into aggregate track records |
 | 2026-10-30 | Option 2 3-tier gating (`Guest` → `Spectator` → `Trader`) unlocks 100% of historical aggregate track records for free signed-in Spectators while gating non-featured fresh `1★–5★` scored picks to Trader | Gives free account signups high immediate value (all 84 finfluencers' aggregate track records + 3 featured finfluencers' `1★–5★` scores) while keeping daily `1★–5★` scored picks across all 84 finfluencers as the core Trader upgrade driver |
 | 2026-10-30 | Public `/signals` is accessible to anonymous visitors (`anon`) with `stars`, `explanation_text`, and `context_line` masked to `NULL` in SQL | Lets anonymous visitors browse real fresh stock picks from the 3 featured finfluencers while requiring a free Spectator signup to reveal the `1★–5★` Prediction Score and `"Why N stars?"` explanation |
@@ -361,6 +366,7 @@ Vault indexes **WIKI.md** and all of **`docs/`** except **`docs/features/`**. Ru
 - [[products/finfluencer-trade]]
 - [[projects/gor_dagster]]
 - [[projects/gor-blog]]
+- [[concepts/share-class-identity]]
 - [[concepts/prediction-scores]]
 - [[concepts/user-default-holding-period]]
 - [[concepts/post-signup-onboarding]]
