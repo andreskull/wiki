@@ -2,45 +2,46 @@
 type: concept
 title: "Spec-Driven Development"
 product: null
-project: spec-driven-ai-coding
+project: ai-factory
 created: 2026-04-06
-updated: 2026-04-06
-tags: [methodology, spec, planning, executor, ai-coding, workflow]
+updated: 2026-11-12
+tags: [methodology, spec, planning, executor, ai-coding, workflow, multi-model]
 ---
 
 # Spec-Driven Development
 
-The AI-assisted development methodology used across all of Andres's projects. Structures LLM coding sessions into explicit phases — requirements, design, tasks, implementation, wrapup — to produce documented, maintainable code rather than throwaway scripts.
+The AI-assisted development methodology used across all of Andres's repositories across Claude Code, Cursor, and Antigravity. Powered since **2026-11-12** by [[projects/ai-factory]] (replacing [[projects/spec-driven-ai-coding]] and `~/.ai_global`).
 
 ## The loop
 
 ```
-/spec  → requirements.md + README.md   (WHAT to build)
-/plan  → design.md                      (HOW to build it — Phase 1)
-/plan  → tasks.md                       (exact steps — Phase 2)
-/executor → one task at a time          (implement)
-/wrapup → permanent docs + WIKI.md update + clean temp files
-wiki sync → update wiki
+/spec     → brief.md (small) OR requirements.md (+ static prototype/index.html for UI) + cross-model critic
+/plan     → design.md (+ critic) → tasks.md leaf checklist (+ check_feature.py & light critic)
+/executor → ready leaves in order (next_leaf.py), verify cmd → logs/, index-only commit per leaf (stage_own_changes.py), cross-model reviewer, runs.md, push if push_policy.py allows
+/wrapup   → /audit + permanent docs/architecture/features/<name>.md + WIKI.md + confirm delete docs/features/<name>/ + commit/push
+wiki sync → update ~/wiki project & concept pages
 ```
 
 ## Key principles
 
-- **One phase per run** — spec, plan (design), plan (tasks), executor each run separately; no skipping
-- **Explicit approval between phases** — each phase requires user review before the next starts
-- **Temporary feature files** — `docs/features/[name]/` holds requirements, design, tasks during development. Deleted by `/wrapup` when done.
-- **Permanent docs** — `/wrapup` extracts to `docs/architecture/features/[name].md`
-- **Real services only** — executor tests use real APIs, real BigQuery, real GCS. No mocks.
+- **Two tiers, lean artifacts:** Small changes use a single `brief.md` (intent, scope, criteria, leaves); larger features use `requirements.md` (`AC-N WHEN ... THE SYSTEM SHALL ... [verify: unit|integration|e2e|manual]`), `design.md`, and `tasks.md`. UI features include a throwaway static `prototype/index.html` at the intent gate.
+- **Cross-vendor / cross-model verification:** `resolve_model.py` and `launch_agent.py` run `critic` (documents) and `reviewer` (code) on a different vendor or model family than the author (e.g., Grok ↔ Opus in Cursor, Gemini 4 Carbon ↔ Opus in Antigravity).
+- **Repo state is portable across tools:** `docs/features/<name>/` (`runs.md`, `logs/`, leaf ticks) holds all state so work can move seamlessly between Claude Code, Cursor, and Antigravity if one tool hits usage limits.
+- **One clean instruction file per repo:** Each switched repo has a concise root `AGENTS.md` (with line 1 pointing at `~/ai-factory/AGENTS.md` and `CLAUDE.md` holding `@AGENTS.md`) checked by `doctor.py --repo`.
+- **Safe staging and push rules:** `stage_own_changes.py` stages only the agent's own diff hunks (never sweeping unrelated unstaged edits), and `push_policy.py` enforces each repo's `Agent branch` (`development`, `staging`, `main`, or `none`).
 
 ## Where it lives
 
-[[projects/spec-driven-ai-coding]] — `.ai_global/commands/` for global commands, `.ai_global/rules/` for framework standards
+[[projects/ai-factory]] (`/Users/andreskull/ai-factory`) — `AGENTS.md`, `skills/`, `agents/`, `scripts/`, `rules/stacks/`, `hooks/block_inline_python.sh`.
 
-## Projects using it
+## Projects switched (all 6 active repos as of 2026-11-12)
 
-All: `gor_dagster`, `rattaproff`, and others
+`gor_dagster` (`staging`), `finfluencer-tracker` (`development`), `gor-blog` (`development`), `botastico-portal` (`development`), `botastico-api` (`none` — unstaged on `main` until production), and `wiki` (`main`).
 
 ## Related pages
 
+- [[projects/ai-factory]]
 - [[projects/spec-driven-ai-coding]]
-- [[entities/cursor]]
-- [[entities/antigravity]]
+- [[projects/gor_dagster]]
+- [[projects/finfluencer-tracker]]
+- [[projects/botastico-portal]]

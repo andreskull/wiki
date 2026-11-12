@@ -4,7 +4,7 @@ title: "botastico-api"
 product: botastico
 project: botastico-api
 created: 2026-05-18
-updated: 2026-05-18
+updated: 2026-11-12
 tags: [botastico, flask, cloud-run, firestore, gcs, rag, chat]
 ---
 
@@ -30,13 +30,15 @@ Primary backend for chat execution, agent configuration, and retrieval-augmented
 
 - **Chat:** Text + optional **image attachments** (OpenAI vision, agent-flag gated). Upload is two-phase (attachment IDs, then prompt). Logs and Pub/Sub carry **metadata only** (no base64 in persisted payloads).
 - **RAG:** Text-only retrieval against pgvector; chat images are not indexed into the durable KB.
-- **Monitoring:** Portal proxies image previews from the API where signed URLs from default SA credentials are unavailable (e.g. Cloud Run `signBlob`).
+- **Monitoring:** Portal ([[projects/botastico-portal]]) proxies image previews from the API where signed URLs from default SA credentials are unavailable (e.g. Cloud Run `signBlob`).
 - **Slack audit:** Cloud Function **`slack_chat_logs`** in repo **`botastico`** (`slack_chat_logs/`) subscribes to `interaction-log`, posts customer prompt + attachment **image blocks** (short-lived v4 signed URLs using runtime `access_token`).
+- **File ingestion & shared utils:** `file_processor/` runs as a separate Cloud Run service (`file-processor-{staging-west1,production-west1}`) and Cloud Run Jobs for document chunking/ingestion; `python_utils/` is a git submodule (`https://github.com/botastico/python_utils.git`) copied into `file_processor/python_utils` during image builds by `file_processor/deploy-main.sh`.
 
 Permanent feature write-up: [botastico-chat-image-attachments.md](file:///Users/andreskull/botastico-api/docs/architecture/features/botastico-chat-image-attachments.md).
 
 ## Key decisions
 
+- **2026-11-12 — Switched to `ai-factory` (`1ec0a9f`) & closed GitHub Pages docs leak (`f48bbc3`):** Added [`AGENTS.md`](file:///Users/andreskull/botastico-api/AGENTS.md) (`Agent branch: none`, `CLAUDE.md` = `@AGENTS.md`), replacing `.cursor/rules/{git-branch,botastico}.mdc`. Preserves the single-branch `main` workflow where undeployed changes stay unstaged until in GCP production (`./deploy-api.sh` runs `gcloud run deploy --source .`, uploading unstaged edits; `/executor` saves per-leaf diffs to `docs/features/<name>/logs/<leaf>.patch`), and separates safe local `.venv/bin/pytest` unit modules from live `*_cloud_test.py` / `test_*_smoke.py` suites. Also deleted `.github/workflows/static.yml` and `gh-pages` (local + `origin/gh-pages`), which had been created in 2023 for `botastico-private-api-swagger-ui` and was publicly publishing all of `./docs` on `botastico.github.io`.
 - **2026-05-18** — GCS previews: byte proxy for portal monitoring; Slack uses signed URLs from **`slack_chat_logs`** with explicit credentials on `generate_signed_url`, not IAM `signBlob` on the API/Run SA alone.
 
 ## Completed features (indexed)
@@ -47,16 +49,17 @@ Permanent feature write-up: [botastico-chat-image-attachments.md](file:///Users/
 
 ## Current status
 
-Chat image attachments **in production** (2026-05-18). **`slack_chat_logs`** must be redeployed when attachment metadata or signing behavior changes.
+Switched to [[projects/ai-factory]] (`Agent branch: none`) and retired public `gh-pages` docs workflow on **2026-11-12** (`1ec0a9f`, `f48bbc3`). Chat image attachments **in production** (2026-05-18). **`slack_chat_logs`** must be redeployed when attachment metadata or signing behavior changes.
 
 ## Repo entry point
 
-[`WIKI.md`](file:///Users/andreskull/botastico-api/WIKI.md) — sync anchor for this project.
+[`WIKI.md`](file:///Users/andreskull/botastico-api/WIKI.md) and [`AGENTS.md`](file:///Users/andreskull/botastico-api/AGENTS.md) — sync and agent-rule anchors for this project.
 
 Temporary specs: `docs/features/` (other in-flight features); wiki does not index those until `/wrapup`.
 
 ## Related pages
 
 - [[products/botastico]]
-- [[projects/spec-driven-ai-coding]]
+- [[projects/botastico-portal]]
+- [[projects/ai-factory]]
 - [[wiki/entities/gcs]] — object storage pattern (also used for chat attachment audit bucket)

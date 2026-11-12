@@ -505,3 +505,12 @@ Phase 4 `ai-factory` switches and extracted reference docs across all three `fin
 - `finfluencer-tracker` (`67776c7`, `ff75f70`, `685d3d1` on `development`): `AGENTS.md` + extracted `docs/ops/deployment-previews.md`, `docs/ops/performance-budget.md`, and `docs/design-system/agent-conventions.md`.
 - `gor-blog` (`0db768c`, `9d050c7`, `3d0882a` on `development`): `AGENTS.md` + aligned feature-folder note (`docs/features/<name>/` and `docs/architecture/features/` kept private via `mkdocs.yml` `exclude_docs: features/`, enforced by `npm test` and `doctor.py`; internal plans moved to `_internal/future-plans.md`).
 Updated [[projects/gor_dagster]], [[projects/finfluencer-tracker]], [[projects/gor-blog]], [[entities/bigquery]], and [[index]].
+
+## [2026-11-12] sync | ai-factory, botastico-portal, botastico-api, spec-driven-ai-coding
+
+Completed Phase 4 switches (`botastico-portal`, `botastico-api`, `wiki`) and Phase 5 retirement (`~/.ai_global`, `spec-driven-ai-coding`) in `ai-factory`:
+- **New [[projects/ai-factory]]:** Phases 0–5 complete (`88f9e9a` on `main`). Shared `AGENTS.md`, 10 `/` skills (including `/humanizer` moved from `~/.cursor/commands/humanizer.md`), cross-vendor `critic`/`reviewer` routing (`resolve_model.py`, `launch_agent.py`), `install.py` + `doctor.py`, `push_policy.py` (with `Agent branch: none`), and `stage_own_changes.py`.
+- **New [[projects/botastico-portal]]:** Turborepo Next.js monorepo (`apps/client` `:3000` on Vercel `https://botasti.co`, `apps/admin` `:3001`, `apps/playground` `:3002`, `apps/functions/slack-events` Cloud Function Gen2) switched to `ai-factory` (`905514b` on `development`, `Agent branch: development`).
+- **Updated [[projects/botastico-api]] & [[products/botastico]]:** Switched to `ai-factory` (`1ec0a9f` on `main`, `Agent branch: none` preserving the single-branch `main` unstaged-until-production workflow) and removed `.github/workflows/static.yml` + `gh-pages` (`f48bbc3`) so private `./docs` pages are no longer served on GitHub Pages.
+- **Retired [[projects/spec-driven-ai-coding]]:** `~/.ai_global`, `~/.gemini/agent/workflows`, and pre-factory `~/.cursor/commands/*` backed up to `~/.ai-factory-backup/20261112T162709Z-phase5` and removed; `README.md` banner and early-exit guards added to sync scripts (`e0a88ce`); `wiki/draft-commands/` removed (`b73f8df`).
+Updated [[concepts/spec-driven-development]], [[overview]], `AGENTS.md`, and [[index]].

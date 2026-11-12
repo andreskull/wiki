@@ -15,11 +15,11 @@ Three products, one methodology, one wiki. Updated: 2026-11-12.
 
 **[[products/rattaproff]]** — WooCommerce multi-store automation for a network of **20** e-commerce storefronts. Single repo. Handles supplier ingestion, **HUF→EUR pricing** (default 350 HUF/EUR; per-site overrides optional — [[concepts/huf-eur-pipeline-pricing]]), publishing, and Google Indexing API quota management. **GSheet ground-truth sync safety** (July 2026) — grow-only robot writes, `__sync_status` marker, GCS fallback — [[concepts/gsheet-ground-truth-sync]]. **Category URL export** (2026-08-14) — Woo REST slugs → gitignored `category_urls_*.csv`. Repo docs: `docs/architecture/huf-eur-per-site-pricing.md`, `docs/architecture/features/gsheet-ground-truth-sync.md`, `docs/architecture/category-url-export.md`.
 
-**[[products/botastico]]** — [[projects/botastico-api]] (2026-05-18): Cloud Run API, chat image attachments, Pub/Sub → `slack_chat_logs`. **[[projects/botastico]]** (2026-07-15): GCP LB SSL for `chatapps`/`assets` widget delivery; July 2026 cert incident fixed; renewal-failure monitoring — [[concepts/botastico-ssl-certificates]]. Other botastico repos still light in wiki.
+**[[products/botastico]]** — **[[projects/botastico-portal]]** (2026-11-12): Turborepo Next.js web apps (`apps/client` on Vercel `https://botasti.co`, `apps/admin`, `apps/playground`) + `slack-events` Cloud Function, switched to `ai-factory` (`Agent branch: development`). **[[projects/botastico-api]]** (2026-05-18; updated 2026-11-12): Cloud Run Flask API + `file_processor`, chat image attachments, Pub/Sub → `slack_chat_logs`, switched to `ai-factory` (`Agent branch: none` single-branch `main` unstaged-until-production; `gh-pages` docs publish retired). **[[projects/botastico]]** (2026-07-15): GCP LB SSL for `chatapps`/`assets` widget delivery; July 2026 cert incident fixed; renewal-failure monitoring — [[concepts/botastico-ssl-certificates]].
 
 ## Methodology
 
-**[[projects/spec-driven-ai-coding]]** — The development process used across all projects. Spec → Plan → Execute → Wrapup. Provides global `/` commands for Cursor and Antigravity. The `/wrapup` command is the bridge between completed features and the wiki.
+**[[projects/ai-factory]]** — Lean, multi-model development workflow across Claude Code, Cursor, and Antigravity (replaced [[projects/spec-driven-ai-coding]] and `~/.ai_global` on **2026-11-12**, Phases 0–5 complete). Provides shared `AGENTS.md`, ten `/` skills (`/spec`, `/plan`, `/executor`, `/review`, `/audit`, `/wrapup`, `/cleanup`, `/improve`, `/factory`, `/humanizer`), cross-vendor `critic` and `reviewer` routing, `install.py` / `doctor.py`, and deterministic git/staging helpers across all six switched repos.
 
 ## Active development
 
@@ -60,7 +60,7 @@ Three products, one methodology, one wiki. Updated: 2026-11-12.
 
 ## Open threads
 
-- Botastico: **`botastico-api`** + **`botastico`** monorepo indexed (SSL/monitoring 2026-07-15); portal/script/stripe/etc. still thin in wiki
+- Botastico: **`botastico-portal`**, **`botastico-api`**, and **`botastico`** monorepo indexed (2026-11-12); `botastico-script`/`botastico-stripe`/etc. still thin in wiki
 - `rattaproff` — category URL export from Woo slugs (2026-08-14); HUF/EUR pricing note (May 2026)
 - **`gor_dagster` feature folders in flight** — wiki gains permanent `docs/architecture/features/` entries as each wraps up
 - **finfluencer-tracker:** profile script split wrapped **2026-09-28** without the body cut (at least 93 KB still before the first card; stand-ins not on production); show profile is data late; field CWV wrapped **2026-09-08** — `/` teaser DATA_READY still ~4 s if cheaper `landing_stats` is wanted later; onboarding completion stayed under 50% after the skip-path work (6 of 14, 29 Sep–5 Oct 2026; Skip stays); Clarity weekly review until **2026-09-17**; official Clarity↔GA4 OAuth link deferred; Reddit pixel Advanced Matching still off (CAPI live); Terminal SKU / product map deferred; magic-link deliverability deferred; true daily portfolio marks parked ([[concepts/core-web-vitals-field]], [[concepts/post-signup-onboarding]], [[concepts/session-replay-analytics]], [[concepts/cumulative-performance-charts]], [[concepts/reddit-ads-conversion-tracking]])
