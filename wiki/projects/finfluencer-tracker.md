@@ -4,7 +4,7 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-11-10
+updated: 2026-11-12
 tags: [prediction-scores, signals, rum, web-vitals, mobile, finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
 ---
 
@@ -164,6 +164,8 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [landing-conversion-improvements](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-conversion-improvements.md) | Public funnel, SEO, anon RPC pattern (**2026-07-10**) |
 | [feedback-system](file:///Users/andreskull/finfluencer-tracker/docs/architecture/feedback-system.md) | Living `/feedback` system: schema, RLS, notify-moderators, admin panel (**2026-06-02**, declined **2026-08-22**) |
 
+Ops & design-system reference docs (extracted from `.cursor/rules/` during the 2026-11-12 [`AGENTS.md`](file:///Users/andreskull/finfluencer-tracker/AGENTS.md) switch): [deployment-previews.md](file:///Users/andreskull/finfluencer-tracker/docs/ops/deployment-previews.md), [performance-budget.md](file:///Users/andreskull/finfluencer-tracker/docs/ops/performance-budget.md), [agent-conventions.md](file:///Users/andreskull/finfluencer-tracker/docs/design-system/agent-conventions.md).
+
 Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/finfluencer-tracker/docs/auth-sharing-landing-app.md).
 
 ## Completed features
@@ -211,6 +213,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-11-12 | Agent rules live in one `AGENTS.md` (`Agent branch: development`); long runbooks live in `docs/ops/` and `docs/design-system/` | Claude Code, Cursor, and Antigravity all read `AGENTS.md` (`CLAUDE.md` = `@AGENTS.md`), whereas `.cursor/rules/` reached only Cursor. Detailed recipes moved to `docs/ops/deployment-previews.md`, `docs/ops/performance-budget.md`, and `docs/design-system/agent-conventions.md` |
 | 2026-11-10 | Share classes merge through `share_class_tickers`, not by rewriting picks. `canonical_ticker` is `STABLE` and not granted to clients. The sync is incremental | A pick keeps its ticker, prices, and return. An empty table is the off switch, so a full refresh would split GOOG and GOOGL for the length of the write. A new group is `GROUPS` plus the methodology list, then the next sync |
 | 2026-10-30 | Individual picks & `1★–5★` Prediction Scores are shown strictly for the first 10 US trading sessions after entry (`get_fresh_scored_picks`); raw client `SELECT` on `signals`, `signal_performance`, `signal_current_performance`, and `pick_scores` is revoked | Prevents bulk scraping of historical picks while delivering real-time actionable signals during the fresh window; on session 11, picks roll off into aggregate track records |
 | 2026-10-30 | Option 2 3-tier gating (`Guest` → `Spectator` → `Trader`) unlocks 100% of historical aggregate track records for free signed-in Spectators while gating non-featured fresh `1★–5★` scored picks to Trader | Gives free account signups high immediate value (all 84 finfluencers' aggregate track records + 3 featured finfluencers' `1★–5★` scores) while keeping daily `1★–5★` scored picks across all 84 finfluencers as the core Trader upgrade driver |

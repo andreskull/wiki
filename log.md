@@ -497,3 +497,11 @@ Re-read after `docs/features/share-class-identity/` was removed. [[concepts/shar
 ## [2026-11-12] sync | gor_dagster
 
 Schwab Network wrapped. Permanent doc `docs/architecture/features/schwab-network-ingestion.md`. 17th `podcast_rss` source. Pattern 5. Proof gate 17/17. Temp `docs/features/schwab-network-ingestion/` removed. Market Hang recorded from the same `WIKI.md` (16th source, Pattern 1, 37/37). Catalogue count is 18, including Closing Bell, whose notes are still in `docs/features/closing-bell-ingestion/`. Updated [[projects/gor_dagster]], [[products/finfluencer-trade]], [[overview]], [[index]], [[concepts/onboarding-new-podcast-source]], and [[concepts/episode-title-speaker-hint]].
+
+## [2026-11-12] sync | gor_dagster, finfluencer-tracker, gor-blog
+
+Phase 4 `ai-factory` switches and extracted reference docs across all three `finfluencer.trade` repos, plus Market Hang directory cross-link:
+- `gor_dagster` (`bafb2bda`, `1357723e` on `staging`): `AGENTS.md` (80 lines, `Agent branch: staging`, `CLAUDE.md` = `@AGENTS.md`) + 10 extracted domain/ops docs under `docs/architecture/` (`pipeline-overview-and-components`, `instrument-resolution-cascade`, `prices-and-performance-invariants`, `schema-and-migration-rules`, `speaker-attribution-working-notes`) and `docs/operations/` (`development-commands`, `environment-deployment-and-monitoring`, `bigquery-dataset-and-credential-conventions`, `speaker-attribution-analysis-queries`, `sensor-deployment-limitations`). Recorded the 3-way BigQuery DDL rule, safe `pytest` command, and Market Hang directory cross-link (`data-key="market-hang"` → `/show/market-hang` on `gor-blog` `development` from `5567dc01`).
+- `finfluencer-tracker` (`67776c7`, `ff75f70`, `685d3d1` on `development`): `AGENTS.md` + extracted `docs/ops/deployment-previews.md`, `docs/ops/performance-budget.md`, and `docs/design-system/agent-conventions.md`.
+- `gor-blog` (`0db768c`, `9d050c7`, `3d0882a` on `development`): `AGENTS.md` + aligned feature-folder note (`docs/features/<name>/` and `docs/architecture/features/` kept private via `mkdocs.yml` `exclude_docs: features/`, enforced by `npm test` and `doctor.py`; internal plans moved to `_internal/future-plans.md`).
+Updated [[projects/gor_dagster]], [[projects/finfluencer-tracker]], [[projects/gor-blog]], [[entities/bigquery]], and [[index]].

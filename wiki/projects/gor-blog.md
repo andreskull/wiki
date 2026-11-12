@@ -4,7 +4,7 @@ title: "gor-blog"
 product: finfluencer-trade
 project: gor-blog
 created: 2026-04-06
-updated: 2026-10-13
+updated: 2026-11-12
 tags: [blog, mkdocs, content, finfluencer, research, articles, newsletter, convertkit]
 ---
 
@@ -32,25 +32,23 @@ The public voice of the platform. Publishes research on finfluencer prediction q
 
 `docs/` in this repo IS the MkDocs site source, not project documentation. There is no separate `docs/architecture/` — the published content is the output.
 
-**Feature specs (requirements / design / tasks) live at `gor-blog/features/<feature-name>/`, NOT under `docs/`.** This is a **gor-blog-specific deviation** from the standard `docs/features/` convention used in `gor_dagster`, `finfluencer-tracker`, and `rattaproff` — putting feature specs under `docs/` would expose them on the public MkDocs site (`finfluencers.trade`). All in-progress feature work for this repo must use `features/` at repo root. Established 2026-05-05. After wrapup, durable notes move to [`WIKI.md`](file:///Users/andreskull/gor-blog/WIKI.md) (and wiki) and the feature folder is removed.
+**Feature work is never served (aligned 2026-11-12 during the `AGENTS.md` switch).** `mkdocs.yml` has `exclude_docs: features/`, which keeps both `docs/features/<name>/` (requirements, design, tasks, prototype) and `docs/architecture/features/<name>.md` out of the public MkDocs build (`npm test` and `~/ai-factory/scripts/doctor.py --repo` both fail if that line is missing). Put **nothing else** under `docs/architecture/` or anywhere under `docs/` unless it is meant to be published. Private internal notes and local tools live in `_internal/` (`_internal/future-plans.md`, `_internal/f5bot/`, also excluded by `.vercelignore`), `research/`, `papers/`, and `pragmatiq/`. Agent instructions live in [`AGENTS.md`](file:///Users/andreskull/gor-blog/AGENTS.md) (`Agent branch: development`, `CLAUDE.md` = `@AGENTS.md`; the nine Cursor-only rules and `.cursor/settings.json` were removed on 2026-11-12).
 
 ```
 gor-blog/
-├── docs/                    ← MkDocs site source (PUBLIC)
+├── docs/                    ← MkDocs site source (PUBLIC, except exclude_docs: features/)
 │   ├── blog/posts/          ← published articles
 │   ├── assets/              ← images, fonts, logos
 │   ├── directory/           ← finfluencer directory content
-│   └── stylesheets/         ← theme overrides
-├── features/                ← feature specs (PRIVATE — outside MkDocs build)
-│   └── <feature-name>/
-│       ├── requirements.md
-│       ├── design.md
-│       └── tasks.md
+│   ├── stylesheets/         ← theme overrides
+│   ├── features/            ← PRIVATE (excluded by mkdocs.yml exclude_docs: features/)
+│   └── architecture/features/ ← PRIVATE permanent feature records (excluded by features/)
+├── _internal/               ← PRIVATE internal plans & local automations (_internal/f5bot/, future-plans.md)
 ├── research/                ← long-form research drafts (PRIVATE)
 └── api/                     ← newsletter / Kit integration code
 ```
 
-Internal implementation notes that are tightly coupled to specific code modules sit next to that code (e.g. `api/newsletter/registered-users-kit-import.md`, `api/newsletter/cumulative-compare-launch.md`, `_internal/f5bot/f5bot-automation.md`), not under `features/`.
+Internal implementation notes tightly coupled to code modules may also sit next to that code (`api/newsletter/registered-users-kit-import.md`, `api/newsletter/cumulative-compare-launch.md`, `_internal/f5bot/f5bot-automation.md`).
 
 ## Published content (as of 2026-04-06)
 
@@ -86,6 +84,8 @@ New articles about finfluencers or the platform are written directly as posts in
 Every blog post in `docs/blog/posts/` must include the CTAs codified in [[concepts/blog-post-cta-pattern]] before publishing — above-the-fold module, inline mid-article module, expanded end-of-post block (newsletter + product CTA), and internal product links throughout the body. The pattern was established 2026-05-05 after the Cramer launch revealed 92% article-to-product abandonment uniform across acquisition channels (GA4 Funnel exploration, May 4 2026). See `research/cramer/promotion/cramer-study-launch-campaign.md` § *Day 1 learnings + plan revision* for the source data.
 
 ## Current status
+
+**Factory `AGENTS.md` switch & directory cards (2026-11-12):** Switched to [`AGENTS.md`](file:///Users/andreskull/gor-blog/AGENTS.md) (`Agent branch: development`; `build.js` hardened so local failed builds exit non-zero instead of reusing stale `site/`). Directory updates on `development`: **In the Money with Amber Kanwar** (`in-the-money-with-amber-kanwar`, live on `main` 2026-11-02), **Market Hang** (`data-key="market-hang"` → `/show/market-hang` on `development`), and **Schwab Network** (card on `development` without `data-key` until a show page exists).
 
 **Sector Alpha research series published (2026-09-15 / 2026-09-16)**: Three research and methodology articles shipped: *Introducing Sector Alpha & Sector Leaderboards* (2026-09-15), *Do Financial Shows Pick Winning Stocks or Winning Sectors?* (2026-09-15, auditing 37,000+ public recommendations), and *Why 6 Months is Our Starting Holding Period* (2026-09-16). Embedded high-res visual assets and companion newsletter draft `emails/newsletters/2026-09-sector-alpha-launch.md`.
 
