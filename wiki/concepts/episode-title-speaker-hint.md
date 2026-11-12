@@ -2,7 +2,7 @@
 type: concept
 title: "Episode-Title Speaker Hint"
 created: 2026-10-25
-updated: 2026-10-25
+updated: 2026-11-12
 product: finfluencer.trade
 component: gor_dagster
 status: active
@@ -18,7 +18,7 @@ tags:
 
 ## What it is
 
-When a registered show (Market Call, The Compound and Friends, The Acquirers Podcast) names its guest in the episode title, that publisher spelling is captured as an authoritative hint. Speaker Identification (SI) uses it to identify the guest under the publisher's spelling, and speaker resolution prevents auto-creating duplicate finfluencers under misheard speech-to-text transcript spellings.
+When a registered show (Market Call, The Compound and Friends, The Acquirers Podcast) names its guest in the episode title, that publisher spelling is captured as an authoritative hint. Speaker Identification (SI) uses it to identify the guest under the publisher's spelling, and speaker resolution prevents auto-creating duplicate finfluencers under misheard speech-to-text transcript spellings. Schwab Network is registered the same way, but the guest name is read from the episode description. The hint renames a misheard guest and does not seed a speaker.
 
 Wrapped **2026-10-25** — permanent architectural doc: [episode-title-speaker-hint.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/episode-title-speaker-hint.md).
 

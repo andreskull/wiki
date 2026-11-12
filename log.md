@@ -493,3 +493,7 @@ Share-class identity. Same pages as the wrapup entry above.
 ## [2026-11-10] sync | finfluencer-tracker, gor_dagster
 
 Re-read after `docs/features/share-class-identity/` was removed. [[concepts/share-class-identity]], [[projects/finfluencer-tracker]], [[projects/gor_dagster]], [[concepts/prediction-scores]], [[concepts/finfluencer-ticker-pick-lookup]], [[products/finfluencer-trade]], [[overview]], and [[index]] already match `docs/architecture/features/share-class-identity.md` and finfluencer-tracker `WIKI.md`. No page rewrite. `docs/architecture/README.md` still does not list the feature page.
+
+## [2026-11-12] sync | gor_dagster
+
+Schwab Network wrapped. Permanent doc `docs/architecture/features/schwab-network-ingestion.md`. 17th `podcast_rss` source. Pattern 5. Proof gate 17/17. Temp `docs/features/schwab-network-ingestion/` removed. Market Hang recorded from the same `WIKI.md` (16th source, Pattern 1, 37/37). Catalogue count is 18, including Closing Bell, whose notes are still in `docs/features/closing-bell-ingestion/`. Updated [[projects/gor_dagster]], [[products/finfluencer-trade]], [[overview]], [[index]], [[concepts/onboarding-new-podcast-source]], and [[concepts/episode-title-speaker-hint]].

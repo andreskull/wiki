@@ -4,7 +4,7 @@ title: "Onboarding a new podcast source"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-05-13
-updated: 2026-10-14
+updated: 2026-11-12
 tags: [rss, dagster, content-source, pipeline, si-sensor, gor_dagster, gor-blog]
 ---
 
@@ -49,6 +49,8 @@ Pipeline PRs plus directory + wrap-up: **Preflight script** → **Regex + valida
 **Ops tips (2026-10-14 / Market Call):** Omny paginates with `atom:link rel="next"`. The unbounded ingestion fetch follows it (cap `RSS_MAX_PAGES = 20`); the sensor head probe does not. Pattern 8 reads the clip UUID on the raw enclosure, including a Podtrac prefix, and ignores the Triton token. A crashed catalog resumes on the next new episode's job, because the sensor only compares page 1. Example: [bnn-market-call.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/bnn-market-call.md) (14th `podcast_rss` source; 1,006/1,006 downloaded; directory Covered `market-call`).
 
 **Ops tips (2026-09-22 / Hedge Fund Tips with Tom Hayes):** For a multi-hour show, set `ContentSource.url` NULL after `add_new_rss_source_job` until one proof episode passes ElevenLabs STT, SI, and FE, then restore the feed URL. ElevenLabs waits are signed URL 14400s, POST 3600s, poll 7200s; do not change credit pacing. A merged monologue keeps the first `source_utterance_end`; the real tail is `merge_metadata.merged_utterances[].utterance_end`. An FE window can finish after the last prediction. Add the directory card only after `/show/{slug}` returns 200. Example: [hedge-fund-tips-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/hedge-fund-tips-ingestion.md) (13th `podcast_rss` source; Patterns 4+5; 359/359 downloaded; directory deferred).
+
+**Ops tips (2026-11-12 / Schwab Network):** A clip-per-segment catalog (median 7.2 min, about 30 weekday clips) can be held with `ContentSource.url` NULL until a 20-clip proof passes, then released. The hold does not stop speech-to-text. Guests named only in the description get a hint that renames a misheard guest and does not seed a speaker. The proof was 17 of 17; a later draw of 20 was 7 of 8, and the source stayed released. Example: [schwab-network-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/schwab-network-ingestion.md) (17th `podcast_rss` source; Pattern 5; live feed 9,975/9,975; directory card without a profile link).
 
 ## Which projects use this
 
