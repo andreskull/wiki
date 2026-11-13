@@ -2,12 +2,12 @@
 type: overview
 title: "Wiki Overview"
 created: 2026-04-06
-updated: 2026-11-12
+updated: 2026-11-13
 ---
 
 # Wiki Overview
 
-Three products, one methodology, one wiki. Updated: 2026-11-12.
+Three products, one methodology, one wiki. Updated: 2026-11-13.
 
 ## Products
 
@@ -19,7 +19,7 @@ Three products, one methodology, one wiki. Updated: 2026-11-12.
 
 ## Methodology
 
-**[[projects/ai-factory]]** — Lean, multi-model development workflow across Claude Code, Cursor, and Antigravity (replaced [[projects/spec-driven-ai-coding]] and `~/.ai_global` on **2026-11-12**, Phases 0–5 complete). Provides shared `AGENTS.md`, ten `/` skills (`/spec`, `/plan`, `/executor`, `/review`, `/audit`, `/wrapup`, `/cleanup`, `/improve`, `/factory`, `/humanizer`), cross-vendor `critic` and `reviewer` routing, `install.py` / `doctor.py`, and deterministic git/staging helpers across all six switched repos.
+**[[projects/ai-factory]]** — Lean, multi-model development workflow across Claude Code, Cursor, and Antigravity (replaced [[projects/spec-driven-ai-coding]] and `~/.ai_global` on **2026-11-12**, Phases 0–5 complete; self-switched via `REPO.md` on **2026-11-13**). Provides shared `AGENTS.md`, ten `/` skills (plus composer-safe `<skill>:` prefixes), cross-vendor clean-context `critic` and `reviewer` routing (including `"author_only": true` support for Fable 5.2), `install.py` / `doctor.py`, and deterministic git/staging helpers across all seven switched repos (`gor_dagster`, `finfluencer-tracker`, `gor-blog`, `botastico-portal`, `botastico-api`, `wiki`, and `ai-factory`).
 
 ## Active development
 

@@ -514,3 +514,11 @@ Completed Phase 4 switches (`botastico-portal`, `botastico-api`, `wiki`) and Pha
 - **Updated [[projects/botastico-api]] & [[products/botastico]]:** Switched to `ai-factory` (`1ec0a9f` on `main`, `Agent branch: none` preserving the single-branch `main` unstaged-until-production workflow) and removed `.github/workflows/static.yml` + `gh-pages` (`f48bbc3`) so private `./docs` pages are no longer served on GitHub Pages.
 - **Retired [[projects/spec-driven-ai-coding]]:** `~/.ai_global`, `~/.gemini/agent/workflows`, and pre-factory `~/.cursor/commands/*` backed up to `~/.ai-factory-backup/20261112T162709Z-phase5` and removed; `README.md` banner and early-exit guards added to sync scripts (`e0a88ce`); `wiki/draft-commands/` removed (`b73f8df`).
 Updated [[concepts/spec-driven-development]], [[overview]], `AGENTS.md`, and [[index]].
+
+## [2026-11-13] sync | ai-factory
+
+Synced `ai-factory` (`2610ecd`, `b5e1614`, `3115626` on `main`):
+- **Self-hosted switch (`3115626`):** Added root `WIKI.md`, `REPO.md` (`Agent branch: main`), `CLAUDE.md` (`@REPO.md`), and `.gitignore` (`logs/`, `docs/features/*/logs/`), keeping `AGENTS.md` strictly global rules so product repos do not load `ai-factory`'s test commands or branch rule; taught `doctor.py --repo` and `push_policy.py` to read `REPO.md` when targeting `~/ai-factory` (`241` unit tests passing).
+- **Composer-safe `<skill>:` prefix (`2610ecd`):** Added `<skill>:` prefixes (`spec:`, `humanizer:`, etc.) and two-step empty `/spec` and `/humanizer` prompt handling for chat composers (such as Claude Desktop's Code tab) that block leading `/` commands containing links, code blocks, or inline formatting.
+- **Claude Code `2.1.323` & Fable 5.2 updates (`b5e1614`):** Added `"author_only": true` roster support (`claude-fable-5-2`), clean non-fork subagent guardrails for `critic`/`reviewer`, reversible leaf implementation rule in `/executor`, and `permissions.blockWritesOutsideWorkingDirectories` warning in `doctor.py`.
+Updated [[projects/ai-factory]], [[concepts/spec-driven-development]], [[overview]], and [[index]].
