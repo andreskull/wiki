@@ -526,3 +526,7 @@ Updated [[projects/ai-factory]], [[concepts/spec-driven-development]], [[overvie
 ## [2026-11-14] wrapup | gor_dagster | ElevenLabs Scribe v3
 
 New transcriptions use Scribe v3. v1 and v2 transcripts stay valid. Permanent page `docs/architecture/features/elevenlabs-scribe-v3-evaluation.md`. Updated [[projects/gor_dagster]], [[decisions/scribe-v3-default]], [[concepts/speaker-attribution]], [[overview]], and [[index]]. The temporary feature folder is still in the repo until the delete is confirmed.
+
+## [2026-11-14] wrapup | gor_dagster | ElevenLabs Scribe v3 folder removed
+
+Deleted `docs/features/elevenlabs-scribe-v3-evaluation/` and the local `logs/scribe_v3/` copies after confirmation. The five comparison scripts under `scripts/` stay.
