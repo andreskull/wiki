@@ -522,3 +522,7 @@ Synced `ai-factory` (`2610ecd`, `b5e1614`, `3115626` on `main`):
 - **Composer-safe `<skill>:` prefix (`2610ecd`):** Added `<skill>:` prefixes (`spec:`, `humanizer:`, etc.) and two-step empty `/spec` and `/humanizer` prompt handling for chat composers (such as Claude Desktop's Code tab) that block leading `/` commands containing links, code blocks, or inline formatting.
 - **Claude Code `2.1.323` & Fable 5.2 updates (`b5e1614`):** Added `"author_only": true` roster support (`claude-fable-5-2`), clean non-fork subagent guardrails for `critic`/`reviewer`, reversible leaf implementation rule in `/executor`, and `permissions.blockWritesOutsideWorkingDirectories` warning in `doctor.py`.
 Updated [[projects/ai-factory]], [[concepts/spec-driven-development]], [[overview]], and [[index]].
+
+## [2026-11-14] wrapup | gor_dagster | ElevenLabs Scribe v3
+
+New transcriptions use Scribe v3. v1 and v2 transcripts stay valid. Permanent page `docs/architecture/features/elevenlabs-scribe-v3-evaluation.md`. Updated [[projects/gor_dagster]], [[decisions/scribe-v3-default]], [[concepts/speaker-attribution]], [[overview]], and [[index]]. The temporary feature folder is still in the repo until the delete is confirmed.

@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-11-12
+updated: 2026-11-14
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, prediction-scores, ml, linkedin, gemini, claude-haiku, podcast-rss, outreach, source-quote, google-ads]
 ---
 
@@ -42,7 +42,7 @@ Growth and GTM live in [[synthesis/gtm-growth]]. **Do not** use `docs/features/<
 | Data warehouse | Google BigQuery — **`dagster_prod`** (RSS/content catalogue) + **`dagster_shared`** (pipeline warehouse) + **`dagster_prices`** (prices and signal performance); see [[entities/bigquery]] |
 | App database | Supabase (PostgreSQL) — nightly read-replica of BigQuery |
 | File storage | GCS: `gor-media-prod` (audio/images), `gor-stt-transcripts` (transcripts — hardcoded), `gor-ml-models` (serialized `blend_w50_v1` prediction scoring models) |
-| STT providers | AssemblyAI, Deepgram Nova-2/Nova-3, ElevenLabs Scribe, Google STT, Speechmatics, Rev.AI |
+| STT providers | AssemblyAI, Deepgram Nova-2/Nova-3, ElevenLabs Scribe v3 (new transcriptions since 2026-11-14; v1 and v2 stay valid), Google STT, Speechmatics, Rev.AI |
 | LLM providers | OpenAI (GPT-5, GPT-4o, O3-mini), Google Gemini (2.5-flash, 2.0-flash, 2.5-pro), Anthropic Claude, xAI Grok |
 | Key libraries | pydantic, instructor, pandas, streamlit, plotly, tiktoken, tenacity, feedparser |
 | CI/CD | GitHub Actions → Docker → GCE VM → Dagster Cloud |
@@ -68,6 +68,8 @@ Docs: [RSS Ingestion Architecture](file:///Users/andreskull/gor_dagster/docs/arc
 ### Stage 2 — STT Transcription
 
 Batch-processes audio against one or more STT providers. The `stt_batch_processor` asset handles large backlogs with quota management, provider-agnostic configuration, and sensor-based triggering. Raw outputs written to `gs://gor-stt-transcripts/raw/{episode_id}/{provider}_{model}.json`.
+
+**Scribe v3 (2026-11-14):** New transcriptions use `elevenlabs_scribe_v3`. Discovery skips an episode that already has a successful v1 or v2 transcript unless `transcribe_v3_when_older_exists` is true. When several transcripts exist, later steps prefer v3, then v2, then v1. The speaker-identification sensor discovers v3 only. [elevenlabs-scribe-v3-evaluation.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/elevenlabs-scribe-v3-evaluation.md). Decision: [[decisions/scribe-v3-default]].
 
 Six providers are supported. Provider registry pattern allows adding new providers without changing pipeline logic. Each provider has centralised pricing so cost estimation is automatic.
 
