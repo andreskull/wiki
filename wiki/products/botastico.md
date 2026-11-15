@@ -4,13 +4,13 @@ title: "botastico"
 product: botastico
 project: null
 created: 2026-04-06
-updated: 2026-11-12
+updated: 2026-11-15
 tags: [botastico]
 ---
 
 # botastico
 
-**Indexed projects:** [[projects/botastico-portal]] (2026-11-12) — Turborepo web monorepo (`apps/client` on Vercel `https://botasti.co`, `apps/admin`, `apps/playground`, `apps/functions/slack-events`), switched to [[projects/ai-factory]] (`Agent branch: development`). [[projects/botastico-api]] (2026-05-18, updated 2026-11-12) — Flask API + `file_processor` on Cloud Run (`Agent branch: none` single-branch `main` unstaged-until-production workflow; `gh-pages` docs publish retired 2026-11-12); chat image attachments + Pub/Slack path. [[projects/botastico]] (2026-07-15) — GCP LB SSL certs, monitoring, `slack_chat_logs`. Other repos below remain lightly linked until separate wiki syncs (`botastico`, `botastico-bo`, and `botastico-react-chatapp` also carry repo-scoped `.agents/plugins/firebase/` MCP configs as of 2026-11-11).
+**Indexed projects:** [[projects/botastico-portal]] (updated 2026-11-15) — Turborepo web monorepo (`apps/client` on Vercel `https://botasti.co`, `apps/admin`, `apps/playground`, `apps/functions/slack-events`), switched to [[projects/ai-factory]] (`Agent branch: development`), local widget Cypress harness + standalone `/chatapps` & `/iframe` isolation + `gpt-4o-mini` fallback (`920477a`, `cab0e26` on `main`). [[projects/botastico-api]] (2026-05-18, updated 2026-11-15) — Flask API + `file_processor` on Cloud Run (`Agent branch: none` single-branch `main` unstaged-until-production workflow; `gh-pages` docs publish retired 2026-11-12; **deprecated OpenAI models removal** wrapped 2026-11-15 on revision `00087`); chat image attachments + Pub/Slack path. [[projects/botastico]] (2026-07-15) — GCP LB SSL certs, monitoring, `slack_chat_logs`. Other repos below remain lightly linked until separate wiki syncs (`botastico`, `botastico-bo`, and `botastico-react-chatapp` also carry repo-scoped `.agents/plugins/firebase/` MCP configs as of 2026-11-11).
 
 ## Component repos
 

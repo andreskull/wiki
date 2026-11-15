@@ -2,12 +2,12 @@
 type: overview
 title: "Wiki Overview"
 created: 2026-04-06
-updated: 2026-11-14
+updated: 2026-11-15
 ---
 
 # Wiki Overview
 
-Three products, one methodology, one wiki. Updated: 2026-11-14.
+Three products, one methodology, one wiki. Updated: 2026-11-15.
 
 ## Products
 
@@ -15,7 +15,7 @@ Three products, one methodology, one wiki. Updated: 2026-11-14.
 
 **[[products/rattaproff]]** — WooCommerce multi-store automation for a network of **20** e-commerce storefronts. Single repo. Handles supplier ingestion, **HUF→EUR pricing** (default 350 HUF/EUR; per-site overrides optional — [[concepts/huf-eur-pipeline-pricing]]), publishing, and Google Indexing API quota management. **GSheet ground-truth sync safety** (July 2026) — grow-only robot writes, `__sync_status` marker, GCS fallback — [[concepts/gsheet-ground-truth-sync]]. **Category URL export** (2026-08-14) — Woo REST slugs → gitignored `category_urls_*.csv`. Repo docs: `docs/architecture/huf-eur-per-site-pricing.md`, `docs/architecture/features/gsheet-ground-truth-sync.md`, `docs/architecture/category-url-export.md`.
 
-**[[products/botastico]]** — **[[projects/botastico-portal]]** (2026-11-12): Turborepo Next.js web apps (`apps/client` on Vercel `https://botasti.co`, `apps/admin`, `apps/playground`) + `slack-events` Cloud Function, switched to `ai-factory` (`Agent branch: development`). **[[projects/botastico-api]]** (2026-05-18; updated 2026-11-12): Cloud Run Flask API + `file_processor`, chat image attachments, Pub/Sub → `slack_chat_logs`, switched to `ai-factory` (`Agent branch: none` single-branch `main` unstaged-until-production; `gh-pages` docs publish retired). **[[projects/botastico]]** (2026-07-15): GCP LB SSL for `chatapps`/`assets` widget delivery; July 2026 cert incident fixed; renewal-failure monitoring — [[concepts/botastico-ssl-certificates]].
+**[[products/botastico]]** — **[[projects/botastico-portal]]** (updated 2026-11-15): Turborepo Next.js web apps (`apps/client` on Vercel `https://botasti.co`, `apps/admin`, `apps/playground`) + `slack-events` Cloud Function, switched to `ai-factory` (`Agent branch: development`), local Cypress widget harness + standalone `/chatapps` & `/iframe` embed isolation + `gpt-4o-mini` widget fallback (`920477a`, `cab0e26` on `main`). **[[projects/botastico-api]]** (2026-05-18; updated 2026-11-15): Cloud Run Flask API + `file_processor`, **deprecated OpenAI models removal** wrapped **2026-11-15** (`00087`, `o3-mini` -> `gpt-5.4-mini`, Claude 4.5 Haiku / Sonnet 4.6 added, 24/24 live Blurby + Opiq public URLs verified), chat image attachments, Pub/Sub → `slack_chat_logs`, switched to `ai-factory` (`Agent branch: none` single-branch `main` unstaged-until-production; `gh-pages` docs publish retired). **[[projects/botastico]]** (2026-07-15): GCP LB SSL for `chatapps`/`assets` widget delivery; July 2026 cert incident fixed; renewal-failure monitoring — [[concepts/botastico-ssl-certificates]].
 
 ## Methodology
 

@@ -4,7 +4,7 @@ title: "botastico-api"
 product: botastico
 project: botastico-api
 created: 2026-05-18
-updated: 2026-11-12
+updated: 2026-11-15
 tags: [botastico, flask, cloud-run, firestore, gcs, rag, chat]
 ---
 
@@ -34,10 +34,13 @@ Primary backend for chat execution, agent configuration, and retrieval-augmented
 - **Slack audit:** Cloud Function **`slack_chat_logs`** in repo **`botastico`** (`slack_chat_logs/`) subscribes to `interaction-log`, posts customer prompt + attachment **image blocks** (short-lived v4 signed URLs using runtime `access_token`).
 - **File ingestion & shared utils:** `file_processor/` runs as a separate Cloud Run service (`file-processor-{staging-west1,production-west1}`) and Cloud Run Jobs for document chunking/ingestion; `python_utils/` is a git submodule (`https://github.com/botastico/python_utils.git`) copied into `file_processor/python_utils` during image builds by `file_processor/deploy-main.sh`.
 
-Permanent feature write-up: [botastico-chat-image-attachments.md](file:///Users/andreskull/botastico-api/docs/architecture/features/botastico-chat-image-attachments.md).
+Permanent feature write-ups:
+- [deprecated-openai-models-removal.md](file:///Users/andreskull/botastico-api/docs/architecture/features/deprecated-openai-models-removal.md)
+- [botastico-chat-image-attachments.md](file:///Users/andreskull/botastico-api/docs/architecture/features/botastico-chat-image-attachments.md)
 
 ## Key decisions
 
+- **2026-11-15 — Deprecated OpenAI models removed & `o3-mini` mapped to `gpt-5.4-mini` (`botastico-api-production-west1-00087`):** Removed `gpt-3.5-turbo*`, `gpt-4-turbo*` / preview variants, and `o3-mini` from `SUPPORTED_MODELS`, `MAX_TOKENS`, and `IA_CREDITS` after staging and production dry-runs confirmed 0 remaining in-scope agents and plans (`_agent_in_migration_scope` skips deleted agents and soft-deleted organizations). Mapped `o3-mini` to `gpt-5.4-mini` (3 IA credits vs 7 previously, avoiding expensive `o3`), gated production `--apply` on a live `https://developers.openai.com/api/docs/deprecations` alias check (`api/openai_deprecations_check.py`), added `claude-haiku-4-5-20251001` and `claude-sonnet-4-6` to the catalog, and kept `gpt-5.1` (`GPT_5_1_RETIREMENT_*`) and `gpt-5-nano`/`gpt-5-mini` (`GPT_5_NANO_MINI_RETIREMENT_*`) on separate retirement tracks. Claude 3.x -> 4.x production agent migration remains deferred as its own track.
 - **2026-11-12 — Switched to `ai-factory` (`1ec0a9f`) & closed GitHub Pages docs leak (`f48bbc3`):** Added [`AGENTS.md`](file:///Users/andreskull/botastico-api/AGENTS.md) (`Agent branch: none`, `CLAUDE.md` = `@AGENTS.md`), replacing `.cursor/rules/{git-branch,botastico}.mdc`. Preserves the single-branch `main` workflow where undeployed changes stay unstaged until in GCP production (`./deploy-api.sh` runs `gcloud run deploy --source .`, uploading unstaged edits; `/executor` saves per-leaf diffs to `docs/features/<name>/logs/<leaf>.patch`), and separates safe local `.venv/bin/pytest` unit modules from live `*_cloud_test.py` / `test_*_smoke.py` suites. Also deleted `.github/workflows/static.yml` and `gh-pages` (local + `origin/gh-pages`), which had been created in 2023 for `botastico-private-api-swagger-ui` and was publicly publishing all of `./docs` on `botastico.github.io`.
 - **2026-05-18** — GCS previews: byte proxy for portal monitoring; Slack uses signed URLs from **`slack_chat_logs`** with explicit credentials on `generate_signed_url`, not IAM `signBlob` on the API/Run SA alone.
 
@@ -45,11 +48,12 @@ Permanent feature write-up: [botastico-chat-image-attachments.md](file:///Users/
 
 | Completed | Feature | Doc |
 |-----------|--------|-----|
+| 2026-11-15 | Deprecated OpenAI models removal | [deprecated-openai-models-removal.md](file:///Users/andreskull/botastico-api/docs/architecture/features/deprecated-openai-models-removal.md) |
 | 2026-05-18 | Chat image attachments | [botastico-chat-image-attachments.md](file:///Users/andreskull/botastico-api/docs/architecture/features/botastico-chat-image-attachments.md) |
 
 ## Current status
 
-Switched to [[projects/ai-factory]] (`Agent branch: none`) and retired public `gh-pages` docs workflow on **2026-11-12** (`1ec0a9f`, `f48bbc3`). Chat image attachments **in production** (2026-05-18). **`slack_chat_logs`** must be redeployed when attachment metadata or signing behavior changes.
+**Deprecated OpenAI models removal** wrapped and verified live in production on **2026-11-15** (`botastico-api-production-west1-00087` + `botastico-portal` `main`; 24/24 live Blurby + Opiq public chat URLs verified; Claude 3.x -> 4.x production agent migration deferred as a separate track, and `gpt-5-1-retirement` / `gpt-5-nano-mini-retirement` remain in flight under `docs/features/`). Switched to [[projects/ai-factory]] (`Agent branch: none`) and retired public `gh-pages` docs workflow on **2026-11-12** (`1ec0a9f`, `f48bbc3`). Chat image attachments **in production** (2026-05-18). **`slack_chat_logs`** must be redeployed when attachment metadata or signing behavior changes.
 
 ## Repo entry point
 

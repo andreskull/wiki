@@ -530,3 +530,8 @@ New transcriptions use Scribe v3. v1 and v2 transcripts stay valid. Permanent pa
 ## [2026-11-14] wrapup | gor_dagster | ElevenLabs Scribe v3 folder removed
 
 Deleted `docs/features/elevenlabs-scribe-v3-evaluation/` and the local `logs/scribe_v3/` copies after confirmation. The five comparison scripts under `scripts/` stay.
+
+
+## [2026-11-15] wrapup | botastico-api | Deprecated OpenAI models removal
+
+Removed `gpt-3.5-turbo*`, `gpt-4-turbo*` / preview variants, and `o3-mini` from `SUPPORTED_MODELS`, `MAX_TOKENS`, and `IA_CREDITS` (0 active agents/plans remaining in staging and production), mapped `o3-mini` to `gpt-5.4-mini` (3 IA credits), added `claude-haiku-4-5-20251001` and `claude-sonnet-4-6`, shipped `api/openai_deprecations_check.py` + `scripts/migrate_deprecated_openai_models.py` (`botastico-api-production-west1-00087`), updated `botastico-portal` chat widget fallback to `gpt-4o-mini` and isolated standalone `/chatapps` + `/iframe` embeds with local Cypress widget harness (`920477a`, `cab0e26` on `main`), and verified 24/24 live Blurby + Opiq public chat URLs. Permanent page `docs/architecture/features/deprecated-openai-models-removal.md`; deleted `docs/features/deprecated-openai-models-removal/` and 43 scratch/one-time files after confirmation. Updated [[projects/botastico-api]], [[projects/botastico-portal]], [[products/botastico]], [[overview]], and [[index]].

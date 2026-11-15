@@ -2,7 +2,7 @@
 type: index
 title: "Wiki Index"
 created: 2026-04-06
-updated: 2026-11-14
+updated: 2026-11-15
 ---
 
 # Wiki Index
@@ -13,7 +13,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 ## Overview
 
-- [[wiki/overview]] — Three products, one methodology, one wiki (Updated 2026-11-13)
+- [[wiki/overview]] — Three products, one methodology, one wiki (Updated 2026-11-15)
 
 ---
 
@@ -23,7 +23,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 |------|-------------|
 | [[wiki/products/finfluencer-trade]] | Financial influencer accountability platform — planning hub; GTM living page [[wiki/synthesis/gtm-growth]] (Updated 2026-11-05) |
 | [[wiki/products/rattaproff]] | WooCommerce multi-store automation — 20 storefronts; HUF→EUR pricing [[wiki/concepts/huf-eur-pipeline-pricing]]; gsheet sync safety [[wiki/concepts/gsheet-ground-truth-sync]]; category URL export (Woo slugs, 2026-08-14) |
-| [[wiki/products/botastico]] | Partially indexed — [[projects/botastico-portal]] (2026-11-12); [[projects/botastico-api]] (2026-11-12); [[projects/botastico]] SSL/monitoring (2026-07-15); other repos pending |
+| [[wiki/products/botastico]] | Partially indexed — [[projects/botastico-portal]] (2026-11-15); [[projects/botastico-api]] (2026-11-15); [[projects/botastico]] SSL/monitoring (2026-07-15); other repos pending |
 
 ---
 
@@ -38,8 +38,8 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/projects/ai-factory]] | (methodology) | Active — Self-switched **2026-11-13** (`REPO.md`, `CLAUDE.md` -> `@REPO.md`, `WIKI.md`); `<skill>:` composer prefix & Claude 2.1.323 / Fable 5.2 `author_only` + clean-context review guardrails **2026-11-13**; Phases 0–5 complete **2026-11-12** across all 7 switched repos |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Retired **2026-11-12** — superseded by [[projects/ai-factory]]; `~/.ai_global` removed & sync scripts guarded |
 | [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | v1 frozen **2026-09-24** — public kit + SSRN 6643379; do not overwrite `data/` |
-| [[wiki/projects/botastico-portal]] | botastico | Active — **Factory `AGENTS.md` switch** **2026-11-12** (`development`, Turborepo Next.js `apps/client` `:3000` on Vercel `https://botasti.co`, `apps/admin`, `apps/playground`, `slack-events` Cloud Function) |
-| [[wiki/projects/botastico-api]] | botastico | Active — **Factory `AGENTS.md` switch + `gh-pages` docs leak closed** **2026-11-12** (`Agent branch: none` single-branch `main` unstaged-until-production; `static.yml` & `gh-pages` removed); chat image attachments **2026-05-18** ([feature doc](file:///Users/andreskull/botastico-api/docs/architecture/features/botastico-chat-image-attachments.md)); Cloud Run Flask + `file_processor` |
+| [[wiki/projects/botastico-portal]] | botastico | Active — **Local widget Cypress harness, standalone `/chatapps` + `/iframe` isolation & `gpt-4o-mini` fallback** **2026-11-15** (`920477a`, `cab0e26` on `main`; 24/24 live Blurby + Opiq public URLs); **Factory `AGENTS.md` switch** **2026-11-12** (`development`, Turborepo Next.js `apps/client` `:3000` on Vercel `https://botasti.co`, `apps/admin`, `apps/playground`, `slack-events` Cloud Function) |
+| [[wiki/projects/botastico-api]] | botastico | Active — **Deprecated OpenAI models removal** wrapped **2026-11-15** (`00087`; `o3-mini` -> `gpt-5.4-mini`, Claude 4.5 Haiku / Sonnet 4.6 added, live OpenAI deprecations gate, [feature doc](file:///Users/andreskull/botastico-api/docs/architecture/features/deprecated-openai-models-removal.md)); **Factory `AGENTS.md` switch + `gh-pages` docs leak closed** **2026-11-12** (`Agent branch: none` single-branch `main` unstaged-until-production); chat image attachments **2026-05-18** ([feature doc](file:///Users/andreskull/botastico-api/docs/architecture/features/botastico-chat-image-attachments.md)); Cloud Run Flask + `file_processor` |
 | [[wiki/projects/botastico]] | botastico | Active — GCP LB SSL certs + monitoring **2026-07-15** (July widget outage); `chatapps`/`assets` auto-renew; [[concepts/botastico-ssl-certificates]] |
 
 ---
