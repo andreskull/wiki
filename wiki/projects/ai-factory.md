@@ -4,7 +4,7 @@ title: "ai-factory"
 product: null
 project: ai-factory
 created: 2026-11-12
-updated: 2026-11-13
+updated: 2026-11-17
 tags: [methodology, ai-coding, claude-code, cursor, antigravity, spec, executor, multi-model]
 ---
 
@@ -18,8 +18,8 @@ Provides one shared working contract ([`AGENTS.md`](file:///Users/andreskull/ai-
 
 ## Tech stack / tooling
 
-- **Harnesses supported:** Claude Code (`claude` 2.1.323+), Cursor IDE + CLI (`cursor` / `agent`), Antigravity IDE + CLI (`antigravity` / `agy`)
-- **Language & tests:** Python 3 standard-library scripts (`scripts/*.py`) + `unittest` suite (`241` unit tests in `tests/`, plus live CLI canary/scenario probes)
+- **Harnesses supported:** Claude Code (`claude` 2.1.323+), Cursor IDE + CLI (`cursor` / `agent`), Antigravity IDE + CLI (`antigravity` / `agy` 1.5.10+)
+- **Language & tests:** Python 3 standard-library scripts (`scripts/*.py`) + `unittest` suite (`247` unit tests in `tests/`, plus live CLI canary/scenario probes)
 - **Global safety hook:** [`hooks/block_inline_python.sh`](file:///Users/andreskull/ai-factory/hooks/block_inline_python.sh) blocks `python -c`, heredocs fed to Python, and pipes into Python across all three tools
 
 ## Installed skills (`/` commands)
@@ -39,8 +39,8 @@ Provides one shared working contract ([`AGENTS.md`](file:///Users/andreskull/ai-
 
 ## Key scripts and architecture
 
-- **Cross-vendor model routing ([`scripts/resolve_model.py`](file:///Users/andreskull/ai-factory/scripts/resolve_model.py), [`config/models.json`](file:///Users/andreskull/ai-factory/config/models.json), [`scripts/launch_agent.py`](file:///Users/andreskull/ai-factory/scripts/launch_agent.py)):** Chooses a different vendor (or different model family within Claude Code) for `critic` and `reviewer` (e.g., Grok ↔ Opus in Cursor, Gemini 4 Carbon ↔ Opus in Antigravity), supports `"author_only": true` roster entries (such as `claude-fable-5-2`) that resolve an author's vendor/tier without ever being handed out as critic, reviewer, or implementer, requires clean non-fork subagent contexts (never inheriting author chat history), tracks quota resets (`--mark-unavailable`), and spawns read-only CLI subprocesses when a harness's native subagent tool cannot target the resolved model.
-- **Install & health check ([`scripts/install.py`](file:///Users/andreskull/ai-factory/scripts/install.py), [`scripts/doctor.py`](file:///Users/andreskull/ai-factory/scripts/doctor.py)):** Dry-run by default; backs up replaced files to `~/.ai-factory-backup/<timestamp>/` before linking skills, agents, rules, and hooks. `doctor.py` validates global links/hooks (and warns if `~/.claude/settings.json` sets `permissions.blockWritesOutsideWorkingDirectories: true`), while `doctor.py --repo <path>` audits switched repos (`AGENTS.md` in product repos, `REPO.md` + `CLAUDE.md` = `@REPO.md` in `ai-factory` itself).
+- **Cross-vendor model routing ([`scripts/resolve_model.py`](file:///Users/andreskull/ai-factory/scripts/resolve_model.py), [`config/models.json`](file:///Users/andreskull/ai-factory/config/models.json), [`scripts/launch_agent.py`](file:///Users/andreskull/ai-factory/scripts/launch_agent.py)):** Chooses a different vendor (or different model family within Claude Code) for `critic` and `reviewer` (e.g., Grok ↔ Opus in Cursor, standalone Gemini 4 Carbon ↔ Opus in Antigravity), supports `"no_review": true` (`gemini-pro-orchestrator` *Orchestrator (Carbon)* as Antigravity `implement_standard` while excluded from `critic`/`reviewer`), `"author_only": true` entries (`claude-fable-5-2`, `gemini-pro-orchestrator-argon`, `gpt-oss-120b`), and fallback effort-suffix lookup (`-low`, `-medium`, `-high`, `-xhigh`, `-fast`), requires clean non-fork subagent contexts (never inheriting author chat history), tracks quota resets (`--mark-unavailable`), and spawns read-only CLI subprocesses when a harness's native subagent tool cannot target the resolved model.
+- **Install & health check ([`scripts/install.py`](file:///Users/andreskull/ai-factory/scripts/install.py), [`scripts/doctor.py`](file:///Users/andreskull/ai-factory/scripts/doctor.py)):** Dry-run by default; backs up replaced files to `~/.ai-factory-backup/<timestamp>/` before linking skills, agents, rules, and hooks. `doctor.py` validates global links/hooks (probing Antigravity on `gemini-4-hydrogen-medium` after retiring `gemini-3.8-flash`, and warning if `~/.claude/settings.json` sets `permissions.blockWritesOutsideWorkingDirectories: true`), while `doctor.py --repo <path>` audits switched repos (`AGENTS.md` in product repos, `REPO.md` + `CLAUDE.md` = `@REPO.md` in `ai-factory` itself).
 - **Git & index safety ([`scripts/push_policy.py`](file:///Users/andreskull/ai-factory/scripts/push_policy.py), [`scripts/stage_own_changes.py`](file:///Users/andreskull/ai-factory/scripts/stage_own_changes.py)):** Reads `- Agent branch:` (`development`, `staging`, `main`, or `none`) and `- Remote:` from a switched repo's `AGENTS.md` (or `REPO.md` in `ai-factory`) to decide push eligibility deterministically; stages index-only diffs from pre-edit snapshots so unrelated unstaged work in shared files (`WIKI.md`, `AGENTS.md`, `botastico-api` working tree) is never swept into a commit.
 - **Stack lessons (`rules/stacks/`):** Concise non-obvious failure lessons only (`bigquery.md`, `dagster.md`, `dash.md`, `nextjs.md`, `python.md`, `shadcn.md`, `typescript.md`, `vercel.md`). Project-specific Antigravity MCP servers (such as Firebase on Botastico repos) live in repo-scoped `.agents/plugins/<name>/` rather than globally.
 
@@ -56,13 +56,22 @@ Provides one shared working contract ([`AGENTS.md`](file:///Users/andreskull/ai-
 | `wiki` | `main` | 248-line `AGENTS.md` operating manual; `draft-commands/` retired |
 | `ai-factory` | `main` | Self-hosted via 29-line `REPO.md` + `CLAUDE.md` (`@REPO.md`) + `WIKI.md`, keeping `AGENTS.md` strictly global rules |
 
+## Completed features
+
+- `2026-11-17` — Antigravity Gemini 4 & Orchestrator modes ([`antigravity-gemini4-models.md`](file:///Users/andreskull/ai-factory/docs/architecture/features/antigravity-gemini4-models.md)): promoted `gemini-4-hydrogen-medium` (replacing `gemini-3.8-flash`) and `gemini-pro-orchestrator` (*Orchestrator (Carbon)* via `"no_review": true`), added *Orchestrator (Argon)* / `gpt-oss-120b` / Sonnet Antigravity IDs, fallback effort-suffix lookup, and Antigravity model/quota guidance.
+- `2026-11-13` — Self-hosted factory switch for `ai-factory` (`REPO.md`, `CLAUDE.md`, `WIKI.md`, `.gitignore`, `doctor.py` and `push_policy.py` support).
+- `2026-11-13` — Claude Code `2.1.323` & Fable 5.2 updates (`author_only` model flag, non-fork subagent review rule, reversible leaf choices in `/executor`, `blockWritesOutsideWorkingDirectories` check in `doctor.py`) and slashless `<skill>:` prefix support.
+- `2026-11-12` — Phases 3–5 rollout: `install.py` and `doctor.py` applied on macOS, `/humanizer` skill added, all six inventory repos switched, and `~/.ai_global` retired.
+
 ## Current status
 
+- **Antigravity 1.5.10 Gemini 4 & Orchestrator models integrated (2026-11-17):** Wrapped `antigravity-gemini4-models` (`8996720`, `247` unit tests OK), recognizing all 19 active Antigravity IDs plus Cursor effort variants and keeping reviews on standalone `claude-opus-5-5-medium` and `gemini-4-carbon-medium`.
 - **Phases 0–5 complete + self-hosted switch (2026-11-13):** All six active product/knowledge repos plus `ai-factory` itself (`3115626`) switched and verified; slashless `<skill>:` prefix + two-step paste (`2610ecd`) and Claude Code `2.1.323` / Fable 5.2 `author_only` + clean-context review guardrails + reversible leaf rule (`b5e1614`) live.
 - **Next (Phase 6):** Accumulate real feature `runs.md` records across switched repos to populate `docs/ledger.md` and run `/improve`.
 
 ## Key docs
 
+- [`antigravity-gemini4-models.md`](file:///Users/andreskull/ai-factory/docs/architecture/features/antigravity-gemini4-models.md)
 - [`WIKI.md`](file:///Users/andreskull/ai-factory/WIKI.md)
 - [`REPO.md`](file:///Users/andreskull/ai-factory/REPO.md)
 - [`AGENTS.md`](file:///Users/andreskull/ai-factory/AGENTS.md)

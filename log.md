@@ -543,3 +543,11 @@ Recorded **Feed email glimpse & self-contained `/api/feed-email`** (`feed-email-
 - `/api/feed-email.ts` is self-contained inside `api/`'s CommonJS boundary (`api/package.json` `"type": "commonjs"`) with `l=ticker&sym=<SYM>` redirects to `/signals?ticker=<SYM>`, eliminating cross-boundary ESM bundling failures on Vercel while locking Web Crypto HMAC parity with `shared/feedEmailToken.ts` via `api/feed-email.test.ts`.
 - Deployed on `development` `wijbxckoiuzxjjxcgjbr` + Vercel preview; production promotion pending owner deployment checklist.
 
+
+## [2026-11-17] wrapup | ai-factory | Antigravity Gemini 4 & Orchestrator models
+
+Wrapped `antigravity-gemini4-models` (`80274fe`, `c2aa0bd`, `00c093d`, `b1bde2f`, `b732268`, `8996720` on `main`):
+- Added `"no_review": true` (`gemini-pro-orchestrator` *Orchestrator (Carbon)* as Antigravity `implement_standard` while excluded from `critic`/`reviewer`), fallback effort-suffix lookup (`-low`, `-medium`, `-high`, `-xhigh`, `-fast`) in `scripts/resolve_model.py`, and retired `gemini-3.8-flash` in favor of `gemini-4-hydrogen-medium` (including `scripts/doctor.py --probe antigravity`).
+- Registered *Orchestrator (Argon)* and `gpt-oss-120b` (`author_only: true`) plus `claude-sonnet-5-5-medium` on `antigravity`, recognizing all 19 active Antigravity IDs (`agy -p` live probe passed for Hydrogen and Orchestrator (Carbon); `247` unit tests OK) and documenting Antigravity model choice and shared quota pools in `docs/user-guide.md`.
+- Permanent page `docs/architecture/features/antigravity-gemini4-models.md` added, `WIKI.md` updated, and temporary `docs/features/antigravity-gemini4-models/` folder deleted after confirmation.
+Updated [[projects/ai-factory]], [[concepts/spec-driven-development]], [[overview]], and [[index]].
