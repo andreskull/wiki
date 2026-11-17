@@ -4,8 +4,8 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-11-12
-tags: [prediction-scores, signals, rum, web-vitals, mobile, finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
+updated: 2026-11-17
+tags: [prediction-scores, signals, feeds, feed-email, rum, web-vitals, mobile, finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
 ---
 
 # finfluencer-tracker
@@ -20,7 +20,11 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-11-10)
+## Current status (2026-11-17)
+
+**Feed email glimpse and self-contained `/api/feed-email` (`feed-email-glimpse`) wrapped (2026-11-17)**: Feed digest emails deduplicate visible new picks across subscribed feeds, group and rank stocks by voice count → max effective stars → newest `signal_date`, cap at 5 stock cards without thesis blurbs while keeping all `N` picks in `plan.picks` / `feed_email_send_picks`, render `logo-email-2x.png` + `#FF5252` dot, list every active email-enabled feed with `matched_count` including quiet `0 stock-picks` feeds and distinct multi-feed overlap notes, and route visible footer settings links to `/settings#feeds` while preserving RFC 8058 `List-Unsubscribe`; `/api/feed-email.ts` is self-contained CommonJS inside `api/`'s boundary with `l=ticker&sym=<SYM>` redirects to `/signals?ticker=<SYM>`. Deployed on `development` `wijbxckoiuzxjjxcgjbr` + Vercel preview, pending production promotion. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feed-email-glimpse.md).
+
+**Guest leaderboard table, mobile landing tour, and magic-link resend wrapped (2026-11-14)**: Anonymous `/leaderboard` shows the full table (paywall deferred to profile/sectors/picks depth; see [guest-leaderboard-table.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/guest-leaderboard-table.md)); first mobile visit to `/` does not auto-open the landing tour (see [mobile-landing-tour.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/mobile-landing-tour.md)); friendly countdown on `/signup` and `/login` when GoTrue email rate limits magic link resends (see [magic-link-resend.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/magic-link-resend.md)).
 
 **Share-class identity wrapped (2026-11-10)**: seven companies are one ticker each (Alphabet GOOGL/GOOG, Berkshire, Fox, News Corp, Under Armour, Liberty Broadband, Brown-Forman). A pick keeps its own ticker, prices, and return. The map is `gor_dagster/utils/share_classes.py` and syncs to `public.share_class_tickers`; an empty table leaves every RPC as before. Live after the manual sync on 2026-11-10. See [[concepts/share-class-identity]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/share-class-identity.md).
 
@@ -132,6 +136,10 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [README](file:///Users/andreskull/finfluencer-tracker/docs/architecture/README.md) | Index |
 | [system-overview](file:///Users/andreskull/finfluencer-tracker/docs/architecture/system-overview.md) | Stack, Vercel, routing |
 | [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md) | Supabase prod/dev, BQ → app path, entitlement SSOT summary |
+| [feed-email-glimpse](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feed-email-glimpse.md) | Self-contained CommonJS `/api/feed-email` redirect/pixel endpoint and ticker-grouped Top-5 feed email glimpse with per-feed match stats (**2026-11-17**) |
+| [guest-leaderboard-table](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/guest-leaderboard-table.md) | Anonymous `/leaderboard` shows the table; paywall starts at a profile, Sectors, Under the Radar, or pick details (**2026-11-14**) |
+| [mobile-landing-tour](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/mobile-landing-tour.md) | First mobile visit to `/` does not auto-open the landing tour; desktop unchanged (**2026-11-14**) |
+| [magic-link-resend](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/magic-link-resend.md) | Friendly countdown when a magic-link resend hits GoTrue's email rate limit, on `/signup` and `/login` (**2026-11-14**) |
 | [share-class-identity](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/share-class-identity.md) | One ticker per company for seven share-class groups; class label on a single pick; map synced from `gor_dagster` (**2026-11-10**) |
 | [prediction-scores](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/prediction-scores.md) | `1★–5★` 6M Prediction Scores (`blend_w50_v1`), 10-session fresh window (`get_fresh_scored_picks`), Option 2 3-tier gating (`Guest` → `Spectator` → `Trader`), evidence-backed `"Why N stars?"` explanations, and `context_line` sample-size rules (**2026-10-30**) |
 | [cumulative-performance-comparison-charts](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/cumulative-performance-comparison-charts.md) | Cumulative % charts, `/compare`, Play, export (**2026-08-04**) |
@@ -172,6 +180,10 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-11-17 | Feed email glimpse and self-contained `/api/feed-email` endpoint | [feed-email-glimpse.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feed-email-glimpse.md) |
+| 2026-11-14 | Guest leaderboard table (paywall after the table) | [guest-leaderboard-table.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/guest-leaderboard-table.md) |
+| 2026-11-14 | No auto tour on a first mobile visit | [mobile-landing-tour.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/mobile-landing-tour.md) |
+| 2026-11-14 | Magic-link resend message | [magic-link-resend.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/magic-link-resend.md) |
 | 2026-11-10 | Share-class identity | [share-class-identity.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/share-class-identity.md) |
 | 2026-10-30 | Prediction Scores for Fresh Stock Picks & Option 2 3-tier gating (`prediction-scores`) | [prediction-scores.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/prediction-scores.md) |
 | 2026-10-20 | Landing tour improvements | [landing-tour-improvements.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/landing-tour-improvements.md) |
@@ -213,6 +225,8 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-11-17 | `/api/feed-email.ts` is self-contained inside `api/` (`"type": "commonjs"`) with tests asserting zero `../shared/` or `../src/` imports | Importing across the root ESM boundary failed on Vercel runtime; locked parity with Deno Web Crypto token helper in `shared/feedEmailToken.ts` |
+| 2026-11-17 | `plan.picks` stays un-truncated while rendered email cards cap at 5 | Truncating `plan.picks` would omit overflow picks from `feed_email_send_picks`, causing the 14-day deduplication query to re-send yesterday's overflow picks on quiet mornings |
 | 2026-11-12 | Agent rules live in one `AGENTS.md` (`Agent branch: development`); long runbooks live in `docs/ops/` and `docs/design-system/` | Claude Code, Cursor, and Antigravity all read `AGENTS.md` (`CLAUDE.md` = `@AGENTS.md`), whereas `.cursor/rules/` reached only Cursor. Detailed recipes moved to `docs/ops/deployment-previews.md`, `docs/ops/performance-budget.md`, and `docs/design-system/agent-conventions.md` |
 | 2026-11-10 | Share classes merge through `share_class_tickers`, not by rewriting picks. `canonical_ticker` is `STABLE` and not granted to clients. The sync is incremental | A pick keeps its ticker, prices, and return. An empty table is the off switch, so a full refresh would split GOOG and GOOGL for the length of the write. A new group is `GROUPS` plus the methodology list, then the next sync |
 | 2026-10-30 | Individual picks & `1★–5★` Prediction Scores are shown strictly for the first 10 US trading sessions after entry (`get_fresh_scored_picks`); raw client `SELECT` on `signals`, `signal_performance`, `signal_current_performance`, and `pick_scores` is revoked | Prevents bulk scraping of historical picks while delivering real-time actionable signals during the fresh window; on session 11, picks roll off into aggregate track records |
