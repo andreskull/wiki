@@ -559,3 +559,9 @@ Recorded **Feeds management** (`feeds-management`, permanent doc at [feeds-manag
 - `FeedEditor` upgrades Who and What inputs into inline browsable pickers backed by `public.feed_picker_counts()` (`20261116120000_feeds_management_rpcs.sql`, 51.5 ms warm / 132.9 ms cold on development; visible + locked Spectator counts and caller-visible `latest_visible_date` with `All`/`Shows`/`People` filters and fresh-first grouping), expands `public.preview_feed` to a 50-row scrollable preview with context-aware overflow copy and an exit-aware star-filter widening hint, and adds `Create and view picks` / `Save and view picks` outside `/signals` with GA4 parameter `then: 'stay' | 'view_picks'`.
 - Arriving on `/signals` with `state.fromFeedNavigation` suppresses the initial `"Save as my default"` prompt without mutating `user_profiles.default_star_filter`.
 - Deployed on `development` (`wijbxckoiuzxjjxcgjbr` + Vercel preview); migration `20261116120000` applied and verified read-only on production `pyeoksniycdtmjvokaqp` (`2026-11-17`), with GA4 `then` dimension registration and `development` → `main` promotion remaining.
+
+## [2026-11-18] sync | finfluencer-tracker
+
+Synced production promotions (`PR #136` `083fa36`, `PR #137` `2170062`, `PR #140` `f734941`, `PR #141` `d3556f9` recorded in `docs/ops/production-deploys.md`) and post-wrapup updates on [[projects/finfluencer-tracker]], [[overview]], and [[index]]:
+- Marked **Feeds management** and **Feed email glimpse** live on production (`https://finfluencers.trade`, `PR #137` `2170062` + `send-feed-email` v3), updated `FeedsSettings` free-limit behavior (`1a65f38`: `+ New feed` locked in place at 1 feed on Spectator with `Upgrade to Trader` link firing `paywall_cta_click` `feeds:limit`), and noted `20261118090000_tighten_email_health_and_sync_alarms` applied on both ledgers (`click_rate_28d` gated on `>= 50` non-internal sends; `pre_digest_sync_late` cleared by same-date or newer clean `sync_runs`).
+
