@@ -565,3 +565,7 @@ Recorded **Feeds management** (`feeds-management`, permanent doc at [feeds-manag
 Synced production promotions (`PR #136` `083fa36`, `PR #137` `2170062`, `PR #140` `f734941`, `PR #141` `d3556f9` recorded in `docs/ops/production-deploys.md`) and post-wrapup updates on [[projects/finfluencer-tracker]], [[overview]], and [[index]]:
 - Marked **Feeds management** and **Feed email glimpse** live on production (`https://finfluencers.trade`, `PR #137` `2170062` + `send-feed-email` v3), updated `FeedsSettings` free-limit behavior (`1a65f38`: `+ New feed` locked in place at 1 feed on Spectator with `Upgrade to Trader` link firing `paywall_cta_click` `feeds:limit`), and noted `20261118090000_tighten_email_health_and_sync_alarms` applied on both ledgers (`click_rate_28d` gated on `>= 50` non-internal sends; `pre_digest_sync_late` cleared by same-date or newer clean `sync_runs`).
 
+
+## [2026-11-18] sync | finfluencer-tracker
+
+Updated [[projects/finfluencer-tracker]] for GA4 custom dimension **Feed save next step** (`Event` scope, parameter `then`, registered 2026-11-17) and the `send-feed-email` production template update (`741180e`, deployed 2026-11-18 to `pyeoksniycdtmjvokaqp`: adds the `1★–5★ Prediction Score` explanation above stock cards and removes the multi-feed overlap footer note).
