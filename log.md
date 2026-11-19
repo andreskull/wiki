@@ -576,3 +576,7 @@ Synced `finfluencer-tracker` `development` at `bd3ce6e` (changes since `e92a2eb`
 - New wrapup **Add to feed from leaderboard rows** (`docs/architecture/features/leaderboard-add-to-feed.md`): signed-in row button after the name on `/leaderboard`, `/shows`, under-the-radar open rows and `/leaderboard/sectors` (both views); static `LeaderboardFeedSlot` + lazy `LeaderboardFeedLayer` after real rows; one modal popover per page outside the table; guests load no feed code and make no `get_my_feeds` call; GA4 `entry_point` `E9`–`E12`. On `development`, not yet on production.
 - Two decisions added: row control reverses the feeds v1 "no row control" rule (lazy, guests load nothing; modal popover cost accepted for keyboard Undo); feeds use `ListPlus` / `ListChecks`, never a star.
 - Noted the docs correction that Karen Finerman, not Tom Lee, is the third free featured finfluencer (no vault page named either).
+
+## [2026-11-19] sync | finfluencer-tracker
+
+Synced the under-the-radar pickers wrap-up (`cd1d654` on `development`, live since 2026-10-13) into [[concepts/under-the-radar-pickers]], [[projects/finfluencer-tracker]], [[projects/gor_dagster]], [[products/finfluencer-trade]], [[overview]] and [[index]]. Guests see rank 1. Any signed-in account sees the full list. The 30-day read measured badge click-through at 1 of 202 profile views and row opens at 4.0% of page views against 12.4% on `/leaderboard`.

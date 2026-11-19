@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-11-14
+updated: 2026-11-19
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, prediction-scores, ml, linkedin, gemini, claude-haiku, podcast-rss, outreach, source-quote, google-ads]
 ---
 
@@ -457,6 +457,7 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 
 | Completed | Topic | Doc |
 |---|---|---|
+| 2026-11-19 | Under-the-radar pickers — step 14b writes `dagster_sync.mat_finfluencer_under_radar_ranking` from less-popular stock picks (100 most-mentioned, 12 months, judged at the pick). The daily sync upserts `public.finfluencer_under_radar_ranking`. Share classes come from `SHARE_CLASS_MAP`. Live since 2026-10-13 | [under-the-radar-pickers.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/under-the-radar-pickers.md) · [[concepts/under-the-radar-pickers]] |
 | 2026-11-12 | Schwab Network RSS onboarding (17th `podcast_rss` source, `content_source_id` `2692382b-dabf-452a-a69f-60196e00ff5e`; Pattern 5; proof gate 17/17; live feed 9,975/9,975; directory card without a profile link) | [schwab-network-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/schwab-network-ingestion.md) |
 | 2026-11-12 | Market Hang RSS onboarding (16th `podcast_rss` source, `content_source_id` `7bc1811a-6303-4562-8dca-fbba72080eef`; Pattern 1; 37/37 downloaded; show page live and shows 0 picks; gor-blog `development` directory card links to `/show/market-hang`) | [market-hang-ingestion.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/market-hang-ingestion.md) |
 | 2026-11-10 | Share-class identity — `utils/share_classes.py` is the one map (seven companies, 14 tickers). `mat_share_class_tickers` syncs it incrementally to `public.share_class_tickers` (threshold 20, never a full refresh). Ticker history and `context_line` use the canonical ticker and the company name; model inputs stay on the raw ticker. Backfill `backfill_share_class_ticker_history` wrote 2,301 production rows on 2026-11-09 | [share-class-identity.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/share-class-identity.md) · [[concepts/share-class-identity]] |
@@ -629,6 +630,7 @@ These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; no
 
 - [[products/finfluencer-trade]]
 - [[projects/gor-blog]]
+- [[concepts/under-the-radar-pickers]]
 - [[concepts/share-class-identity]]
 - [[concepts/prediction-scores]]
 - [[concepts/proof-segment-speaker-resolution]]

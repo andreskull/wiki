@@ -5,7 +5,7 @@ product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
 updated: 2026-11-19
-tags: [prediction-scores, signals, feeds, leaderboard-add-to-feed, feed-email, rum, web-vitals, mobile, finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
+tags: [under-the-radar, prediction-scores, signals, feeds, leaderboard-add-to-feed, feed-email, rum, web-vitals, mobile, finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
 ---
 
 # finfluencer-tracker
@@ -21,6 +21,8 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
 ## Current status (2026-11-19)
+
+**Under-the-radar pickers wrapped 2026-11-19, live on production since 2026-10-13** (`cd1d654`, PR #103 `732daab`): `/leaderboard/under-the-radar` ranks people by alpha on stocks outside the 100 most-mentioned in the 12 months up to the pick, at 1M, 3M and 6M. A profile badge links to that row. Guests see rank 1 and free-tier rows; any signed-in account sees the full list after `20261028120000`. The ranking is `gor_dagster` step 14b. The 30-day read (13 Oct–11 Nov) measured badge click-through at 1 of 202 profile views, and row opens at 4.0% of page views against 12.4% on `/leaderboard`. See [[concepts/under-the-radar-pickers]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/under-the-radar-pickers.md).
 
 **Add to feed from leaderboard rows (`leaderboard-add-to-feed`) wrapped 2026-11-19, on `development` (`bd3ce6e`), not yet promoted to production**: signed-in viewers get a 32 × 32 button right after the name on `/leaderboard`, `/shows`, `/leaderboard/under-the-radar` (open rows only) and `/leaderboard/sectors` (both views; a sector row adds the person or show alone, never "only in this sector"). It opens the existing `Add to feed` popover (modal on leaderboards, one per page rendered outside the table, plus one `FeedDialogHost`); with no feeds the editor opens directly. Rows show a `ListChecks` + `text-primary` "in a feed" state from active feeds (saved read-only feeds ignored) and update without reload after tick, Undo, create, rename or delete. Guests get no button, no reserved space, no feed code and no `get_my_feeds` call; signed-in viewers load `LeaderboardFeedLayer` lazily via `React.lazy` only after real rows render (static `LeaderboardFeedSlot` reserves an inert box, `FeedModuleBoundary` swallows a failed chunk load). Every feed surface now uses lucide `ListPlus` / `ListChecks` instead of a star (stars are Prediction Scores only). GA4 `entry_point` gains `E9` (finfluencer leaderboard), `E10` (shows), `E11` (under-the-radar), `E12` (sectors) — no new custom dimension. No DB/RPC/env changes; performance budget unchanged. Known gaps: keyboard Undo is unreachable while the modal popover is open (owner accepted), no bulk add, no manual screen-reader pass. Same day, docs corrected the third free featured finfluencer to **Karen Finerman** (not Tom Lee) in `prediction-scores.md` and `guest-leaderboard-table.md`. See [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/leaderboard-add-to-feed.md).
 
@@ -114,6 +116,7 @@ Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in pro
 |---------|--------------------|--------------------------|-----------------|
 | `/cnbc-ipo` (IPO scoreboard) | Public | Public | Public |
 | Leaderboards (`/leaderboard`, `/leaderboard/sectors`, `/shows`) | Public: 3 `is_free_tier` finfluencers unmasked; remaining 81 masked (`NULL` before `ORDER BY`/`ROW_NUMBER()`) behind free-account CTA | **Full unmasked** across all 84 finfluencers & 14 shows (`1W`–`1Y`) | **Full unmasked** |
+| `/leaderboard/under-the-radar` | Rank 1 and free-tier rows open; every other row keeps its rank only | **Full list** | **Full list** |
 | `/upgrade` (Pricing) | Public | Unchanged | Unchanged |
 | `/compare` | Prefilled Cramer vs Brown; locked subjects redirect to `/signup` | **Full picker** across all 84 finfluencers | **Full picker** |
 | Finfluencer profile (KPIs, cumulative chart, sector widget, ticker lookup) | 3 `is_free_tier` unmasked; remaining 81 gated behind free-account signup | **Full aggregate track record** across all 84 finfluencers | **Full aggregate track record** |
@@ -141,6 +144,7 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [system-overview](file:///Users/andreskull/finfluencer-tracker/docs/architecture/system-overview.md) | Stack, Vercel, routing |
 | [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md) | Supabase prod/dev, BQ → app path, entitlement SSOT summary |
 | [leaderboard-add-to-feed](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/leaderboard-add-to-feed.md) | Row `Add to feed` button on four leaderboards: static `LeaderboardFeedSlot` + lazy `LeaderboardFeedLayer`, one modal popover per page, `E9`–`E12`, feed icon pair |
+| [under-the-radar-pickers](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/under-the-radar-pickers.md) | Ranking of who does well on stocks outside the 100 most-mentioned; page, profile badge, guest mask on rank 1 (**2026-11-19**) |
 | [feeds-management](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feeds-management.md) | Settings → Feeds creation & `View in Picks`, inline browsable Who/What pickers (`feed_picker_counts`), 50-row scrollable `preview_feed` with star hint, and `Create/Save and view picks` (`then` GA4 param) (**2026-11-17**) |
 | [feed-email-glimpse](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feed-email-glimpse.md) | Self-contained CommonJS `/api/feed-email` redirect/pixel endpoint and ticker-grouped Top-5 feed email glimpse with per-feed match stats (**2026-11-17**) |
 | [guest-leaderboard-table](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/guest-leaderboard-table.md) | Anonymous `/leaderboard` shows the table; paywall starts at a profile, Sectors, Under the Radar, or pick details (**2026-11-14**) |
@@ -187,6 +191,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
 | 2026-11-19 | Add to feed from leaderboard rows (`E9`–`E12`) and the `ListPlus` / `ListChecks` feed icon pair | [leaderboard-add-to-feed.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/leaderboard-add-to-feed.md) |
+| 2026-11-19 | Under-the-radar pickers | [under-the-radar-pickers.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/under-the-radar-pickers.md) |
 | 2026-11-17 | Feeds management (Settings creation & `View in Picks`, browsable Who/What pickers, 50-row preview + star hint, `Save and view picks`) | [feeds-management.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feeds-management.md) |
 | 2026-11-17 | Feed email glimpse and self-contained `/api/feed-email` endpoint | [feed-email-glimpse.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feed-email-glimpse.md) |
 | 2026-11-14 | Guest leaderboard table (paywall after the table) | [guest-leaderboard-table.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/guest-leaderboard-table.md) |
@@ -234,6 +239,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 | Date | Decision | Rationale |
 |------|----------|-----------|
 | 2026-11-19 | Leaderboard rows get an `Add to feed` button for signed-in viewers, loaded lazily after real rows, with one modal popover per page outside the table | Reverses the feeds v1 "no row control" rule: guests download nothing, so first load is unchanged. A popover per cell let portal clicks bubble into `<tr onClick>`; the modal blocks the dismissing click from opening a row. Cost accepted: keyboard users undo by unticking in the popover |
+| 2026-10-13 | Under-the-radar ranking is the good side only, judged at the time of the pick, on 1M / 3M / 6M, with rank 1 open to a guest | A popular-vs-rest comparison had already shipped and been removed. 1W annualises one week into unusable alphas. A fully locked page would have shown no name. Signed-in accounts see the full list since `20261028120000` |
 | 2026-11-19 | Feeds use `ListPlus` / `ListChecks`, never a star | Stars mean Prediction Scores. "In a feed" is an icon swap plus `text-primary`, no `fill-*`; icons imported from `lucide-react` directly (an alias module would pin both into the `ad-shared` chunk) |
 | 2026-11-17 | `feed_picker_counts()` emits sparse non-zero `(kind, entity_key)` rows with `latest_visible_date` gated by `FILTER (WHERE vis)` | Single ~80-row scan (51.5 ms warm) covers finfluencers, shows, and canonical sectors without leaking hidden pick dates to Spectators; client fills zeros only once `isReady` is true |
 | 2026-11-17 | `View in Picks` and `Save and view picks` open `/signals?feed=<id>&stars=any` with one-shot `state.fromFeedNavigation` | Shows every pick counted in `"N fresh now"` across all star levels while suppressing the initial `"Save as my default"` prompt without mutating `user_profiles.default_star_filter` |
@@ -339,6 +345,7 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 ## Supabase notes (app layer)
 
 - **Entitlement:** `user_profiles.subscription_tier` (+ status, `stripe_customer_id`, `cancel_at_period_end`, `subscription_reconciled_at`); writers are service-role edge functions only (H9); `get_user_tier()` drives RLS / masked views
+- **Under-the-radar ranking:** `finfluencer_under_radar_ranking` synced from `dagster_sync.mat_finfluencer_under_radar_ranking` (step 14b). Anon has no grant on the base table. `finfluencer_under_radar_ranking_public` opens rank 1 and free-tier rows for guests, and every row for a signed-in account. `finfluencer_under_radar_badge` returns rank and qualifier count to anon and authenticated ([[concepts/under-the-radar-pickers]])
 - **Prediction Scores (`public.pick_scores` & `get_fresh_scored_picks`):** Synced from BigQuery `dagster_sync.mat_pick_scores`; direct `SELECT` revoked on `signals`, `signal_performance`, `signal_current_performance`, and `pick_scores` for `anon`/`authenticated`; `get_fresh_scored_picks(p_finfluencer_id, p_direction, p_min_stars, p_limit, p_offset)` serves fresh picks and exits within 10 US trading sessions (`sessions 1–10`) with server-side Option 2 tier masking ([[concepts/prediction-scores]])
 - **Holding-period preference:** `user_profiles.default_holding_period` (nullable text, CHECK `1w|1m|3m|6m|1y`); `authenticated` UPDATE on that column only; `NULL` = follow system 6 months ([[concepts/user-default-holding-period]])
 - **`finfluencer_combined_performance_public`** + **`leaderboard`** — security-definer masked views; under Option 2 (`20261030120000`), `anon` sees 3 `is_free_tier` rows unmasked and remaining 81 nulled **before** `ORDER BY`/`ROW_NUMBER()`, while `authenticated` (`spectator`/`trader`) sees all 84 unmasked; base table not readable by anon
@@ -395,6 +402,7 @@ Vault indexes **WIKI.md** and all of **`docs/`** except **`docs/features/`**. Ru
 - [[products/finfluencer-trade]]
 - [[projects/gor_dagster]]
 - [[projects/gor-blog]]
+- [[concepts/under-the-radar-pickers]]
 - [[concepts/share-class-identity]]
 - [[concepts/prediction-scores]]
 - [[concepts/user-default-holding-period]]
