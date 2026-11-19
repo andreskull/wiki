@@ -569,3 +569,10 @@ Synced production promotions (`PR #136` `083fa36`, `PR #137` `2170062`, `PR #140
 ## [2026-11-18] sync | finfluencer-tracker
 
 Updated [[projects/finfluencer-tracker]] for GA4 custom dimension **Feed save next step** (`Event` scope, parameter `then`, registered 2026-11-17) and the `send-feed-email` production template update (`741180e`, deployed 2026-11-18 to `pyeoksniycdtmjvokaqp`: adds the `1★–5★ Prediction Score` explanation above stock cards and removes the multi-feed overlap footer note).
+
+## [2026-11-19] sync | finfluencer-tracker
+
+Synced `finfluencer-tracker` `development` at `bd3ce6e` (changes since `e92a2eb`) into [[projects/finfluencer-tracker]], [[products/finfluencer-trade]], [[overview]] and [[index]]:
+- New wrapup **Add to feed from leaderboard rows** (`docs/architecture/features/leaderboard-add-to-feed.md`): signed-in row button after the name on `/leaderboard`, `/shows`, under-the-radar open rows and `/leaderboard/sectors` (both views); static `LeaderboardFeedSlot` + lazy `LeaderboardFeedLayer` after real rows; one modal popover per page outside the table; guests load no feed code and make no `get_my_feeds` call; GA4 `entry_point` `E9`–`E12`. On `development`, not yet on production.
+- Two decisions added: row control reverses the feeds v1 "no row control" rule (lazy, guests load nothing; modal popover cost accepted for keyboard Undo); feeds use `ListPlus` / `ListChecks`, never a star.
+- Noted the docs correction that Karen Finerman, not Tom Lee, is the third free featured finfluencer (no vault page named either).
