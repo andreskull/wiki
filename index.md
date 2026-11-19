@@ -13,7 +13,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 
 ## Overview
 
-- [[wiki/overview]] — Three products, one methodology, one wiki (Updated 2026-11-18)
+- [[wiki/overview]] — Three products, one methodology, one wiki (Updated 2026-11-19)
 
 ---
 
@@ -23,7 +23,7 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 |------|-------------|
 | [[wiki/products/finfluencer-trade]] | Financial influencer accountability platform — planning hub; GTM living page [[wiki/synthesis/gtm-growth]] (Updated 2026-11-17) |
 | [[wiki/products/rattaproff]] | WooCommerce multi-store automation — 20 storefronts; HUF→EUR pricing [[wiki/concepts/huf-eur-pipeline-pricing]]; gsheet sync safety [[wiki/concepts/gsheet-ground-truth-sync]]; category URL export (Woo slugs, 2026-08-14) |
-| [[wiki/products/botastico]] | Partially indexed — [[projects/botastico-portal]] (2026-11-15); [[projects/botastico-api]] (2026-11-15); [[projects/botastico]] SSL/monitoring (2026-07-15); other repos pending |
+| [[wiki/products/botastico]] | Partially indexed — [[projects/botastico-portal]] (2026-11-19); [[projects/botastico-api]] (2026-11-19); [[projects/botastico]] SSL/monitoring (2026-07-15); other repos pending |
 
 ---
 
@@ -38,8 +38,8 @@ Master catalog of all pages in this wiki. Update this file whenever a page is ad
 | [[wiki/projects/ai-factory]] | (methodology) | Active — **Antigravity Gemini 4 & Orchestrator modes** wrapped **2026-11-17** (`gemini-4-hydrogen-medium` replacing `3.8-flash`, *Orchestrator (Carbon)* via `no_review`, effort-suffix lookup, [feature doc](file:///Users/andreskull/ai-factory/docs/architecture/features/antigravity-gemini4-models.md)); Self-switched **2026-11-13** (`REPO.md`, `CLAUDE.md` -> `@REPO.md`, `WIKI.md`); `<skill>:` composer prefix & Claude 2.1.323 / Fable 5.2 `author_only` **2026-11-13**; Phases 0–5 complete **2026-11-12** across all 7 switched repos |
 | [[wiki/projects/spec-driven-ai-coding]] | (methodology) | Retired **2026-11-12** — superseded by [[projects/ai-factory]]; `~/.ai_global` removed & sync scripts guarded |
 | [[wiki/projects/cramer-mad-money-research]] | finfluencer.trade | v1 frozen **2026-09-24** — public kit + SSRN 6643379; do not overwrite `data/` |
-| [[wiki/projects/botastico-portal]] | botastico | Active — **Local widget Cypress harness, standalone `/chatapps` + `/iframe` isolation & `gpt-4o-mini` fallback** **2026-11-15** (`920477a`, `cab0e26` on `main`; 24/24 live Blurby + Opiq public URLs); **Factory `AGENTS.md` switch** **2026-11-12** (`development`, Turborepo Next.js `apps/client` `:3000` on Vercel `https://botasti.co`, `apps/admin`, `apps/playground`, `slack-events` Cloud Function) |
-| [[wiki/projects/botastico-api]] | botastico | Active — **Deprecated OpenAI models removal** wrapped **2026-11-15** (`00087`; `o3-mini` -> `gpt-5.4-mini`, Claude 4.5 Haiku / Sonnet 4.6 added, live OpenAI deprecations gate, [feature doc](file:///Users/andreskull/botastico-api/docs/architecture/features/deprecated-openai-models-removal.md)); **Factory `AGENTS.md` switch + `gh-pages` docs leak closed** **2026-11-12** (`Agent branch: none` single-branch `main` unstaged-until-production); chat image attachments **2026-05-18** ([feature doc](file:///Users/andreskull/botastico-api/docs/architecture/features/botastico-chat-image-attachments.md)); Cloud Run Flask + `file_processor` |
+| [[wiki/projects/botastico-portal]] | botastico | Active — **`gpt-6-luna` temperature suppression & strict `chat_image_attachments_enabled === true` upload gate** **2026-11-19**; **Local widget Cypress harness, standalone `/chatapps` + `/iframe` isolation & `gpt-4o-mini` fallback** **2026-11-15** (`920477a`, `cab0e26` on `main`; 24/24 live Blurby + Opiq public URLs); **Factory `AGENTS.md` switch** **2026-11-12** (`development`, Turborepo Next.js `apps/client` `:3000` on Vercel `https://botasti.co`, `apps/admin`, `apps/playground`, `slack-events` Cloud Function) |
+| [[wiki/projects/botastico-api]] | botastico | Active — **GPT-5.1 retirement and `gpt-6-luna` rollout** wrapped **2026-11-19** (`00089-tbp`, `20f09d1`; all 49 live production agents & 7 plans migrated to `gpt-6-luna` at 1 IA credit, 7 retired GPT-5/Claude 3 models removed from catalog, [feature doc](file:///Users/andreskull/botastico-api/docs/architecture/features/gpt-5-1-retirement.md)); **Deprecated OpenAI models removal** wrapped **2026-11-15** (`00087`; `o3-mini` -> `gpt-5.4-mini`, Claude 4.5 Haiku / Sonnet 4.6 added, live OpenAI deprecations gate, [feature doc](file:///Users/andreskull/botastico-api/docs/architecture/features/deprecated-openai-models-removal.md)); **Factory `AGENTS.md` switch + `gh-pages` docs leak closed** **2026-11-12** (`Agent branch: none` single-branch `main` unstaged-until-production); chat image attachments **2026-05-18** ([feature doc](file:///Users/andreskull/botastico-api/docs/architecture/features/botastico-chat-image-attachments.md)); Cloud Run Flask + `file_processor` |
 | [[wiki/projects/botastico]] | botastico | Active — GCP LB SSL certs + monitoring **2026-07-15** (July widget outage); `chatapps`/`assets` auto-renew; [[concepts/botastico-ssl-certificates]] |
 
 ---

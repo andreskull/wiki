@@ -580,3 +580,13 @@ Synced `finfluencer-tracker` `development` at `bd3ce6e` (changes since `e92a2eb`
 ## [2026-11-19] sync | finfluencer-tracker
 
 Synced the under-the-radar pickers wrap-up (`cd1d654` on `development`, live since 2026-10-13) into [[concepts/under-the-radar-pickers]], [[projects/finfluencer-tracker]], [[projects/gor_dagster]], [[products/finfluencer-trade]], [[overview]] and [[index]]. Guests see rank 1. Any signed-in account sees the full list. The 30-day read measured badge click-through at 1 of 202 profile views and row opens at 4.0% of page views against 12.4% on `/leaderboard`.
+
+## [2026-11-19] wrapup | botastico-api | GPT-5.1 retirement and gpt-6-luna rollout
+
+Wrapped `gpt-5-1-retirement` (`20f09d1` on `main`, live on Cloud Run `botastico-api-production-west1-00089-tbp` and `botastico-api-staging-west1-00101-ztv`):
+- Added `gpt-6-luna` (`MAX_TOKENS: 16384`, `IA_CREDITS: 1` from \$0.10 input / \$0.50 output per 1M tokens, OpenAI vision capability matching `gpt-5.4-mini`) with `_build_openai_streaming_params` / `_build_openai_non_streaming_params` sending `max_completion_tokens` and `reasoning_effort='none'` without `verbosity` (`tools` + `tool_choice='auto'` on non-streaming only) plus `_LazyTokenHelper`.
+- Deleted 18 churned DAO (`17JMLFaZfInEkuz0clD5`) agents, migrated all live customer agents (`19` staging, `49` production) and Firestore subscription plans (`4` staging, `7` production) to `gpt-6-luna` (`0` live agents off `gpt-6-luna`, `0` plans pending), and verified live chats on Botastico (`qvoGbMp5esOw4fF7qMGs`), Opiq (`kK458rkp8gIdEGli7o3a`), and Blurby (`5WshrgGYUWp6fCkxoXtP`).
+- Removed `gpt-5.1`, `gpt-5.4-nano`, `gpt-5-nano`, `gpt-5-mini`, `claude-3-haiku-20240307`, `claude-3-5-haiku-20241022`, and `claude-3-7-sonnet-20250219` from `SUPPORTED_MODELS`, `MAX_TOKENS`, and `IA_CREDITS` (and `gpt-5-mini` from `IMAGE_MODEL_CAPABILITIES` and portal vision lists); updated `botastico-portal` to treat `gpt-6-luna` as temperature-free (`isGpt5Model`) and require `chat_image_attachments_enabled === true` in `/api/chatapps/[chatAppId]/attachments`.
+- Permanent page `docs/architecture/features/gpt-5-1-retirement.md` added, `WIKI.md` updated, and `docs/features/gpt-5-1-retirement/` plus five completed one-time migration scripts (`migrate_gpt51_agents.py`, `migrate_deprecated_openai_models.py`, `migrate_deprecated_claude_models.py`, `migrate_gpt5_nano_mini_agents.py`, `audit_retired_claude_agents.py`) deleted via `/cleanup`.
+Updated [[projects/botastico-api]], [[projects/botastico-portal]], [[products/botastico]], [[overview]], and [[index]].
+
