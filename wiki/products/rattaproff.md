@@ -4,7 +4,7 @@ title: "rattaproff"
 product: rattaproff
 project: null
 created: 2026-04-06
-updated: 2026-08-14
+updated: 2026-11-21
 tags: [rattaproff, woocommerce, ecommerce, automation, google-indexing, gcp]
 ---
 
@@ -31,15 +31,16 @@ Rattaproff automates the full cycle from supplier catalogue ingestion to live pr
 ## Architecture summary
 
 Python-based automation suite on GCP. Key components:
-- **Supplier ingestion** (`suppliers.py`, `process.py`) — normalise catalogue data, HUF→EUR pricing ([[concepts/huf-eur-pipeline-pricing]]), image validation
-- **WooCommerce publishing** (`woo.py`) — per-site credentials, create/update/delete operations
-- **Indexing backlog governance** (`bigquery_backlog.py`, `indexing_api_utils.py`) — BigQuery-backed queue, quota enforcement
+- **Supplier ingestion & diffing** (`suppliers.py`, `process.py`) — normalise catalogue data (`custom_packageunit` numeric sanitization), HUF→EUR pricing ([[concepts/huf-eur-pipeline-pricing]]), canonical HTML/typography/category diffing (`normalize_name`, `normalize_description`, `normalize_category_hierarchy`), image validation
+- **Slim Google Sheet & sync safety** (`gsheet.py`, `gsheet_write.py`, `sheet_utils.py`) — 65-column `Sheet1` on `1tWrtr3hSpwW-jgf-KBVm8oaWMF0ax9-FfC2uJrwXNHU` (`RAW` writes, `78 MiB` cap, `__sync_status` + GCS fallback, [[concepts/gsheet-ground-truth-sync]])
+- **WooCommerce publishing & Cloud SQL cache** (`woo.py`, `db_cache.py`) — per-site credentials, normalized category lookup, immediate `POST`/`PUT`/category write-through to Cloud SQL (sole source of product permalinks), bounded Cyrillic slug (`db_insert_error`) & non-JSON HTML `404` retries
+- **Indexing backlog governance & draft guards** (`bigquery_backlog.py`, `indexing_api_utils.py`, `permalink_resolver.py`) — skip futile `HEAD`/`GET` probes on draft products, resolve publish permalinks post-`PUT`, queue via BigQuery backlog
 - **Indexing dispatcher** — Cloud Function processing up to 200 URLs/day via Cloud Scheduler
 - **Dashboards** — Streamlit (`dashboard_app.py`) and CLI (`indexing_dashboard.py`) for backlog visibility
 
 ## Current status
 
-Operational. Core supplier-to-storefront pipeline running. **GSheet ground-truth sync** hardened July 2026 — grow-only writes, `__sync_status` marker, GCS fallback ([[concepts/gsheet-ground-truth-sync]]). **Category URL export** (2026-08-14) — live Woo slugs, not guessed sheet names; gitignored `category_urls_*.csv` in the repo root. Docs: `docs/architecture/features/gsheet-ground-truth-sync.md`, `docs/architecture/category-url-export.md`.
+Operational across **20 storefronts**. **Slim Google Sheet migration (2026-11-21)** moved `Rattaproff Products` from the locked 118-column sheet (`1AGIUKToNIKJqIyQ5mUh-0bP3oKg1_Wlmqfnwmr-Kkiw`, `97.4 MB`, renamed `Rattaproff Products -- Old (do not use anymore)`) to a 65-column `RAW` spreadsheet (`1tWrtr3hSpwW-jgf-KBVm8oaWMF0ax9-FfC2uJrwXNHU`, `40,986` rows on `2026-11-21`, `81,045,617` bytes measured on `40,611` rows vs `78 MiB` cap), moved permalinks strictly to Cloud SQL, and purged legacy automated-translation code. **Woo sync comparison and draft indexing (2026-11-21)** cut the nightly robot batch run from ~43h (`154,296 s`) to **7.4h (`26,649 s`)** (`New: 2,596, Updated: 5,022, Deleted: 260`), eliminated HTML/typography/`27.5"` category churn, skipped draft redirect probes, and verified bounded Cyrillic slug & HTML `404` retries live. Docs: `docs/architecture/features/gsheet-ground-truth-sync.md`, `docs/architecture/features/gsheet-slim-migration.md`, `docs/architecture/features/woo-sync-comparison-and-draft-indexing.md`, `docs/architecture/category-url-export.md`.
 
 ## Related pages
 
