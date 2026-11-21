@@ -4,8 +4,8 @@ title: "finfluencer-tracker"
 product: finfluencer-trade
 project: finfluencer-tracker
 created: 2026-04-06
-updated: 2026-11-19
-tags: [under-the-radar, prediction-scores, signals, feeds, leaderboard-add-to-feed, feed-email, rum, web-vitals, mobile, finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
+updated: 2026-11-21
+tags: [shows-leaderboard-counts, search-console, backtest-signup-source, under-the-radar, prediction-scores, signals, feeds, leaderboard-add-to-feed, feed-email, rum, web-vitals, mobile, finfluencer, auth, landing, vercel, supabase, react, conversion, seo, linkedin, stripe, entitlement, charts, compare, export, outreach, reddit-ads, navigation, clarity, session-replay, feedback, roadmap, lcp, performance, ga4, bigquery, analytics, google-ads, ticker, lookup, onboarding, holding-period, sector-alpha, sector-leaderboard, supabase-migrations, ledger-baseline]
 ---
 
 # finfluencer-tracker
@@ -20,7 +20,13 @@ Part of [[products/finfluencer-trade]]. Vite/React SPA on Vercel — auth, Strip
 
 Vite + React + TypeScript SPA on **Vercel**: auth, Stripe billing, logged-in product (signals, leaderboard, instruments, onboarding), and **marketing landing** routes in the same deploy. Browser talks to **Supabase** (Auth, Postgres, Edge Functions); pipeline analytics originate in **BigQuery** ([[projects/gor_dagster]]) and reach the app via Supabase sync (see [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md)).
 
-## Current status (2026-11-19)
+## Current status (2026-11-21)
+
+**Shows and finfluencer leaderboard completed-picks horizon counts and floors (`shows-leaderboard-counts`) wrapped 2026-11-21 (`1bcfb60`, `8619983`, `3905463`, `ea370e4`, `d574a5a`, `181948a` on `development`, pending production promotion)**: `/shows` and the landing `ShowsTeaserSection` (`fetchShowLeaderboard` and `fetchShowLeaderboardFromShell`) now filter and display completed picks at the selected holding period from `show_combined_performance_public.signal_count` using `MIN_COMPLETED_SHOW_PICKS = 100` in dependency-free `src/config/showLeaderboard.ts` (keeping `showLeaderboardFromShell.ts` free of runtime imports from `useShowLeaderboard.ts` so closed `vi.mock` test factories stay intact, and retaining masked single-paid-panelist shows with `ann_alpha: null` when `perf.signal_count >= 100`), removing small-sample horizon rows like *Closing Bell* at `6M` (`80` picks vs `472` all-time) and *Schwab Network* at `1W` (`11` picks vs `314` all-time). On `/leaderboard`, `fetchLeaderboardData` now enforces `MIN_COMPLETED_LEADERBOARD_PICKS = IR_MIN_PICKS = 20` on `finfluencer_combined_performance[_public].signal_count`, excluding finfluencers below `20` completed picks at the selected horizon (such as *Ivana Delevska* `14` and *John Stephenson* `8` at `6M` with `—` Information Ratio). Inline shell prefetch URLs (`buildShowsRequests`, `buildLeaderboardRequests`, `routeBootstrap.ts`) remain unchanged (`2,998 / 3,072` bytes). See [[concepts/information-ratio]] and [shows-leaderboard-counts.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/shows-leaderboard-counts.md).
+
+**Search Console pull plumbed 2026-11-20**: Monday `01:00` UTC workflow (`.github/workflows/pull-search-console.yml`, `scripts/pull-search-console.mjs`) pulls 28-day web Search Console metrics (`sc-domain:finfluencers.trade`) and commits `marketing/growth-loop/search-console/{latest.csv,latest.json,snapshots/<endDate>.json}` to `development` for the Monday review (quote `latest.json` `totals`, never sum query or page rows); awaits GitHub secret `GSC_SERVICE_ACCOUNT_JSON`. See [search-console-pull.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/search-console-pull.md).
+
+**Backtest sign-up source wrapped 2026-11-19**: guest `/backtest` explainer fires `feeds_explainer_view` then `signup_cta_click` (`location: 'backtest_explainer'`, `signup_source: '/backtest'`), preserves `signup_source: '/backtest'` and `page_location` across magic-link (`ml_ssrc`) and OAuth round trips into `sign_up`, and repeats `signup_source` on `feed_created` and `backtest_run` for 28 days (`BACKTEST_ROLLOUT` remains `'internal'`). See [backtest-signup-source.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/backtest-signup-source.md).
 
 **Under-the-radar pickers wrapped 2026-11-19, live on production since 2026-10-13** (`cd1d654`, PR #103 `732daab`): `/leaderboard/under-the-radar` ranks people by alpha on stocks outside the 100 most-mentioned in the 12 months up to the pick, at 1M, 3M and 6M. A profile badge links to that row. Guests see rank 1 and free-tier rows; any signed-in account sees the full list after `20261028120000`. The ranking is `gor_dagster` step 14b. The 30-day read (13 Oct–11 Nov) measured badge click-through at 1 of 202 profile views, and row opens at 4.0% of page views against 12.4% on `/leaderboard`. See [[concepts/under-the-radar-pickers]] and [feature doc](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/under-the-radar-pickers.md).
 
@@ -143,6 +149,9 @@ In-repo: **[WIKI.md](file:///Users/andreskull/finfluencer-tracker/WIKI.md)** and
 | [README](file:///Users/andreskull/finfluencer-tracker/docs/architecture/README.md) | Index |
 | [system-overview](file:///Users/andreskull/finfluencer-tracker/docs/architecture/system-overview.md) | Stack, Vercel, routing |
 | [data-layer](file:///Users/andreskull/finfluencer-tracker/docs/architecture/data-layer.md) | Supabase prod/dev, BQ → app path, entitlement SSOT summary |
+| [shows-leaderboard-counts](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/shows-leaderboard-counts.md) | `/shows`, landing teaser, and `/leaderboard` filter and display completed picks at the selected holding period (`100+` shows, `20+` finfluencers) (**2026-11-21**) |
+| [search-console-pull](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/search-console-pull.md) | Weekly Search Console pull (`marketing/growth-loop/search-console/latest.json`), Monday 01:00 UTC (**2026-11-20**) |
+| [backtest-signup-source](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/backtest-signup-source.md) | Guest `/backtest` explainer keeps that page as the GA4 `sign_up` source across magic link & OAuth (**2026-11-19**) |
 | [leaderboard-add-to-feed](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/leaderboard-add-to-feed.md) | Row `Add to feed` button on four leaderboards: static `LeaderboardFeedSlot` + lazy `LeaderboardFeedLayer`, one modal popover per page, `E9`–`E12`, feed icon pair |
 | [under-the-radar-pickers](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/under-the-radar-pickers.md) | Ranking of who does well on stocks outside the 100 most-mentioned; page, profile badge, guest mask on rank 1 (**2026-11-19**) |
 | [feeds-management](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feeds-management.md) | Settings → Feeds creation & `View in Picks`, inline browsable Who/What pickers (`feed_picker_counts`), 50-row scrollable `preview_feed` with star hint, and `Create/Save and view picks` (`then` GA4 param) (**2026-11-17**) |
@@ -190,6 +199,9 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Feature | Permanent doc |
 |------|---------|---------------|
+| 2026-11-21 | Shows and finfluencer leaderboard completed-picks horizon counts and floors (`100+` shows, `20+` finfluencers) | [shows-leaderboard-counts.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/shows-leaderboard-counts.md) |
+| 2026-11-20 | Search Console pull (`pull-search-console.mjs`) | [search-console-pull.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/search-console-pull.md) |
+| 2026-11-19 | Backtest sign-up source (`signup_source` on the guest explainer funnel) | [backtest-signup-source.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/backtest-signup-source.md) |
 | 2026-11-19 | Add to feed from leaderboard rows (`E9`–`E12`) and the `ListPlus` / `ListChecks` feed icon pair | [leaderboard-add-to-feed.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/leaderboard-add-to-feed.md) |
 | 2026-11-19 | Under-the-radar pickers | [under-the-radar-pickers.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/under-the-radar-pickers.md) |
 | 2026-11-17 | Feeds management (Settings creation & `View in Picks`, browsable Who/What pickers, 50-row preview + star hint, `Save and view picks`) | [feeds-management.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/feeds-management.md) |
@@ -238,6 +250,8 @@ Cross-subdomain auth: [auth-sharing-landing-app.md](file:///Users/andreskull/fin
 
 | Date | Decision | Rationale |
 |------|----------|-----------|
+| 2026-11-21 | Filter `/shows` (`>= 100` via dependency-free `src/config/showLeaderboard.ts`) and `/leaderboard` (`>= IR_MIN_PICKS = 20`) in JS join loops on unmasked horizon `signal_count`; leave inline bootstrap URLs unchanged | Prevents incomplete horizon samples from showing all-time counts or missing `IR` dashes while keeping `showLeaderboardFromShell.ts` free of runtime imports from `useShowLeaderboard.ts` (avoiding closed `vi.mock` failures), preserving masked `ann_alpha: null` show rows, and keeping `routeBootstrap.ts` under 3,072 bytes (`2,998` bytes) |
+| 2026-11-19 | A sign-up that starts on `/backtest` sends `signup_source` and `page_location` to the explainer across magic link (`ml_ssrc`) and OAuth | Mail clients open magic links in a new browser where session landing would otherwise be `/auth/callback`; the 28-day record passes through to `feed_created` and `backtest_run`, while `BACKTEST_ROLLOUT` stays `internal` |
 | 2026-11-19 | Leaderboard rows get an `Add to feed` button for signed-in viewers, loaded lazily after real rows, with one modal popover per page outside the table | Reverses the feeds v1 "no row control" rule: guests download nothing, so first load is unchanged. A popover per cell let portal clicks bubble into `<tr onClick>`; the modal blocks the dismissing click from opening a row. Cost accepted: keyboard users undo by unticking in the popover |
 | 2026-10-13 | Under-the-radar ranking is the good side only, judged at the time of the pick, on 1M / 3M / 6M, with rank 1 open to a guest | A popular-vs-rest comparison had already shipped and been removed. 1W annualises one week into unusable alphas. A fully locked page would have shown no name. Signed-in accounts see the full list since `20261028120000` |
 | 2026-11-19 | Feeds use `ListPlus` / `ListChecks`, never a star | Stars mean Prediction Scores. "In a feed" is an icon swap plus `text-primary`, no `fill-*`; icons imported from `lucide-react` directly (an alias module would pin both into the `ad-shared` chunk) |
@@ -425,4 +439,5 @@ Vault indexes **WIKI.md** and all of **`docs/`** except **`docs/features/`**. Ru
 - [[concepts/linkedin-outreach]]
 - [[concepts/signal-source-quote]]
 - [[decisions/ga4-instrumentation-registration-2026-09]]
+- [[concepts/information-ratio]]
 - [[entities/bigquery]]

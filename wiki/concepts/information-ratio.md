@@ -4,7 +4,7 @@ title: "Information Ratio"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-09-29
-updated: 2026-09-29
+updated: 2026-11-21
 tags: [performance, leaderboard, information-ratio, supabase, bigquery]
 ---
 
@@ -29,6 +29,8 @@ Below 0 lagged the market. 0–0.1 beat it inconsistently. 0.1–0.2 is good. Ab
 A parity test pins the two engines. A post-sync drift check reports a stored value that no longer matches the helper and does not block publishing.
 
 The leaderboard header is **IR**. The profile card is **Info Ratio**. A NULL on an unlocked row is "—". A paid finfluencer's ratio stays masked for a spectator. Show ratios are not masked. `signal_count` still counts every pick.
+
+As of **2026-11-21** ([shows-leaderboard-counts.md](file:///Users/andreskull/finfluencer-tracker/docs/architecture/features/shows-leaderboard-counts.md)), `/leaderboard` also enforces `MIN_COMPLETED_LEADERBOARD_PICKS = IR_MIN_PICKS = 20` on `finfluencer_combined_performance[_public].signal_count` at the selected holding period (and `/shows` enforces `MIN_COMPLETED_SHOW_PICKS = 100` on `show_combined_performance_public.signal_count`), so finfluencers with fewer than `20` total completed picks at a horizon are excluded on that horizon tab. On `/leaderboard`, `"—"` for `IR` on an unlocked row now occurs only when a finfluencer has `>= 20` total completed picks at that horizon (`signal_count`) but `< 20` kept (`is_kept = TRUE`) picks after daily/repeat deduplication (`1` row at `1Y` in production BigQuery on 2026-11-21).
 
 ## Relevance to Andres's work
 
