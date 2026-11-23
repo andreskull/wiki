@@ -4,7 +4,7 @@ title: "gor_dagster"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-06
-updated: 2026-11-21
+updated: 2026-11-23
 tags: [dagster, pipeline, bigquery, gcs, python, stt, llm, speaker-attribution, facts-extraction, supabase, prediction-scores, ml, linkedin, gemini, claude-haiku, podcast-rss, outreach, source-quote, google-ads]
 ---
 
@@ -183,7 +183,7 @@ Docs: [Instrument Resolution Cascade](file:///Users/andreskull/gor_dagster/docs/
 
 `SignalCurrentPerformance` (BigQuery VIEW) and the `calculate_signal_performance` asset share the same truncation logic (`implicit_close_signals` ∪ `close_signals` in SQL).
 
-Signal date uses `ContentSourceTimingConfig` per show — `pubDate` from RSS is not reliable for air date, especially for shows like Mad Money that publish after market close.
+Signal date uses `ContentSourceTimingConfig` per show — `pubDate` from RSS is not reliable for air date, especially for shows like Mad Money that publish after market close. Since **2026-11-21** (`show-entry-timing`), all 18 configured shows (including *CNBC Halftime Report* and *The Morning Filter*, `09:00:00`–`09:45:00` ET) use `next_market_open` (`adj_open` entry on the next US trading session; [show-entry-timing.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/show-entry-timing.md)).
 
 Docs: [ActionableSignal Schema](file:///Users/andreskull/gor_dagster/docs/schemas/actionable-signal-schema.md), [Performance Methodology](file:///Users/andreskull/gor_dagster/docs/architecture/performance-methodology.md), [Prices and Performance Invariants](file:///Users/andreskull/gor_dagster/docs/architecture/prices-and-performance-invariants.md), [Signal Date vs Publication Date](file:///Users/andreskull/gor_dagster/docs/operations/signal-date-vs-publication-date.md), [Signal Timing and Source Config](file:///Users/andreskull/gor_dagster/docs/operations/signal-timing-and-source-config.md), [Prediction Scores Architecture](file:///Users/andreskull/gor_dagster/docs/architecture/features/prediction-scores.md)
 
@@ -461,6 +461,7 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 
 | Completed | Topic | Doc |
 |---|---|---|
+| 2026-11-21 | Show entry timing — switched *CNBC Halftime Report* and *The Morning Filter* (`09:00:00`–`09:45:00` ET) from `same_day_close` to `next_market_open` across `source_timing_config.py`, `ContentSourceTimingConfig`, `ActionableSignal`, `SignalPerformance`/`_pruned` (`111,679`/`71,835` rows replaced by `111,383`/`71,801`), `SignalSequence`, and 17 `mat_*` tables; synced dev (`base_version = 12`) & prod (`base_version = 21`) Supabase; hardened `seed_content_source_timing_config.py` (DML) & `repair_signal_performance.py` (`--reason`), added `reset_timing_backtest_snapshots.py` & `verify_show_entry_timing.py`; Joe Terranova prod `backtest_compute` `+235.1%` → `+192.52%` vs S&P 500 `+209.31%` | [show-entry-timing.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/show-entry-timing.md) |
 | 2026-11-21 | Backtest price fixes — `build_mat_instrument_daily_prices_sql` settled US-session projection capped at `SPY`'s max bar before `LAG(adj_close)` (`open_ret = 0.0` on off-calendar carry-forwards), purged 3 OTC spike bars (`SICPQ`, `HRBR`) and fixed 2 `HRBR` `0.0101` stub opens (*The Compound and Friends* max drawdown `-79.7%` → `-28.7%` on prod `base_version = 17`), `10x` spike guard + `SKIPPED_SPIKE_GUARD` step-16 holdback, snapshot cleaner + parity verifier (`404`-safe for unmigrated prod) | [backtest-price-fixes.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/backtest-price-fixes.md) |
 | 2026-11-14 | ElevenLabs Scribe v3 — new transcriptions use `elevenlabs_scribe_v3` (v1 and v2 stay valid, order v3 → v2 → v1); SI sensor discovers v3 only; `transcribe_v3_when_older_exists` defaults false | [elevenlabs-scribe-v3-evaluation.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/elevenlabs-scribe-v3-evaluation.md) · [[decisions/scribe-v3-default]] |
 | 2026-11-13 | Instrument identity and price integrity — `v_ticker_tenancy` (migrations `022`–`026`), `DelistedSecurityIndex`, SEC EDGAR ISIN fallback, isolated bulk vs per-symbol price sync without `gap_fill_price_history`, `spinoff_events.yaml`, point-in-time `vix_at_signal` (0 NULLs), `choose_listing` policy, and blocking `consolidate_sync_tables` integrity checks | [instrument-identity-and-price-integrity.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/instrument-identity-and-price-integrity.md) |
@@ -519,7 +520,9 @@ Permanent docs under `docs/architecture/features/` (post-`/wrapup`).
 
 These live in **`gor_dagster/docs/features/`** — temporary until `/wrapup`; not indexed verbatim by wiki.
 
-**In progress:** `closing-bell-ingestion/`, `show-entry-timing/`.
+**In progress:** `closing-bell-ingestion/`.
+
+**Wrapped 2026-11-21:** `show-entry-timing/` → [show-entry-timing.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/show-entry-timing.md) (all 18 shows on `next_market_open`; `111,383` full / `71,801` pruned performance rows recomputed, dev `base_version = 12`, prod `base_version = 21`; Joe Terranova prod `backtest_compute` `+235.1%` → `+192.52%` vs S&P 500 `+209.31%`. Temp folder removed.)
 
 **Wrapped 2026-11-21:** `backtest-price-fixes/` → [backtest-price-fixes.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/backtest-price-fixes.md) (`build_mat_instrument_daily_prices_sql` US-session projection capped at `SPY`'s max bar before `LAG(adj_close)`, `SICPQ`/`HRBR` OTC spike & stub-open repairs cutting *The Compound and Friends* max drawdown `-79.7%` → `-28.7%` on prod `base_version = 17`, `10x` spike holdback `SKIPPED_SPIKE_GUARD`, snapshot cleaner & parity verifier. Temp folder removed.)
 

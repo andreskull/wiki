@@ -4,7 +4,7 @@ title: "Signal performance (truncation & implicit flip)"
 product: finfluencer-trade
 project: gor_dagster
 created: 2026-04-08
-updated: 2026-09-29
+updated: 2026-11-23
 tags: [performance, actionable-signal, bigquery, truncation, finfluencer-trade]
 ---
 
@@ -14,7 +14,7 @@ How finfluencer **calls** ([[concepts/actionable-signal]]) are turned into measu
 
 ## Definition
 
-- **Entry**: Next trading day after air date, at adjusted open (`first_tradeable_session_date` policy — see repo `docs/architecture/performance-methodology.md`).
+- **Entry**: Next trading day after air date, at adjusted open (`first_tradeable_session_date` policy — see repo `docs/architecture/performance-methodology.md`). Since **2026-11-21** (`show-entry-timing`), all 18 configured shows (including *CNBC Halftime Report* and *The Morning Filter*, `09:00:00`–`09:45:00` ET) use `next_market_open`, leaving zero active `same_day_close` rows in `ContentSourceTimingConfig` ([show-entry-timing.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/show-entry-timing.md)).
 - **Exit (horizon end)**: Latest available `PriceHistory` bar **on or before** the calendar horizon end date (as-of join). Used when `TradingCalendar` lists a day without a bar — avoids NULL benchmark/exit prices without inventing phantom days. Shipped **2026-06-30** with SPY consolidation ([spy-canonical-figi-consolidation.md](file:///Users/andreskull/gor_dagster/docs/architecture/features/spy-canonical-figi-consolidation.md)).
 - **S&P 500 benchmark**: SPY at Bloomberg FIGI **`BBG000BDTBL9`** (`gor_dagster/configs/benchmark_figi.py`); single FI row drives daily price sync and benchmark SQL.
 - **Completed horizon**: A row in `dagster_prices.SignalPerformance` (BigQuery) only if the horizon’s evaluation end falls **before** any boundary that ends the position.
